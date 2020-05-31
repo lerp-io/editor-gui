@@ -13,7 +13,7 @@ Menu = (props)->
 	style = {}
 	
 	context = useContext(LayoutContext)
-	self_context = Object.assign {},context,{root:no,vert:props.vert}
+	self_context = Object.assign {},context,{root:no,vert:props.vert,depth:context?.depth+1}
 
 	# log visible
 
@@ -48,8 +48,9 @@ Menu = (props)->
 		right:props.right
 		top:props.top
 		bottom:props.bottom
-	
-	
+
+	style.zIndex = props.select && 666 || 1
+	style.zIndex += self_context.depth
 	
 	if props.items
 		items = Object.keys(props.items).map (key,i)->
@@ -60,34 +61,40 @@ Menu = (props)->
 				return h 'div',
 					key:key
 					className: 'ed-menu-item'
-					onClick: callback
-					key
+					h 'div',
+						className: cn 'ed-menu-item-label',props.select == key && 'ed-selected','noselect'
+						onClick: callback
+						key
 			else
 				return h 'div',
 					key:key
-					title: title
-					className: cn 'ed-menu-item',props.select == key && 'ed-selected','noselect'
-					onClick: props.onSelect && ( (e)->
-						if e.target.title != title
-							return
-						# if e.target != ref
-						if props.select == key
-							# log 'select undefined',title
-							props.onSelect(undefined,child)
-						else
-							# log 'SELECT',key,child
-							props.onSelect(key,child)
-					) || undefined
-					key
+					className: 'ed-menu-item'
+					h 'div',
+						title: title
+						onClick: props.onSelect && ( (e)->
+							if e.target.title != title
+								return
+							# if e.target != ref
+							if props.select == key
+								# log 'select undefined',title
+								props.onSelect(undefined,child)
+							else
+								# log 'SELECT',key,child
+								props.onSelect(key,child)
+						) || undefined
+						className: cn 'ed-menu-item-label',props.select == key && 'ed-selected','noselect'
+						key
+
 					props.select == key && child || null
 
 
-	h LayoutContext.Provider,
-		value: self_context
-		h 'div',
-			ref: menu_ref
-			className: cn 'ed-menu',props.vert && 'ed-flex-down' || 'ed-flex-right',!visible && 'ed-hidden'
-			style: style
+	
+	h 'div',
+		ref: menu_ref
+		className: cn 'ed-menu',props.vert && 'ed-flex-down' || 'ed-flex-right',!visible && 'ed-hidden'
+		style: style
+		h LayoutContext.Provider,
+			value: self_context
 			items
 
 

@@ -1,7 +1,7 @@
 ## editor-gui
 [VIEW LIVE DEMO](http://lerp-io.github.io/editor-gui)
 
-A simple and flexible Javascript GUI library for internal development tools and editors.
+A sleek, simple, and flexible Javascript GUI library for javascript canvas based development tools and editors. 
 
 Built for React.
 

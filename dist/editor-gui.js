@@ -100,7 +100,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _LayoutContext__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./LayoutContext */ "./components/LayoutContext.coffee");
+/* harmony import */ var _BoxContext__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./BoxContext */ "./components/BoxContext.coffee");
 var Box, h;
+
+
 
 
 
@@ -111,29 +114,82 @@ var Box, h;
 h = react__WEBPACK_IMPORTED_MODULE_1__["createElement"];
 
 Box = function(props, state) {
-  var context, position, self_context, setPosition, setSelfContext, style;
-  style = {};
+  var context, menu_ref, position, self_context, setPosition, setSelfContext, setVisible, style, visible;
   [position, setPosition] = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(props.position);
-  [self_context, setSelfContext] = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])({
-    root: true
-  });
+  [self_context, setSelfContext] = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])();
+  [visible, setVisible] = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false);
+  menu_ref = Object(react__WEBPACK_IMPORTED_MODULE_1__["useRef"])(null);
+  style = {};
+  context = Object(react__WEBPACK_IMPORTED_MODULE_1__["useContext"])(_LayoutContext__WEBPACK_IMPORTED_MODULE_2__["default"]);
+  self_context = {};
+  // log visible
+
+  // log context
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function() {
+    if (!visible && menu_ref.current) {
+      // log 'set visible',menu_ref.current
+      setVisible(true);
+    }
     if (props.position !== position) {
+      // log 'set position'
       return setPosition(position);
     }
   });
-  context = Object(react__WEBPACK_IMPORTED_MODULE_1__["useContext"])(_LayoutContext__WEBPACK_IMPORTED_MODULE_2__["default"]);
+  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function() {
+    return function() {
+      return typeof props.onSelect === "function" ? props.onSelect(void 0, void 0) : void 0;
+    };
+  }, []);
   if (!context) {
     return null;
   }
-  Object(_decidePosition_coffee__WEBPACK_IMPORTED_MODULE_0__["default"])(style, context, position, props.left, props.right, props.top, props.bottom);
+  Object(_decidePosition_coffee__WEBPACK_IMPORTED_MODULE_0__["default"])({
+    style: style,
+    context: context,
+    menu_ref: menu_ref,
+    position: position,
+    left: props.left,
+    right: props.right,
+    top: props.top,
+    bottom: props.bottom
+  });
   return h('div', {
     style: style,
     className: 'ed-box'
-  }, props.children);
+  }, props.title && (h('div', {
+    className: 'ed-box-title'
+  }, '~* ' + props.title + ' *~')) || null, props.description && (h('div', {
+    className: 'ed-description'
+  }, props.description)) || null, h('div', {
+    className: 'ed-box-content'
+  }, h(_BoxContext__WEBPACK_IMPORTED_MODULE_3__["default"].Provider, {
+    value: self_context
+  }, props.children)));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Box);
+
+
+/***/ }),
+
+/***/ "./components/BoxContext.coffee":
+/*!**************************************!*\
+  !*** ./components/BoxContext.coffee ***!
+  \**************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var context, createContext;
+
+({createContext} = __webpack_require__(/*! react */ "react"));
+
+context = createContext({
+  dispatch: null
+});
+
+/* harmony default export */ __webpack_exports__["default"] = (context);
 
 
 /***/ }),
@@ -147,7 +203,20 @@ Box = function(props, state) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-// input types
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! classnames */ "classnames");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _BoxContext__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./BoxContext */ "./components/BoxContext.coffee");
+var In, decideInput, h, initial_state, reducer;
+
+
+
+h = react__WEBPACK_IMPORTED_MODULE_0__["createElement"];
+
+
+
+
 
 // range
 // checkbox
@@ -156,9 +225,90 @@ __webpack_require__.r(__webpack_exports__);
 // number
 // text
 // toggle
-var In;
+decideInput = function(props) {};
 
-In = function(props, state) {};
+reducer = function(state, action) {
+  if (action.type === 'text') {
+    return {
+      text_value: action.value
+    };
+  }
+};
+
+initial_state = {
+  text: null
+};
+
+In = function(props) {
+  var context, dispatch, input, label, state;
+  [state, dispatch] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useReducer"])(reducer, initial_state);
+  context = Object(react__WEBPACK_IMPORTED_MODULE_0__["useContext"])(_BoxContext__WEBPACK_IMPORTED_MODULE_2__["default"]);
+  if (props.label) {
+    label = h('div', {
+      className: 'ed-in-label'
+    }, props.label);
+  }
+  switch (props.type) {
+    case 'text':
+      input = h('input', {
+        type: 'text',
+        className: 'ed-input',
+        onChange: function(e) {
+          if (props.commit || context.dispatch) {
+            dispatch({
+              type: 'text',
+              value: e.target.value
+            });
+          }
+          if (context.dispatch) {
+            context.dispatch({
+              type: 'text',
+              value: e.target.value
+            });
+          }
+          if (!props.commit && !context.commit && props.set) {
+            return props.set(e.target.value);
+          }
+        },
+        value: props.value
+      });
+      break;
+    case 'toggle':
+      input = h('div', {
+        className: 'ed-toggle-outer',
+        onClick: function() {
+          if (props.commit || context.dispatch) {
+            dispatch({
+              type: 'toggle',
+              value: !props.value
+            });
+          }
+          if (context.dispatch) {
+            context.dispatch({
+              type: 'toggle',
+              value: !props.value
+            });
+          }
+          if (!props.commit && !context.commit && props.set) {
+            return props.set(!props.value);
+          }
+        }
+      }, h('div', {
+        className: classnames__WEBPACK_IMPORTED_MODULE_1___default()('ed-toggle-inner', props.value && 'ed-toggle-active'),
+        style: {
+          backgroundColor: props.value && props.color || void 0
+        }
+      }));
+      break;
+    default:
+      throw new Error('invalid input type');
+  }
+  return h('div', {
+    className: 'ed-in-wrap'
+  }, label, h('div', {
+    className: 'ed-input-wrap'
+  }, input));
+};
 
 /* harmony default export */ __webpack_exports__["default"] = (In);
 
@@ -198,9 +348,10 @@ Layout = function(props, state) {
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function() {
     var rect;
     if (!context) {
-      log('set context (after mount)');
+      // log 'set context (after mount)'
       rect = layout_ref.current.getBoundingClientRect();
       return setContext({
+        depth: 0,
         root: true,
         right: rect.right,
         left: rect.left,
@@ -281,7 +432,8 @@ Menu = function(props) {
   context = Object(react__WEBPACK_IMPORTED_MODULE_0__["useContext"])(_LayoutContext__WEBPACK_IMPORTED_MODULE_3__["default"]);
   self_context = Object.assign({}, context, {
     root: false,
-    vert: props.vert
+    vert: props.vert,
+    depth: (context != null ? context.depth : void 0) + 1
   });
   // log visible
 
@@ -316,6 +468,8 @@ Menu = function(props) {
     top: props.top,
     bottom: props.bottom
   });
+  style.zIndex = props.select && 666 || 1;
+  style.zIndex += self_context.depth;
   if (props.items) {
     items = Object.keys(props.items).map(function(key, i) {
       var callback, child, title;
@@ -325,14 +479,17 @@ Menu = function(props) {
         callback = child;
         return h('div', {
           key: key,
-          className: 'ed-menu-item',
+          className: 'ed-menu-item'
+        }, h('div', {
+          className: classnames__WEBPACK_IMPORTED_MODULE_1___default()('ed-menu-item-label', props.select === key && 'ed-selected', 'noselect'),
           onClick: callback
-        }, key);
+        }, key));
       } else {
         return h('div', {
           key: key,
+          className: 'ed-menu-item'
+        }, h('div', {
           title: title,
-          className: classnames__WEBPACK_IMPORTED_MODULE_1___default()('ed-menu-item', props.select === key && 'ed-selected', 'noselect'),
           onClick: props.onSelect && (function(e) {
             if (e.target.title !== title) {
               return;
@@ -345,17 +502,18 @@ Menu = function(props) {
               // log 'SELECT',key,child
               return props.onSelect(key, child);
             }
-          }) || void 0
-        }, key, props.select === key && child || null);
+          }) || void 0,
+          className: classnames__WEBPACK_IMPORTED_MODULE_1___default()('ed-menu-item-label', props.select === key && 'ed-selected', 'noselect')
+        }, key), props.select === key && child || null);
       }
     });
   }
-  return h(_LayoutContext__WEBPACK_IMPORTED_MODULE_3__["default"].Provider, {
-    value: self_context
-  }, h('div', {
+  return h('div', {
     ref: menu_ref,
     className: classnames__WEBPACK_IMPORTED_MODULE_1___default()('ed-menu', props.vert && 'ed-flex-down' || 'ed-flex-right', !visible && 'ed-hidden'),
     style: style
+  }, h(_LayoutContext__WEBPACK_IMPORTED_MODULE_3__["default"].Provider, {
+    value: self_context
   }, items));
 };
 
@@ -643,7 +801,7 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, ".noselect {\n  -webkit-touch-callout: none;\n  /* iOS Safari */\n  -webkit-user-select: none;\n  /* Safari */\n  -khtml-user-select: none;\n  /* Konqueror HTML */\n  -moz-user-select: none;\n  /* Old versions of Firefox */\n  -ms-user-select: none;\n  /* Internet Explorer/Edge */\n  user-select: none;\n  /* Non-prefixed version, currently\n                                  supported by Chrome, Edge, Opera and Firefox */\n}\n.ed-layout {\n  transform: translate(0, 0);\n  font-family: 'DM Mono', monospace;\n  font-size: 1em;\n  color: #f0f0f0;\n  position: fixed;\n  top: 0px;\n  left: 0px;\n  width: 100%;\n  height: 100%;\n  overflow: hidden;\n  pointer-events: none;\n}\n.ed-layout * {\n  pointer-events: all;\n}\n.ed-flex-right {\n  display: flex;\n  flex-wrap: wrap;\n  flex-direction: row;\n  align-items: center;\n  justify-content: flex-start;\n}\n.ed-flex-down {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  justify-content: flex-start;\n}\n.ed-input,\n.ed-toggle-box {\n  background-color: #292929;\n  margin: 0.1em;\n}\n.ed-input-label {\n  margin: 0.1em;\n}\n.ed-input {\n  -webkit-appearance: none;\n  outline: none;\n  border: none;\n  padding: 0.4em;\n}\n.ed-title {\n  text-transform: uppercase;\n}\n.ed-box {\n  position: absolute;\n  background-color: #131313;\n}\n.ed-box .ed-description {\n  font-size: 0.8em;\n  color: #c7c7c7;\n}\n.ed-menu {\n  background-color: #131313;\n  color: #f0f0f0;\n  flex-wrap: nowrap;\n  width: fit-content;\n  position: absolute;\n}\n.ed-menu.ed-flex-down > .ed-menu-item {\n  width: -webkit-fill-available;\n  height: auto;\n}\n.ed-menu.ed-flex-right > .ed-menu-item {\n  height: -webkit-fill-available;\n  width: auto;\n}\n.ed-menu > .ed-menu-item {\n  position: relative;\n  white-space: nowrap;\n  cursor: pointer;\n  padding: 0.4em 0.8em;\n  text-transform: uppercase;\n  background-color: #131313;\n  color: #f0f0f0;\n}\n.ed-menu > .ed-menu-item:hover {\n  background: #292929;\n}\n.ed-menu > .ed-menu-item.ed-selected {\n  background-color: #f0f0f0;\n  color: #131313;\n}\n.ed-menu-item-child {\n  position: absolute;\n  left: 0px;\n  top: 0px;\n}\n.ed-hidden {\n  visibility: hidden;\n}\n", ""]);
+exports.push([module.i, ".noselect {\n  -webkit-touch-callout: none;\n  /* iOS Safari */\n  -webkit-user-select: none;\n  /* Safari */\n  -khtml-user-select: none;\n  /* Konqueror HTML */\n  -moz-user-select: none;\n  /* Old versions of Firefox */\n  -ms-user-select: none;\n  /* Internet Explorer/Edge */\n  user-select: none;\n  /* Non-prefixed version, currently\n                                  supported by Chrome, Edge, Opera and Firefox */\n}\n.ed-layout {\n  transform: translate(0, 0);\n  font-family: 'DM Mono', monospace;\n  font-size: 0.85em;\n  color: #bbbbbb;\n  position: fixed;\n  top: 0px;\n  left: 0px;\n  width: 100%;\n  height: 100%;\n  overflow: hidden;\n  pointer-events: none;\n}\n.ed-layout * {\n  pointer-events: all;\n  box-sizing: border-box;\n}\n.ed-full-w {\n  width: 100%;\n}\n.ed-flex-left,\n.ed-input-wrap {\n  display: flex;\n  flex-wrap: wrap;\n  flex-direction: row-reverse;\n  align-items: center;\n  justify-content: flex-end;\n}\n.ed-flex-right,\n.ed-in-wrap {\n  display: flex;\n  flex-wrap: wrap;\n  flex-direction: row;\n  align-items: center;\n  justify-content: flex-start;\n}\n.ed-flex-down {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  justify-content: flex-start;\n}\n.ed-in-wrap {\n  font-size: 0.9em;\n  width: 100%;\n  min-height: 24px;\n  flex-wrap: nowrap;\n  margin-bottom: 0.425em;\n}\n.ed-input-wrap {\n  margin-left: 0.85em;\n  width: 150%;\n}\n.ed-in-label {\n  width: 100%;\n  white-space: normal;\n  text-align: -webkit-right;\n}\n.ed-input {\n  width: inherit;\n  height: 26px;\n  -webkit-appearance: none;\n  outline: none;\n  color: #bbbbbb;\n  background-color: #4e4e4e;\n  border: none;\n  border-radius: none;\n  padding: 0.425em;\n}\n.ed-toggle-outer {\n  width: 26px;\n  height: 26px;\n  background-color: #4e4e4e;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.ed-toggle-outer .ed-toggle-inner {\n  width: 12px;\n  height: 12px;\n  border-radius: 6px;\n  background-color: #4e4e4e;\n}\n.ed-toggle-outer .ed-toggle-inner.ed-toggle-active {\n  background: #bbbbbb;\n}\n.ed-box-title {\n  padding: 0px 0.85em;\n  margin: 0.85em 0px;\n  text-align: center;\n  width: 100%;\n  text-transform: uppercase !important;\n}\n.ed-box-content {\n  padding: 0px 0.85em;\n  margin: 0.85em 0px;\n}\n.ed-box {\n  backdrop-filter: blur(10px);\n  background-color: rgba(17, 17, 17, 0.8);\n  color: #bbbbbb;\n  width: 340px;\n  min-height: 26px;\n  flex-wrap: nowrap;\n  position: absolute;\n}\n.ed-box .ed-description {\n  padding: 0px 0.85em;\n  font-size: 0.8em;\n  color: #8d8d8d;\n  margin: 0.85em 0px;\n  white-space: normal;\n}\n.ed-menu {\n  color: #bbbbbb;\n  flex-wrap: nowrap;\n  width: fit-content;\n  position: absolute;\n}\n.ed-menu.ed-flex-down > .ed-menu-item {\n  width: -webkit-fill-available;\n  height: auto;\n}\n.ed-menu.ed-flex-right > .ed-menu-item {\n  height: -webkit-fill-available;\n  width: auto;\n}\n.ed-menu .ed-menu-item-label {\n  color: #8d8d8d;\n  height: 26px;\n  text-transform: uppercase;\n  backdrop-filter: blur(10px);\n  background-color: rgba(17, 17, 17, 0.8);\n  cursor: pointer;\n  padding: 0.425em 0.85em;\n}\n.ed-menu .ed-menu-item-label.ed-selected {\n  background-color: #4e4e4e;\n  color: #bbbbbb;\n}\n.ed-menu .ed-menu-item-label:hover {\n  background: #4e4e4e;\n}\n.ed-menu > .ed-menu-item {\n  position: relative;\n  white-space: nowrap;\n  color: #bbbbbb;\n}\n.ed-menu-item-child {\n  position: absolute;\n  left: 0px;\n  top: 0px;\n}\n.ed-hidden {\n  visibility: hidden;\n}\n", ""]);
 // Exports
 module.exports = exports;
 

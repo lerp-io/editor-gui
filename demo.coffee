@@ -11,7 +11,7 @@ import './demo.less'
 demo = ()->
 
 	[show_menu_item_a,setMenuItemA] = useState('🐠 another menu 🐠')
-	[show_menu_item_b,setMenuItemB] = useState(undefined)
+	[show_menu_item_b,setMenuItemB] = useState("0")
 	[show_menu_item_c,setMenuItemC] = useState(undefined)
 	[show_menu_item_d,setMenuItemD] = useState('undefined')
 	
@@ -306,13 +306,14 @@ demo = ()->
 	dev = ()->
 		h Layout,{},
 			h Menu,
-				right: yes
+				left: yes
 				# top: yes
 				vert: yes
 				select: show_menu_item_a
 				onSelect: (item_name,renderFn)->
 					# log 'select a',item_name
 					setMenuItemA(item_name)
+				
 				items:
 					'bUtToN': ()->
 						alert('trigger 1')
@@ -327,28 +328,92 @@ demo = ()->
 						onSelect: (item_name,renderFn)->
 							setMenuItemB(item_name)
 						items:
-							0: ()->
-								h Box,
-									title: 'test'
-							"123": ()->
-								h Box,
-									title: 'test'
+							0: h Box,
+								# top: yes
+								title: 'box title'
+								description: 'this is some sort of test description with a semi long line of text!'
+								# h In,
+								# 	type: 'text'
+								# 	label: 'some text this is some sort of test description with a semi long line of text!'
+								# 	# min: -10
+								# 	# max: 10
+								# 	# step: 1
+								# 	value: val_text_a
+								# 	set: setValTextA
+								h In,
+									type: 'text'
+									label: 'val'
+									# min: -10
+									# max: 10
+									# step: 1
+									value: val_text_a
+									set: setValTextA
+								h In,
+									type: 'text'
+									label: 'val'
+									# min: -10
+									# max: 10
+									# step: 1
+									value: val_text_a
+									set: setValTextA
+								h In,
+									type: 'toggle'
+									label: 'toggle A'
+									value: val_toggle_a
+									set: setValToggleA
+									# color: 'red'
+								h In,
+									type: 'toggle'
+									label: 'toggle B'
+									value: val_toggle_b
+									set: setValToggleB
+									color: 'red'
+								# h In,
+								# 	type: 'range'
+								# 	label: 'range B'
+								# 	min: -10
+								# 	max: 10
+								# 	step: 1
+								# 	value: val_range_b
+								# 	set: setValRangeB
+
+							"123": h Box,
+								title: 'test'
 							'🐠 another menu 2 🐠': h Menu,
 								vert: no
 								left: yes
 								items:
-									0: ()->
-										h Box,
-											title: 'test'
-									"123": ()->
-										h Box,
-											title: 'test'
-									"125": ()->
-										h Box,
-											title: 'test'
-									"126": ()->
-										h Box,
-											title: 'test'
+									0: h Box,
+										title: 'test 1'
+									"123": h Box,
+										title: 'test 2'
+									"125": h Box,
+										title: 'test 3'
+									"126": h Box,
+										title: 'test 4'
+							'🐠 another menu 3 🐠': h Menu,
+								vert: no
+								left: yes
+								select: show_menu_item_c
+								onSelect: (item_name,renderFn)->
+									setMenuItemC(item_name)
+								items:
+									"test": h Menu,
+										vert: no
+										right: yes
+										top: yes
+										items:
+											0: h Box,
+												title: 'test 1'
+											"123": h Box,
+												title: 'test 2'
+											"125": h Box,
+												title: 'test 3'
+									"123": h Box,
+										title: 'test 2'
+									"125": h Box,
+										title: 'test 3'
+									
 
 	
 	return dev()
