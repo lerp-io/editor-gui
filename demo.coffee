@@ -11,7 +11,7 @@ import './demo.less'
 demo = ()->
 
 	[show_menu_item_a,setMenuItemA] = useState('🐠 another menu 🐠')
-	[show_menu_item_b,setMenuItemB] = useState('🐠 another menu 2 🐠')
+	[show_menu_item_b,setMenuItemB] = useState(undefined)
 	[show_menu_item_c,setMenuItemC] = useState(undefined)
 	[show_menu_item_d,setMenuItemD] = useState('undefined')
 	
@@ -306,9 +306,9 @@ demo = ()->
 	dev = ()->
 		h Layout,{},
 			h Menu,
-				left: yes
-				bottom: yes
-				vert: no
+				right: yes
+				# top: yes
+				vert: yes
 				select: show_menu_item_a
 				onSelect: (item_name,renderFn)->
 					# log 'select a',item_name

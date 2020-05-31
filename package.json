@@ -2,11 +2,11 @@
   "name": "re-lui",
   "version": "0.8.5",
   "description": "basic react web ui components",
-  "main": "./dist/lui.js",
+  "main": "./dist/editor-gui.js",
   "scripts": {
-    "dev": "DIM=30 webpack-dev-server --config ./scripts/demo.config.js --mode development",
-    "prod": "LIBNAME=lui-big DIM=45 NODE_ENV=production webpack --config ./scripts/lib.config.js --progress --mode development && LIBNAME=lui-mid DIM=30 NODE_ENV=production webpack --config ./scripts/lib.config.js --progress --mode development && NODE_ENV=production DIM=30 webpack --config ./scripts/demo.config.js --progress --mode production",
-    "lib": "coffee -cmw --output ./dist/ ./components & LIBNAME=lui-mid DIM=30 NODE_ENV=development webpack --config ./scripts/lib.config.js --watch --progress --mode development"
+    "dev": "webpack-dev-server --config ./scripts/demo.config.js --mode development",
+    "prod": "NODE_ENV=production webpack --config ./scripts/lib.config.js --progress --mode development && NODE_ENV=production webpack --config ./scripts/lib.config.js --progress --mode development && webpack --config ./scripts/demo.config.js --progress --mode production",
+    "lib": "coffee -cmw --output ./dist/ ./components & webpack --config ./scripts/lib.config.js --watch --progress --mode development"
   },
   "repository": {
     "type": "git",

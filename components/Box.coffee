@@ -9,16 +9,15 @@ Box = (props,state)->
 	useEffect ()->
 		if props.position != position
 			setPosition(position)
-	context = useContext(LayoutContext)
-	decidePosition(style,context,position,props.left,props.right,props.top,props.bottom)
-			
-	# else
-	# 	style.
 	
-	self_context = 
-		root: false
+	context = useContext(LayoutContext)
+	if !context
+		return null
+	
+	decidePosition(style,context,position,props.left,props.right,props.top,props.bottom)
+	
 
-	# h LayoutContext.Provider(self_context)
+
 	h 'div',
 		style: style
 		className: 'ed-box'
