@@ -12,16 +12,16 @@ Layout = (props,state)->
 
 
 	useEffect ()->
-		if !context
-			# log 'set context (after mount)'
-			rect = layout_ref.current.getBoundingClientRect()
-			setContext
-				depth: 0
-				root: yes
-				right: rect.right
-				left: rect.left
-				top: rect.top
-				bottom: rect.bottom
+	
+		# log 'set context (after mount)'
+		rect = layout_ref.current.getBoundingClientRect()
+		setContext
+			depth: 0
+			root: yes
+			right: rect.right
+			left: rect.left
+			top: rect.top
+			bottom: rect.bottom
 	,[mounted,window.innerHeight,window.innerWidth]
 
 	h LayoutContext.Provider,

@@ -101,7 +101,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _LayoutContext__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./LayoutContext */ "./components/LayoutContext.coffee");
 /* harmony import */ var _BoxContext__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./BoxContext */ "./components/BoxContext.coffee");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! classnames */ "classnames");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_4__);
 var Box, h;
+
+
 
 
 
@@ -156,7 +160,7 @@ Box = function(props, state) {
   return h('div', {
     ref: menu_ref,
     style: style,
-    className: 'ed-box'
+    className: classnames__WEBPACK_IMPORTED_MODULE_4___default()('ed-box', !visible && 'ed-hidden')
   }, props.title && (h('div', {
     className: 'ed-box-title'
   }, '~* ' + props.title + ' *~')) || null, props.description && (h('div', {
@@ -486,18 +490,17 @@ Layout = function(props, state) {
   [context, setContext] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function() {
     var rect;
-    if (!context) {
-      // log 'set context (after mount)'
-      rect = layout_ref.current.getBoundingClientRect();
-      return setContext({
-        depth: 0,
-        root: true,
-        right: rect.right,
-        left: rect.left,
-        top: rect.top,
-        bottom: rect.bottom
-      });
-    }
+    
+    // log 'set context (after mount)'
+    rect = layout_ref.current.getBoundingClientRect();
+    return setContext({
+      depth: 0,
+      root: true,
+      right: rect.right,
+      left: rect.left,
+      top: rect.top,
+      bottom: rect.bottom
+    });
   }, [mounted, window.innerHeight, window.innerWidth]);
   return h(_LayoutContext__WEBPACK_IMPORTED_MODULE_2__["default"].Provider, {
     value: context
@@ -876,13 +879,19 @@ decidePosition = function({style, context, menu_ref, position, left, right, top,
     }
     if (appear_on_either_right_or_left) {
       // log 'APPEAR ON RIGHT OR LEFT',style.top
+      // log style,menu_ref.current
       if (style.top) {
+        // log 'TOP',style.top
+        // log parent_rect.top
         clamp_offset = (rect.height + parent_rect.top) - context.bottom;
+        // log clamp_offset
         if (clamp_offset > 0) {
-          return style.top = `calc( ${style.top} + ${clamp_offset}px )`;
+          return style.top = `calc( ${style.top} - ${clamp_offset}px )`;
         }
       } else {
+        // log 'BOTTOM',style.bottom
         clamp_offset = context.top - (parent_rect.bottom - rect.height);
+        // log clamp_offset 
         if (clamp_offset > 0) {
           return style.bottom = `calc( ${style.bottom} - ${clamp_offset}px )`;
         }

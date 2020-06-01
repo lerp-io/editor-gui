@@ -130,12 +130,18 @@ decidePosition = ({style,context,menu_ref,position,left,right,top,bottom})->
 
 		if appear_on_either_right_or_left
 			# log 'APPEAR ON RIGHT OR LEFT',style.top
+			# log style,menu_ref.current
 			if style.top
+				# log 'TOP',style.top
+				# log parent_rect.top
 				clamp_offset = (rect.height + parent_rect.top) - context.bottom
+				# log clamp_offset
 				if clamp_offset > 0
-					style.top = "calc( #{style.top} + #{clamp_offset}px )"
+					style.top = "calc( #{style.top} - #{clamp_offset}px )"
 			else
+				# log 'BOTTOM',style.bottom
 				clamp_offset = context.top - ( parent_rect.bottom - rect.height)
+				# log clamp_offset 
 				if clamp_offset > 0
 					style.bottom = "calc( #{style.bottom} - #{clamp_offset}px )"
 

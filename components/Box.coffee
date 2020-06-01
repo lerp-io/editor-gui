@@ -2,6 +2,8 @@ import decidePosition from './decidePosition.coffee'
 import {createElement,useState,useEffect,useRef,useContext} from 'react'
 import LayoutContext from './LayoutContext'
 import BoxContext from './BoxContext'
+import cn from 'classnames'
+
 h = createElement
 Box = (props,state)->
 	[position,setPosition] = useState(props.position)
@@ -51,7 +53,7 @@ Box = (props,state)->
 	h 'div',
 		ref: menu_ref
 		style: style
-		className: 'ed-box'
+		className: cn 'ed-box',!visible && 'ed-hidden'
 		props.title && (h 'div',
 			className: 'ed-box-title'
 			'~* '+props.title+' *~'
