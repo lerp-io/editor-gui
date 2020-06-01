@@ -51,6 +51,9 @@ Menu = (props)->
 
 	style.zIndex = props.select && 666 || 1
 	style.zIndex += self_context.depth
+
+	# if self_context.depth == 1
+	# 	style.borderLeft = '10px solid black'
 	
 	if props.items
 		items = Object.keys(props.items).map (key,i)->

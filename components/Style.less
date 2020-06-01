@@ -1,5 +1,5 @@
-@bg1: rgba(17, 17, 17, 0.8);
-@bg2:rgba(78, 78, 78, 1.0);
+@bg1: rgba(27, 27, 27, 0.9);
+@bg2:rgba(27, 27, 27, 0.95);
 
 @color1: rgb(187, 187, 187);
 @color2: rgb(141, 141, 141);
@@ -105,6 +105,7 @@
 
 .ed-toggle-outer{
 	width: 26px;
+	cursor: pointer;
 	height: 26px;
 	background-color: @bg2;
 	display: flex;
@@ -114,7 +115,7 @@
 		width: 12px;
 		height: 12px;
 		border-radius: 6px;
-		background-color: @bg2;
+		background-color: @bg1;
 		&.ed-toggle-active{
 			background: @color1;
 		}
@@ -132,6 +133,12 @@
 .ed-box-content{
 	padding: 0px @padding2;
 	margin: @padding2 0px;
+	display: flex;
+	align-self: start;
+	justify-content: start;
+	flex-direction: row;
+	flex-wrap: wrap;
+
 }
 .ed-box{
 	// box-shadow: inset 0px 0px 4px #00000052;
@@ -178,12 +185,12 @@
 		}
 	}
 	.ed-menu-item-label{
-		background-color: @bg1;
+		// background-color: @bg1;
 		color: @color2;
 		height: 26px;
 		text-transform: uppercase;
-		backdrop-filter: @blur;
-		background-color: @bg1;
+		
+		
 		
 		&.ed-selected{
 			background-color: @bg2;
@@ -200,6 +207,8 @@
 		position: relative;
 		white-space: nowrap;
 		color: @color1;
+		backdrop-filter: @blur;
+		background-color: @bg1;
 		
 	}
 }
@@ -212,4 +221,54 @@
 
 .ed-hidden{
 	visibility: hidden;
+}
+
+.ed-range-outer{
+	height: 24px;
+    width: 100%;
+	background: @bg2;
+	position: relative;
+	.ed-range-slider{
+		width: 6px;
+		height: 24px;
+		background: @color1;
+		&.ed-active{
+			background: @color1;
+		}
+		
+	}
+	.ed-range-value{
+		position: absolute;
+		left: 14px;
+		top: 50%;
+		transform: translate(0%,-50%);
+		&.ed-range-value-snap{
+			right: 8px;
+			left: initial;
+		}
+		&.ed-range-value-left{
+			right: 14px;
+			left: initial;
+			&.ed-range-value-snap{
+				left: 8px;
+				right: initial;
+			}
+		}
+		
+	}
+	cursor: ew-resize;
+}
+
+.ed-button{
+	outline: none;
+	-webkit-appearance: none;
+	border: none;
+	cursor: pointer;
+	width: 100%;
+	height: 24px;
+	background: @bg2;
+	color: @color2;
+	&:hover{
+		color: @color1;
+	}
 }

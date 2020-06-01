@@ -49,6 +49,7 @@ Box = (props,state)->
 
 	
 	h 'div',
+		ref: menu_ref
 		style: style
 		className: 'ed-box'
 		props.title && (h 'div',

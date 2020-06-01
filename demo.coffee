@@ -9,14 +9,20 @@ h = createElement
 import './demo.less'
 
 demo = ()->
-
+	[is_mounted,setMounted] = useState(false)
+	[size,setSize] = useState(null)
+	useEffect ()->
+		if !is_mounted
+			setMounted(yes)
+			window.addEventListener 'resize',setSize
+	,[]
 	[show_menu_item_a,setMenuItemA] = useState('🐠 another menu 🐠')
 	[show_menu_item_b,setMenuItemB] = useState("0")
 	[show_menu_item_c,setMenuItemC] = useState(undefined)
 	[show_menu_item_d,setMenuItemD] = useState('undefined')
 	
-	[val_range_a,setValRangeA] = useState(10.10)
-	[val_range_b,setValRangeB] = useState(-10.2)
+	[val_range_a,setValRangeA] = useState(5.0)
+	[val_range_b,setValRangeB] = useState(20)
 	[val_range_c,setValRangeC] = useState(5.4)
 	
 	[val_number_a,setValNumberA] = useState(1.4)
@@ -368,14 +374,61 @@ demo = ()->
 									value: val_toggle_b
 									set: setValToggleB
 									color: 'red'
-								# h In,
-								# 	type: 'range'
-								# 	label: 'range B'
-								# 	min: -10
-								# 	max: 10
-								# 	step: 1
-								# 	value: val_range_b
-								# 	set: setValRangeB
+								h In,
+									type: 'range'
+									label: 'range A'
+									value: val_range_a
+									set: setValRangeA
+									toFixed: 3
+									min: 1
+									max: 10
+								h In,
+									type: 'range'
+									label: 'copy of range A'
+									value: val_range_a
+									set: setValRangeA
+									toFixed: 3
+									min: 1
+									max: 10
+									# color: 'cyan'
+								h In,
+									type: 'range'
+									label: 'colored, stepped by 1 with snapped labels on either end'
+									value: val_range_b
+									set: setValRangeB
+									toFixed: 0
+									min: 1
+									max: 100
+									step: 1
+									snapValueToEdge: yes
+									color: 'yellow'
+								h In,
+									type: 'range'
+									label: 'stepped by 10 and fixed to 2 decimals'
+									value: val_range_c
+									set: setValRangeC
+									toFixed: 2
+									min: 1
+									max: 100
+									step: 10
+									snapValueToEdge: yes
+									color: 'lime'
+								h In,
+									type: 'button'
+									label: 'pls click meh'
+									onSelect: ->
+										alert('hellow wurld')
+								h In,
+									type: 'button'
+									value: 'hello'
+									onSelect: ->
+										alert('hellow wurld')
+								h In,
+									type: 'button'
+									value: 'hello 2'
+									onSelect: ->
+										alert('hellow wurld')
+								
 
 							"123": h Box,
 								title: 'test'
@@ -413,6 +466,7 @@ demo = ()->
 										title: 'test 2'
 									"125": h Box,
 										title: 'test 3'
+										
 									
 
 	

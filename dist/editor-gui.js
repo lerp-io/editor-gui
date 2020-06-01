@@ -154,6 +154,7 @@ Box = function(props, state) {
     bottom: props.bottom
   });
   return h('div', {
+    ref: menu_ref,
     style: style,
     className: 'ed-box'
   }, props.title && (h('div', {
@@ -228,26 +229,61 @@ h = react__WEBPACK_IMPORTED_MODULE_0__["createElement"];
 decideInput = function(props) {};
 
 reducer = function(state, action) {
-  if (action.type === 'text') {
+  // if action.type == 'dragstart'
+  // 	return
+  // 		start_range_slider_x: action.start_range_slider_x
+  // 		drag_start_client_x: action.drag_start_client_x
+  if (action.type === 'slide-rect') {
+    return {
+      range_rect: action.value
+    };
+  } else if (action.type === 'text') {
     return {
       text_value: action.value
+    };
+  } else if (action.type === 'rangeslide') {
+    return {
+      range_slider_x: action.range_slider_x
     };
   }
 };
 
 initial_state = {
-  text: null
+  text: null,
+  range_slider_x: 0
 };
 
 In = function(props) {
-  var context, dispatch, input, label, state;
+  var context, dispatch, input, isDragging, is_dragging, label, max, min, outer_range_ref, props_range_value, props_value, range_slider_x, setStepValue, slider_state_ref, state, step_value, value_alpha, value_label;
   [state, dispatch] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useReducer"])(reducer, initial_state);
+  [is_dragging, isDragging] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
+  [step_value, setStepValue] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(void 0);
   context = Object(react__WEBPACK_IMPORTED_MODULE_0__["useContext"])(_BoxContext__WEBPACK_IMPORTED_MODULE_2__["default"]);
+  outer_range_ref = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
+  slider_state_ref = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])({});
   if (props.label) {
     label = h('div', {
       className: 'ed-in-label'
     }, props.label);
   }
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function() {
+    if (outer_range_ref.current) {
+      return dispatch({
+        type: 'slide-rect',
+        value: outer_range_ref.current.getBoundingClientRect()
+      });
+    }
+  }, [outer_range_ref.current]);
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function() {
+    if (props.step != null) {
+      // log props.value
+      // log Math.floor(step_value/props.step)*props.step
+      if (Math.floor(step_value / props.step) * props.step !== Math.floor(props.value / props.step) * props.step) {
+        log('override step value', props.value);
+        return setStepValue(props.value);
+      }
+    }
+  }, [props.value]);
   switch (props.type) {
     case 'text':
       input = h('input', {
@@ -299,6 +335,109 @@ In = function(props) {
           backgroundColor: props.value && props.color || void 0
         }
       }));
+      break;
+    case 'range':
+      if (state.range_rect) {
+        // log state.range_rect
+        props_value = Number(props.value) || 1;
+        if (props.step != null) {
+          props_value = Math.floor(step_value / props.step) * props.step;
+        }
+        // log 'set from step value',step_value
+        max = props.max || 1;
+        min = props.min || 0;
+        props_value = Math.min(Math.max(props_value, min), max);
+        value_alpha = (props_value - min) / (max - min);
+        range_slider_x = value_alpha * (state.range_rect.width - 6);
+        // log range_slider_x
+        if (props.step != null) {
+          slider_state_ref.current.range_slider_x = ((step_value - min) / (max - min)) * (state.range_rect.width - 6);
+        } else {
+          slider_state_ref.current.range_slider_x = range_slider_x;
+        }
+      } else {
+        range_slider_x = 0;
+      }
+      // log state.range_slider_x
+
+      // log value_alpha
+      props_range_value = Number(props.value).toFixed(props.toFixed != null ? props.toFixed : 2);
+      value_label = h('div', {
+        className: classnames__WEBPACK_IMPORTED_MODULE_1___default()('ed-range-value', value_alpha > .5 && 'ed-range-value-left', props.snapValueToEdge && 'ed-range-value-snap')
+      }, props_range_value);
+      input = h('div', {
+        className: classnames__WEBPACK_IMPORTED_MODULE_1___default()('ed-range-outer'),
+        ref: outer_range_ref,
+        style: {
+          color: props.color != null ? props.color : void 0
+        },
+        onMouseDown: function(e) {
+          var onDrag, onDragEnd;
+          slider_state_ref.current.cx = e.clientX;
+          onDrag = function(e) {
+            var diff_x, new_value, range_rect, value, x, y, y_d, y_min_d;
+            range_rect = state.range_rect;
+            x = e.clientX;
+            y = e.clientY;
+            y_d = Math.abs(y - (range_rect.top + (range_rect.bottom - range_rect.top) / 2));
+            y_min_d = range_rect.height / 2;
+            if (y_d > y_min_d) {
+              y_d = 1 + (y_d - y_min_d) * .1;
+            } else {
+              y_d = 1;
+            }
+            // log slider_state_ref.current.range_slider_x
+            diff_x = (x - slider_state_ref.current.cx) / y_d;
+            slider_state_ref.current.cx = x;
+            range_slider_x = Math.min(Math.max(0, slider_state_ref.current.range_slider_x + diff_x), range_rect.width - 6);
+            value_alpha = range_slider_x / (range_rect.width - 6);
+            min = props.min || 0;
+            max = props.max || 1;
+            value = min + (max - min) * value_alpha;
+            if (props.step != null) {
+              new_value = Math.floor(value / props.step) * props.step;
+              
+              // log new_value,props.value
+              setStepValue(value);
+              if (new_value !== props.value) {
+                props.set(Math.min(Math.max(new_value, min), max));
+              }
+            } else {
+              props.set(value);
+            }
+            // isDragging(true)
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+          };
+          onDragEnd = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.body.style.cursor = 'default';
+            document.body.removeEventListener('mousemove', onDrag);
+            document.body.removeEventListener('mouseup', onDragEnd);
+            // isDragging(false)
+            return false;
+          };
+          document.body.style.cursor = 'ew-resize';
+          document.body.addEventListener('mousemove', onDrag);
+          return document.body.addEventListener('mouseup', onDragEnd);
+        }
+      }, h('div', {
+        className: 'ed-range-slider',
+        style: {
+          transform: `translate(${range_slider_x}px,${0}%)`,
+          backgroundColor: props.color != null ? props.color : void 0
+        }
+      }, !props.snapValueToEdge && value_label || void 0), props.snapValueToEdge && value_label || void 0);
+      break;
+    case 'button':
+      input = h('button', {
+        className: 'ed-button',
+        onClick: function(e) {
+          return props.onSelect(e);
+        }
+      }, props.value || 'button');
       break;
     default:
       throw new Error('invalid input type');
@@ -470,6 +609,8 @@ Menu = function(props) {
   });
   style.zIndex = props.select && 666 || 1;
   style.zIndex += self_context.depth;
+  // if self_context.depth == 1
+  // 	style.borderLeft = '10px solid black'
   if (props.items) {
     items = Object.keys(props.items).map(function(key, i) {
       var callback, child, title;
@@ -599,7 +740,7 @@ __webpack_require__.r(__webpack_exports__);
 var decidePosition;
 
 decidePosition = function({style, context, menu_ref, position, left, right, top, bottom}) {
-  var appear_on_either_right_or_left, appear_on_either_top_or_bottom, default_to_bottom, default_to_left, default_to_right, default_to_top, parent_is_vertical_list, parent_rect, r_bottom, r_left, r_right, r_top, rect;
+  var appear_on_either_right_or_left, appear_on_either_top_or_bottom, clamp_offset, default_to_bottom, default_to_left, default_to_right, default_to_top, parent_is_vertical_list, parent_rect, r_bottom, r_left, r_right, r_top, rect;
   if (context.root) {
     if (position) {
       style.transform = `translate(${position[0]},${position[1]})`;
@@ -696,13 +837,13 @@ decidePosition = function({style, context, menu_ref, position, left, right, top,
         r_top = parent_rect.bottom - rect.height;
         if (r_top < context.top) {
           style.bottom = void 0;
-          return style.top = '0%';
+          style.top = '0%';
         }
       } else {
         r_bottom = parent_rect.top + rect.height;
         if (r_bottom > context.bottom) {
           style.bottom = '0%';
-          return style.top = void 0;
+          style.top = void 0;
         }
       }
     } else {
@@ -723,13 +864,27 @@ decidePosition = function({style, context, menu_ref, position, left, right, top,
         r_top = parent_rect.top - rect.height;
         if (r_top < context.top) {
           style.top = '100%';
-          return style.bottom = void 0;
+          style.bottom = void 0;
         }
       } else {
         r_bottom = parent_rect.bottom + rect.height;
         if (r_bottom > context.bottom) {
           style.bottom = '100%';
-          return style.top = void 0;
+          style.top = void 0;
+        }
+      }
+    }
+    if (appear_on_either_right_or_left) {
+      // log 'APPEAR ON RIGHT OR LEFT',style.top
+      if (style.top) {
+        clamp_offset = (rect.height + parent_rect.top) - context.bottom;
+        if (clamp_offset > 0) {
+          return style.top = `calc( ${style.top} + ${clamp_offset}px )`;
+        }
+      } else {
+        clamp_offset = context.top - (parent_rect.bottom - rect.height);
+        if (clamp_offset > 0) {
+          return style.bottom = `calc( ${style.bottom} - ${clamp_offset}px )`;
         }
       }
     }
@@ -801,7 +956,7 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, ".noselect {\n  -webkit-touch-callout: none;\n  /* iOS Safari */\n  -webkit-user-select: none;\n  /* Safari */\n  -khtml-user-select: none;\n  /* Konqueror HTML */\n  -moz-user-select: none;\n  /* Old versions of Firefox */\n  -ms-user-select: none;\n  /* Internet Explorer/Edge */\n  user-select: none;\n  /* Non-prefixed version, currently\n                                  supported by Chrome, Edge, Opera and Firefox */\n}\n.ed-layout {\n  transform: translate(0, 0);\n  font-family: 'DM Mono', monospace;\n  font-size: 0.85em;\n  color: #bbbbbb;\n  position: fixed;\n  top: 0px;\n  left: 0px;\n  width: 100%;\n  height: 100%;\n  overflow: hidden;\n  pointer-events: none;\n}\n.ed-layout * {\n  pointer-events: all;\n  box-sizing: border-box;\n}\n.ed-full-w {\n  width: 100%;\n}\n.ed-flex-left,\n.ed-input-wrap {\n  display: flex;\n  flex-wrap: wrap;\n  flex-direction: row-reverse;\n  align-items: center;\n  justify-content: flex-end;\n}\n.ed-flex-right,\n.ed-in-wrap {\n  display: flex;\n  flex-wrap: wrap;\n  flex-direction: row;\n  align-items: center;\n  justify-content: flex-start;\n}\n.ed-flex-down {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  justify-content: flex-start;\n}\n.ed-in-wrap {\n  font-size: 0.9em;\n  width: 100%;\n  min-height: 24px;\n  flex-wrap: nowrap;\n  margin-bottom: 0.425em;\n}\n.ed-input-wrap {\n  margin-left: 0.85em;\n  width: 150%;\n}\n.ed-in-label {\n  width: 100%;\n  white-space: normal;\n  text-align: -webkit-right;\n}\n.ed-input {\n  width: inherit;\n  height: 26px;\n  -webkit-appearance: none;\n  outline: none;\n  color: #bbbbbb;\n  background-color: #4e4e4e;\n  border: none;\n  border-radius: none;\n  padding: 0.425em;\n}\n.ed-toggle-outer {\n  width: 26px;\n  height: 26px;\n  background-color: #4e4e4e;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.ed-toggle-outer .ed-toggle-inner {\n  width: 12px;\n  height: 12px;\n  border-radius: 6px;\n  background-color: #4e4e4e;\n}\n.ed-toggle-outer .ed-toggle-inner.ed-toggle-active {\n  background: #bbbbbb;\n}\n.ed-box-title {\n  padding: 0px 0.85em;\n  margin: 0.85em 0px;\n  text-align: center;\n  width: 100%;\n  text-transform: uppercase !important;\n}\n.ed-box-content {\n  padding: 0px 0.85em;\n  margin: 0.85em 0px;\n}\n.ed-box {\n  backdrop-filter: blur(10px);\n  background-color: rgba(17, 17, 17, 0.8);\n  color: #bbbbbb;\n  width: 340px;\n  min-height: 26px;\n  flex-wrap: nowrap;\n  position: absolute;\n}\n.ed-box .ed-description {\n  padding: 0px 0.85em;\n  font-size: 0.8em;\n  color: #8d8d8d;\n  margin: 0.85em 0px;\n  white-space: normal;\n}\n.ed-menu {\n  color: #bbbbbb;\n  flex-wrap: nowrap;\n  width: fit-content;\n  position: absolute;\n}\n.ed-menu.ed-flex-down > .ed-menu-item {\n  width: -webkit-fill-available;\n  height: auto;\n}\n.ed-menu.ed-flex-right > .ed-menu-item {\n  height: -webkit-fill-available;\n  width: auto;\n}\n.ed-menu .ed-menu-item-label {\n  color: #8d8d8d;\n  height: 26px;\n  text-transform: uppercase;\n  backdrop-filter: blur(10px);\n  background-color: rgba(17, 17, 17, 0.8);\n  cursor: pointer;\n  padding: 0.425em 0.85em;\n}\n.ed-menu .ed-menu-item-label.ed-selected {\n  background-color: #4e4e4e;\n  color: #bbbbbb;\n}\n.ed-menu .ed-menu-item-label:hover {\n  background: #4e4e4e;\n}\n.ed-menu > .ed-menu-item {\n  position: relative;\n  white-space: nowrap;\n  color: #bbbbbb;\n}\n.ed-menu-item-child {\n  position: absolute;\n  left: 0px;\n  top: 0px;\n}\n.ed-hidden {\n  visibility: hidden;\n}\n", ""]);
+exports.push([module.i, ".noselect {\n  -webkit-touch-callout: none;\n  /* iOS Safari */\n  -webkit-user-select: none;\n  /* Safari */\n  -khtml-user-select: none;\n  /* Konqueror HTML */\n  -moz-user-select: none;\n  /* Old versions of Firefox */\n  -ms-user-select: none;\n  /* Internet Explorer/Edge */\n  user-select: none;\n  /* Non-prefixed version, currently\n                                  supported by Chrome, Edge, Opera and Firefox */\n}\n.ed-layout {\n  transform: translate(0, 0);\n  font-family: 'DM Mono', monospace;\n  font-size: 0.85em;\n  color: #bbbbbb;\n  position: fixed;\n  top: 0px;\n  left: 0px;\n  width: 100%;\n  height: 100%;\n  overflow: hidden;\n  pointer-events: none;\n}\n.ed-layout * {\n  pointer-events: all;\n  box-sizing: border-box;\n}\n.ed-full-w {\n  width: 100%;\n}\n.ed-flex-left,\n.ed-input-wrap {\n  display: flex;\n  flex-wrap: wrap;\n  flex-direction: row-reverse;\n  align-items: center;\n  justify-content: flex-end;\n}\n.ed-flex-right,\n.ed-in-wrap {\n  display: flex;\n  flex-wrap: wrap;\n  flex-direction: row;\n  align-items: center;\n  justify-content: flex-start;\n}\n.ed-flex-down {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  justify-content: flex-start;\n}\n.ed-in-wrap {\n  font-size: 0.9em;\n  width: 100%;\n  min-height: 24px;\n  flex-wrap: nowrap;\n  margin-bottom: 0.425em;\n}\n.ed-input-wrap {\n  margin-left: 0.85em;\n  width: 150%;\n}\n.ed-in-label {\n  width: 100%;\n  white-space: normal;\n  text-align: -webkit-right;\n}\n.ed-input {\n  width: inherit;\n  height: 26px;\n  -webkit-appearance: none;\n  outline: none;\n  color: #bbbbbb;\n  background-color: rgba(27, 27, 27, 0.95);\n  border: none;\n  border-radius: none;\n  padding: 0.425em;\n}\n.ed-toggle-outer {\n  width: 26px;\n  cursor: pointer;\n  height: 26px;\n  background-color: rgba(27, 27, 27, 0.95);\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.ed-toggle-outer .ed-toggle-inner {\n  width: 12px;\n  height: 12px;\n  border-radius: 6px;\n  background-color: rgba(27, 27, 27, 0.9);\n}\n.ed-toggle-outer .ed-toggle-inner.ed-toggle-active {\n  background: #bbbbbb;\n}\n.ed-box-title {\n  padding: 0px 0.85em;\n  margin: 0.85em 0px;\n  text-align: center;\n  width: 100%;\n  text-transform: uppercase !important;\n}\n.ed-box-content {\n  padding: 0px 0.85em;\n  margin: 0.85em 0px;\n  display: flex;\n  align-self: start;\n  justify-content: start;\n  flex-direction: row;\n  flex-wrap: wrap;\n}\n.ed-box {\n  backdrop-filter: blur(10px);\n  background-color: rgba(27, 27, 27, 0.9);\n  color: #bbbbbb;\n  width: 340px;\n  min-height: 26px;\n  flex-wrap: nowrap;\n  position: absolute;\n}\n.ed-box .ed-description {\n  padding: 0px 0.85em;\n  font-size: 0.8em;\n  color: #8d8d8d;\n  margin: 0.85em 0px;\n  white-space: normal;\n}\n.ed-menu {\n  color: #bbbbbb;\n  flex-wrap: nowrap;\n  width: fit-content;\n  position: absolute;\n}\n.ed-menu.ed-flex-down > .ed-menu-item {\n  width: -webkit-fill-available;\n  height: auto;\n}\n.ed-menu.ed-flex-right > .ed-menu-item {\n  height: -webkit-fill-available;\n  width: auto;\n}\n.ed-menu .ed-menu-item-label {\n  color: #8d8d8d;\n  height: 26px;\n  text-transform: uppercase;\n  cursor: pointer;\n  padding: 0.425em 0.85em;\n}\n.ed-menu .ed-menu-item-label.ed-selected {\n  background-color: rgba(27, 27, 27, 0.95);\n  color: #bbbbbb;\n}\n.ed-menu .ed-menu-item-label:hover {\n  background: rgba(27, 27, 27, 0.95);\n}\n.ed-menu > .ed-menu-item {\n  position: relative;\n  white-space: nowrap;\n  color: #bbbbbb;\n  backdrop-filter: blur(10px);\n  background-color: rgba(27, 27, 27, 0.9);\n}\n.ed-menu-item-child {\n  position: absolute;\n  left: 0px;\n  top: 0px;\n}\n.ed-hidden {\n  visibility: hidden;\n}\n.ed-range-outer {\n  height: 24px;\n  width: 100%;\n  background: rgba(27, 27, 27, 0.95);\n  position: relative;\n  cursor: ew-resize;\n}\n.ed-range-outer .ed-range-slider {\n  width: 6px;\n  height: 24px;\n  background: #bbbbbb;\n}\n.ed-range-outer .ed-range-slider.ed-active {\n  background: #bbbbbb;\n}\n.ed-range-outer .ed-range-value {\n  position: absolute;\n  left: 14px;\n  top: 50%;\n  transform: translate(0%, -50%);\n}\n.ed-range-outer .ed-range-value.ed-range-value-snap {\n  right: 8px;\n  left: initial;\n}\n.ed-range-outer .ed-range-value.ed-range-value-left {\n  right: 14px;\n  left: initial;\n}\n.ed-range-outer .ed-range-value.ed-range-value-left.ed-range-value-snap {\n  left: 8px;\n  right: initial;\n}\n.ed-button {\n  outline: none;\n  -webkit-appearance: none;\n  border: none;\n  cursor: pointer;\n  width: 100%;\n  height: 24px;\n  background: rgba(27, 27, 27, 0.95);\n  color: #8d8d8d;\n}\n.ed-button:hover {\n  color: #bbbbbb;\n}\n", ""]);
 // Exports
 module.exports = exports;
 

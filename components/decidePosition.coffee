@@ -79,7 +79,6 @@ decidePosition = ({style,context,menu_ref,position,left,right,top,bottom})->
 			style.bottom = undefined
 			
 
-
 	if menu_ref.current
 		rect = menu_ref.current.getBoundingClientRect()
 		parent_rect = menu_ref.current.parentNode.getBoundingClientRect()
@@ -129,7 +128,19 @@ decidePosition = ({style,context,menu_ref,position,left,right,top,bottom})->
 					style.bottom = '100%'
 					style.top = undefined
 
+		if appear_on_either_right_or_left
+			# log 'APPEAR ON RIGHT OR LEFT',style.top
+			if style.top
+				clamp_offset = (rect.height + parent_rect.top) - context.bottom
+				if clamp_offset > 0
+					style.top = "calc( #{style.top} + #{clamp_offset}px )"
+			else
+				clamp_offset = context.top - ( parent_rect.bottom - rect.height)
+				if clamp_offset > 0
+					style.bottom = "calc( #{style.bottom} - #{clamp_offset}px )"
 
+					
+		
 
 
 				
