@@ -7,6 +7,7 @@ import LayoutContext from './LayoutContext'
 
 Menu = (props)->
 	[position,setPosition] = useState(props.position)
+	[dim,setDim] = useState(null)
 	[self_context,setSelfContext] = useState()
 	[visible,setVisible] = useState(false)
 	menu_ref = useRef(null)
@@ -23,6 +24,14 @@ Menu = (props)->
 		if !visible && menu_ref.current
 			# log 'set visible',menu_ref.current
 			setVisible(true)
+		
+		rect = menu_ref.current?.getBoundingClientRect()
+		if rect
+			new_dim = rect.height+'x'+rect.width
+			if dim != new_dim
+				log 'set dim'
+				setDim(new_dim)
+	
 
 		if props.position != position
 			# log 'set position'

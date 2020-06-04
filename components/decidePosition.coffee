@@ -101,8 +101,9 @@ decidePosition = ({style,context,menu_ref,position,left,right,top,bottom})->
 					style.bottom = undefined
 					style.top = '0%'
 			else
+				# log 'DEFAULT TO BOTTOM'
 				r_bottom = parent_rect.top + rect.height
-				if r_bottom > context.bottom
+				if r_bottom > (context.bottom + rect.height/2)
 					style.bottom = '0%'
 					style.top = undefined
 		else

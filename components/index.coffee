@@ -1,9 +1,12 @@
-import Box from './Box'
-import In from './In'
+import './Style.less'
+
 import Layout from './Layout'
 import Menu from './Menu'
+import Box from './Box'
+import In from './In'
+import Section from './Section'
+import Divider from './Divider'
 import Row from './Row'
-import SectionLabel from './SectionLabel'
-import Style from './Style.less'
 
-export {Box,In,Layout,Menu,Row,SectionLabel,Style}
+
+export {Box,In,Layout,Menu,Row,Divider,Section}

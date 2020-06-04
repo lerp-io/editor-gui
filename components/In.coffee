@@ -5,7 +5,7 @@ import cn from 'classnames'
 # import LayoutContext from './LayoutContext'
 import BoxContext from './BoxContext'
 
-import ColorPicker from 'simple-color-picker'
+import parseColor from 'parse-color'
 # range
 # checkbox
 # select
@@ -21,7 +21,11 @@ reducer = (state,action)->
 	# 	return
 	# 		start_range_slider_x: action.start_range_slider_x
 	# 		drag_start_client_x: action.drag_start_client_x
-	if action.type == 'slide-rect'
+	if action.type == 'set-color-input'
+		return
+			color_input_value: action.value
+	
+	else if action.type == 'slide-rect'
 		return
 			range_rect: action.value
 	
@@ -36,6 +40,7 @@ reducer = (state,action)->
 initial_state =
 	text:null
 	range_slider_x: 0
+	color_input_value: null
 
 In = (props)->
 	[state,dispatch] = useReducer(reducer,initial_state) 
@@ -45,27 +50,42 @@ In = (props)->
 	context = useContext(BoxContext)
 	outer_range_ref = useRef(null)
 	slider_state_ref = useRef({})
+	input_ref = useRef(null)
+
+	# log state
 
 	if props.label
 		label = h 'div',
-			className: 'ed-in-label'
+			className: 'ed-in-label ed-flex-right'
 			props.label
-	
-	useEffect ()->
+			h 'div',
+				className:'ed-in-label-colon'
+				':'
+
+	# log state
+
+	# useEffect ()->
 		
 
-		if outer_range_ref.current
-			dispatch
-				type:'slide-rect'
-				value: outer_range_ref.current.getBoundingClientRect()
-	,[outer_range_ref.current]
+	# 	if outer_range_ref.current
+	# 		dispatch
+	# 			type:'slide-rect'
+	# 			value: outer_range_ref.current.getBoundingClientRect()
+	# ,[outer_range_ref.current]
 
+	# log state.color_input_value
 	useEffect ()->
+		if props.value != state.color_input_value && props.type == 'color'
+			# log 'set color input',state.color_input_value
+			dispatch
+				type: 'set-color-input'
+				value: props.value
+
 		if props.step?
 			# log props.value
 			# log Math.floor(step_value/props.step)*props.step
 			if Math.floor(step_value/props.step)*props.step !=  Math.floor(props.value/props.step)*props.step
-				log 'override step value',props.value
+				# log 'override step value',props.value
 				setStepValue(props.value)
 		
 	,[props.value]
@@ -115,7 +135,8 @@ In = (props)->
 						backgroundColor: props.value && props.color || undefined
 		
 		when 'range'
-			if state.range_rect
+			if outer_range_ref.current
+				range_rect = outer_range_ref.current.getBoundingClientRect()
 				# log state.range_rect
 				props_value = Number(props.value) || 1
 				if props.step?
@@ -125,10 +146,10 @@ In = (props)->
 				min = props.min || 0
 				props_value = Math.min(Math.max(props_value,min),max)
 				value_alpha = (props_value-min) / (max - min)
-				range_slider_x = value_alpha * (state.range_rect.width-6)
+				range_slider_x = value_alpha * (range_rect.width-6)
 				# log range_slider_x
 				if props.step?
-					slider_state_ref.current.range_slider_x = ((step_value-min) / (max - min)) * (state.range_rect.width-6)
+					slider_state_ref.current.range_slider_x = ((step_value-min) / (max - min)) * (range_rect.width-6)
 				else
 					slider_state_ref.current.range_slider_x = range_slider_x
 			else
@@ -155,7 +176,8 @@ In = (props)->
 					
 
 					onDrag = (e)->
-						range_rect = state.range_rect
+						range_rect = outer_range_ref.current.getBoundingClientRect()
+						# range_rect = state.range_rect
 						x = e.clientX
 						y = e.clientY
 
@@ -233,24 +255,53 @@ In = (props)->
 
 		when 'color'
 			input = h 'div',
-				className: 'ed-flex-right'
+				className: 'ed-flex-right ed-full-w'
 				h 'div',
 					className: 'ed-color-box'
-					onClick: (e)->
+					style:
+						background: props.value
+					h 'input',
+						ref: input_ref
+						className: 'ed-color-box-input'
+						onChange: (e)->
+							if !context.commit && props.set
+								props.set(e.target.value)
+						type: 'color'
 
-				# h 'div',
-				# 	className: 'ed-color-val'
 				h 'input',
-					type: 'color'
+					type: 'text'
+					className: 'ed-input'
+					value: state.color_input_value || ''
+					# onKeyDown: (e)->
+					# 	# log state
+					# 	if e.keyCode == 13
+							
+								
+					onChange: (e)->
+				
+						
+						
+						
+						# log parseColor(state.color_input_value).hex
+						parsed_color = parseColor(e.target.value)
+						log e.target.value
+						if parsed_color.hex
+							props.set?(e.target.value)
+						else
+							dispatch
+								type: 'set-color-input'
+								value: e.target.value
+
+						
 
 		else
 			throw new Error 'invalid input type'
 	
 	h 'div',
-		className: 'ed-in-wrap'
+		className: cn 'ed-in-wrap',props.half && 'ed-in-half'
 		label
 		h 'div',
-			className: 'ed-input-wrap'
+			className: cn 'ed-input-wrap',props.half && 'ed-in-half'
 			input
 
 

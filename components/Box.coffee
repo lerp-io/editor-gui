@@ -7,6 +7,7 @@ import cn from 'classnames'
 h = createElement
 Box = (props,state)->
 	[position,setPosition] = useState(props.position)
+	[dim,setDim] = useState(null)
 	[self_context,setSelfContext] = useState()
 	[visible,setVisible] = useState(false)
 	menu_ref = useRef(null)
@@ -27,6 +28,12 @@ Box = (props,state)->
 		if props.position != position
 			# log 'set position'
 			setPosition(position)
+		
+		rect = menu_ref.current?.getBoundingClientRect()
+		if rect
+			new_dim = rect.height+'x'+rect.width
+			if dim != new_dim
+				setDim(new_dim)
 	
 	
 	useEffect ()->
@@ -38,6 +45,7 @@ Box = (props,state)->
 	if !context
 		return null
 	
+	# log 'DECIDE BOX POSITION',menu_ref.current?.getBoundingClientRect().height
 	decidePosition
 		style:style
 		context: context

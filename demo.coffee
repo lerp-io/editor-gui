@@ -3,7 +3,7 @@ global.log = console.log.bind(console)
 import 'normalize.css'
 import {createElement,useState,useEffect,useRef} from 'react'
 import {render} from 'react-dom'
-import {Layout,In,Box,Row,Menu,SectionLabel,Style} from './components'
+import {Layout,In,Box,Row,Menu,Section,SectionLabel,Style} from './components'
 h = createElement
 
 import './demo.less'
@@ -32,8 +32,8 @@ demo = ()->
 	[val_text_b,setValTextB] = useState('this some sort of oneline text, like a name or something')
 	
 	[val_color_a,setValColorA] = useState("#fff")
-	[val_color_b,setValColorB] = useState(undefined)
-	[val_color_c,setValColorB] = useState("#80cf3b")
+	[val_color_b,setValColorB] = useState("black")
+	[val_color_c,setValColorC] = useState("#80cf3b")
 	
 	[val_toggle_a,setValToggleA] = useState(true)
 	[val_toggle_b,setValToggleB] = useState(false)
@@ -364,12 +364,34 @@ demo = ()->
 									set: setValTextA
 								h In,
 									type: 'toggle'
+									label: 'full toggle'
+									value: val_toggle_b
+									set: setValToggleB
+									color: 'red'
+								h In,
+									type: 'toggle'
+									half: yes
 									label: 'toggle A'
 									value: val_toggle_a
 									set: setValToggleA
 									# color: 'red'
 								h In,
 									type: 'toggle'
+									half: yes
+									label: 'toggle B'
+									value: val_toggle_b
+									set: setValToggleB
+									color: 'red'
+								h In,
+									type: 'toggle'
+									half: yes
+									label: 'toggle A'
+									value: val_toggle_a
+									set: setValToggleA
+									# color: 'red'
+								h In,
+									type: 'toggle'
+									half: yes
 									label: 'toggle B'
 									value: val_toggle_b
 									set: setValToggleB
@@ -430,9 +452,56 @@ demo = ()->
 										alert('hellow wurld')
 								h In,
 									type: 'color'
-									label: 'colors!'
+									label: 'color 1'
 									value: val_color_a
-									onSelect: setValColorA
+									set: setValColorA
+								h In,
+									type: 'color'
+									label: 'color 2'
+									value: val_color_b
+									set: setValColorB
+								h In,
+									type: 'color'
+									label: 'color 2 copy'
+									value: val_color_b
+									set: setValColorB
+								h Section,
+									label: 'some section'
+									visible: section_visible_a 
+									set: setSectionVisibleA
+									h In,
+										type: 'button'
+										value: 'hello 2'
+										onSelect: ->
+											alert('hellow wurld')
+									h In,
+										type: 'color'
+										label: 'color 1'
+										value: val_color_a
+										set: setValColorA
+								h Section,
+									label: 'some other section'
+									visible: section_visible_b
+									set: setSectionVisibleB
+									h In,
+										type: 'button'
+										value: 'hello 2'
+										onSelect: ->
+											alert('hellow wurld')
+									h In,
+										type: 'color'
+										label: 'color 1'
+										value: val_color_a
+										set: setValColorA
+									h In,
+										type: 'range'
+										label: 'range A'
+										value: val_range_a
+										set: setValRangeA
+										toFixed: 3
+										min: 1
+										max: 10
+									
 								
 
 							"123": h Box,
