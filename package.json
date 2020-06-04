@@ -44,5 +44,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "simple-color-picker": "^0.1.2"
+  }
 }

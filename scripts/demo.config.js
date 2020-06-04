@@ -16,15 +16,19 @@ var cfg = {
 	entry: {
 		demo: path.join(__dirname,'..','/demo.coffee')
 	},
+	
 	resolve: {
 		extensions: [ '.js', '.coffee' ]
-	},	
+	},
+
 	output: {
 		path: path.join(__dirname,'..','/dist'),
 		publicPath: '/dist',
 		filename: "[name].js"
 	},
+	
 	devServer: {
+		host: 'localhost',
 		port: 3234,
 		disableHostCheck: true
 		// host: 'localhost'

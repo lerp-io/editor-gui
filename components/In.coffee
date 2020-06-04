@@ -4,6 +4,8 @@ import cn from 'classnames'
 # import decidePosition from './decidePosition.coffee'
 # import LayoutContext from './LayoutContext'
 import BoxContext from './BoxContext'
+
+import ColorPicker from 'simple-color-picker'
 # range
 # checkbox
 # select
@@ -228,6 +230,19 @@ In = (props)->
 				onClick: (e)->
 					props.onSelect(e)
 				props.value || 'button'
+
+		when 'color'
+			input = h 'div',
+				className: 'ed-flex-right'
+				h 'div',
+					className: 'ed-color-box'
+					onClick: (e)->
+
+				# h 'div',
+				# 	className: 'ed-color-val'
+				h 'input',
+					type: 'color'
+
 		else
 			throw new Error 'invalid input type'
 	

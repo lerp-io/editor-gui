@@ -428,6 +428,11 @@ demo = ()->
 									value: 'hello 2'
 									onSelect: ->
 										alert('hellow wurld')
+								h In,
+									type: 'color'
+									label: 'colors!'
+									value: val_color_a
+									onSelect: setValColorA
 								
 
 							"123": h Box,
