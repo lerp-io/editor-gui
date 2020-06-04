@@ -205,19 +205,14 @@ In = (props)->
 						if props.step?
 							new_value = Math.floor(value/props.step)*props.step
 							
-							# log new_value,props.value
-
 							setStepValue(value)
 							if new_value != props.value
 								props.set(Math.min(Math.max(new_value,min),max))
-							
 						else
 							props.set(value)
-						# isDragging(true)
 						e.preventDefault()
 						e.stopPropagation()
 						return false
-
 
 					onDragEnd = (e)->
 						e.preventDefault()
@@ -225,17 +220,11 @@ In = (props)->
 						document.body.style.cursor = 'default'
 						document.body.removeEventListener('mousemove',onDrag)
 						document.body.removeEventListener('mouseup',onDragEnd)
-						# isDragging(false)
 						return false
-
 
 					document.body.style.cursor = 'ew-resize'
 					document.body.addEventListener 'mousemove',onDrag
 					document.body.addEventListener 'mouseup',onDragEnd
-							
-
-			
-
 				
 				h 'div',
 					className: 'ed-range-slider'
@@ -272,19 +261,8 @@ In = (props)->
 					type: 'text'
 					className: 'ed-input'
 					value: state.color_input_value || ''
-					# onKeyDown: (e)->
-					# 	# log state
-					# 	if e.keyCode == 13
-							
-								
 					onChange: (e)->
-				
-						
-						
-						
-						# log parseColor(state.color_input_value).hex
 						parsed_color = parseColor(e.target.value)
-						log e.target.value
 						if parsed_color.hex
 							props.set?(e.target.value)
 						else
