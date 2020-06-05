@@ -8,6 +8,17 @@ h = createElement
 
 import './demo.less'
 
+
+chart_data = [
+	[0,10]
+	[1,11]
+	[2,12]
+	[3,10]
+	[4,5]
+	[2,6]
+	[3,12]
+]
+
 demo = ()->
 	[is_mounted,setMounted] = useState(false)
 	[size,setSize] = useState(null)
@@ -39,8 +50,8 @@ demo = ()->
 	[val_toggle_b,setValToggleB] = useState(false)
 	[val_toggle_c,setValToggleC] = useState(true)
 
-	[section_visible_a,setSectionVisibleA] = useState(true)
-	[section_visible_b,setSectionVisibleB] = useState(false)
+	[section_visible_a,setSectionVisibleA] = useState(false)
+	[section_visible_b,setSectionVisibleB] = useState(true)
 
 	[val_select_a,setValSelectA] = useState(null)
 
@@ -347,6 +358,14 @@ demo = ()->
 								# 	value: val_text_a
 								# 	set: setValTextA
 								h In,
+									type: 'plain'
+									label: 'plain value'
+									value: 'some value string'
+								h In,
+									type: 'plain'
+									label: 'plain value 2'
+									value: '10293.1020310.123'
+								h In,
 									type: 'text'
 									label: 'val'
 									# min: -10
@@ -467,7 +486,7 @@ demo = ()->
 									set: setValColorB
 								h Section,
 									label: 'some section'
-									visible: section_visible_a 
+									visible: section_visible_a
 									set: setSectionVisibleA
 									h In,
 										type: 'button'
@@ -501,8 +520,44 @@ demo = ()->
 										toFixed: 3
 										min: 1
 										max: 10
-									
+									h In,
+										type: 'line-chart'
+										label: 'line chart label'
+										set: (key,value)->
+											setValSelectA(key)
+										value: val_select_a
+										xBounds: [-200,200]
+										yRange: 10
+										xRange: 50
+										step: .5
+										getY: (x)->
+											# log x
+											Math.sin(x)
+								h In,
+									type: 'select'
+									set: (key,value)->
+										setValSelectA(key)
+									value: val_select_a
+									label: 'select'
+									options: 
+										'option-a': 'Option 1'
+										'option-b': 'Option 2'
+										'option-c': 'Option 3'
+								h In,
+									type: 'select'
+									set: (key,value)->
+										setValSelectA(key)
+									value: val_select_a
+									label: 'select copy'
+									options: 
+										'option-a': 'Option 1'
+										'option-b': 'Option 2'
+										'option-c': 'Option 3'
 								
+										
+
+							
+
 
 							"123": h Box,
 								title: 'test'

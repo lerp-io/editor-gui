@@ -20,7 +20,7 @@ Section = (props,state)->
 				className: 'ed-section-label ed-flex-right ed-full-w'
 				h 'div',
 					className: 'ed-in-label-colon'
-					'### '
+					'# '
 				props.label
 				h 'div',
 					className: 'ed-section-label-toggle'

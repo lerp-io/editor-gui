@@ -1,20 +1,147 @@
 import {createElement,useState,useEffect,useContext,useRef,useReducer} from 'react'
-h = createElement
 import cn from 'classnames'
-# import decidePosition from './decidePosition.coffee'
-# import LayoutContext from './LayoutContext'
 import BoxContext from './BoxContext'
-
 import parseColor from 'parse-color'
-# range
-# checkbox
-# select
-# color
-# number
-# text
-# toggle
+h = createElement
 
-decideInput = (props)->
+
+
+
+
+renderChart = (state,props)->
+	
+	{ctx,rect,pan_x} = state
+	if !ctx then return
+	# log rect.width,rect.height
+	# log pan_x
+	ctx.clearRect(0,0,rect.width,rect.height)
+	ctx.fillStyle = 'red'
+	# ctx.rect(0, 0, 10, 10)
+	# ctx.rect(0, 20, 10, 10)
+	# ctx.fill()
+	y_pan = props.yRange/2
+	y_range = props.yRange
+	pan_x = pan_x * -1
+	step = props.step
+	x_max = props.xBounds[1] - Math.floor(pan_x/step)*step
+	x_min = Math.max(x_max-props.xRange,props.xBounds[0])
+	x_length = Math.max(x_max - x_min,0)
+	# log x_length
+	pan_diff = pan_x - Math.floor(pan_x/step)*step
+	# log pan_diff
+
+	ctx.beginPath()
+	for i in [0...(x_length/step)]
+		x_val = x_min + (i * step)
+		y_val = props.getY(x_val)
+		if !y_val then continue
+		
+
+		r_left = rect.width - rect.width/props.xRange * (i * step + pan_diff) 
+		r_top = rect.height - (rect.height/y_range * (y_val + y_pan))
+		
+		r_width = rect.width/props.xRange
+		r_height = (rect.height/y_range * y_val)
+
+		ctx.rect(r_left, r_top, r_width,r_height)
+		i += 1
+	ctx.closePath()
+	ctx.fill()
+	
+
+
+	
+
+
+
+LineChart = (props)->
+	wrap_ref = useRef(null)
+	canvas_ref = useRef(null)
+	canvas_state = useRef({
+		pan_x: 0
+	})
+	[rect,setRect] = useState(null)
+	[tick_step,setTickStep] = useState(null)
+	
+	useEffect ()->
+		if wrap_ref.current
+			rect = wrap_ref.current.getBoundingClientRect()
+			canvas_state.current.rect = rect
+			setRect(rect)
+			
+	,[wrap_ref.current]
+
+	useEffect ()->
+		if canvas_ref.current
+			log 'set canvas context'
+			canvas_state.current.ctx = canvas_ref.current.getContext('2d')
+			setTickStep(0)
+		return
+	,[canvas_ref.current]
+
+	useEffect ()->
+		try
+			renderChart(canvas_state.current,props)
+		catch error
+			console.error(error)
+			return
+		# setTimeout ()->
+		# 	if !canvas_ref.current
+		# 		return
+		# 	setTickStep(tick_step+1)
+		# ,100
+		return
+	,[tick_step]
+
+
+	if rect
+		canvas = h 'canvas',
+			ref: canvas_ref
+			width: rect.width
+			height: rect.height
+			onMouseDown: (e)->
+				canvas_state.current.cx = e.clientX 
+
+				onDrag = (e)->
+					x = e.clientX
+					y = e.clientY
+					rect = canvas_ref.current.getBoundingClientRect()
+					diff_x = ( x - canvas_state.current.cx )
+					canvas_state.current.cx = x
+					# log (canvas_state.current.pan_x + diff_x)
+					pan_x = Math.min(Math.max(0,(canvas_state.current.pan_x + diff_x)),Math.abs(props.xBounds[1] - props.xBounds[0]))
+					canvas_state.current.pan_x = pan_x
+					# log pan_x
+					
+					# log pan_x
+
+					renderChart(canvas_state.current,props)
+					e.preventDefault()
+					e.stopPropagation()
+					return false
+
+				onDragEnd = (e)->
+					e.preventDefault()
+					e.stopPropagation()
+					document.body.style.cursor = 'default'
+					document.body.removeEventListener('mousemove',onDrag)
+					document.body.removeEventListener('mouseup',onDragEnd)
+					return false
+				
+				document.body.style.cursor = 'ew-resize'
+				document.body.addEventListener 'mousemove',onDrag
+				document.body.addEventListener 'mouseup',onDragEnd
+
+	
+	h 'div',
+		className: 'ed-full-w'
+		ref: wrap_ref
+		canvas
+
+
+
+
+
 	
 reducer = (state,action)->
 	# if action.type == 'dragstart'
@@ -47,12 +174,12 @@ In = (props)->
 	[is_dragging,isDragging] = useState(false)
 	[step_value,setStepValue] = useState(undefined)
 
+	
 	context = useContext(BoxContext)
 	outer_range_ref = useRef(null)
 	slider_state_ref = useRef({})
 	input_ref = useRef(null)
 
-	# log state
 
 	if props.label
 		label = h 'div',
@@ -62,30 +189,14 @@ In = (props)->
 				className:'ed-in-label-colon'
 				':'
 
-	# log state
-
-	# useEffect ()->
-		
-
-	# 	if outer_range_ref.current
-	# 		dispatch
-	# 			type:'slide-rect'
-	# 			value: outer_range_ref.current.getBoundingClientRect()
-	# ,[outer_range_ref.current]
-
-	# log state.color_input_value
 	useEffect ()->
 		if props.value != state.color_input_value && props.type == 'color'
-			# log 'set color input',state.color_input_value
 			dispatch
 				type: 'set-color-input'
 				value: props.value
 
 		if props.step?
-			# log props.value
-			# log Math.floor(step_value/props.step)*props.step
 			if Math.floor(step_value/props.step)*props.step !=  Math.floor(props.value/props.step)*props.step
-				# log 'override step value',props.value
 				setStepValue(props.value)
 		
 	,[props.value]
@@ -93,6 +204,11 @@ In = (props)->
 
 
 	switch props.type
+		when 'plain'
+			input = h 'div',
+				className: 'ed-label full-w'
+				props.value
+				
 		when 'text'
 			input = h 'input',
 				type: 'text'
@@ -137,26 +253,24 @@ In = (props)->
 		when 'range'
 			if outer_range_ref.current
 				range_rect = outer_range_ref.current.getBoundingClientRect()
-				# log state.range_rect
 				props_value = Number(props.value) || 1
 				if props.step?
 					props_value = Math.floor(step_value/props.step)*props.step
-					# log 'set from step value',step_value
+				
 				max = props.max || 1
 				min = props.min || 0
+
 				props_value = Math.min(Math.max(props_value,min),max)
 				value_alpha = (props_value-min) / (max - min)
 				range_slider_x = value_alpha * (range_rect.width-6)
-				# log range_slider_x
+				
 				if props.step?
 					slider_state_ref.current.range_slider_x = ((step_value-min) / (max - min)) * (range_rect.width-6)
 				else
 					slider_state_ref.current.range_slider_x = range_slider_x
 			else
 				range_slider_x = 0
-				# log state.range_slider_x
-
-			# log value_alpha
+				
 			
 			props_range_value = Number(props.value).toFixed(if props.toFixed? then props.toFixed else 2)
 
@@ -173,11 +287,9 @@ In = (props)->
 					
 					slider_state_ref.current.cx = e.clientX 
 					
-					
-
 					onDrag = (e)->
 						range_rect = outer_range_ref.current.getBoundingClientRect()
-						# range_rect = state.range_rect
+						
 						x = e.clientX
 						y = e.clientY
 
@@ -189,7 +301,6 @@ In = (props)->
 						else
 							y_d = 1
 
-						# log slider_state_ref.current.range_slider_x
 						
 						diff_x = ( x - slider_state_ref.current.cx ) / y_d
 						slider_state_ref.current.cx = x
@@ -269,14 +380,54 @@ In = (props)->
 							dispatch
 								type: 'set-color-input'
 								value: e.target.value
-
+		when 'select'
+			# value_exists = false
+			options = Object.keys(props.options).map (key)->
+				
+				h 'option',
+					key: key
+					value:key
+					props.options[key]
+			
+			if !props.options[props.value]
+				options.unshift h 'option',
+					key: '-'
+					value: null
+					props.value || '-'
+		
+			input = h 'div',
+				className: 'ed-flex-right ed-full-w'
+				h 'select',
+					className: 'ed-input-select'
+					value: props.value || '[select]'
+					onChange: (e)=>
+						props.set?(e.target.value)
+					options
+					
+				h 'div',
+					className: 'ed-input-select-arrow'
+					'▼'
 						
-
+		when 'line-chart'
+			input = h 'div',
+				className: 'ed-line-chart'
+				h LineChart,props
 		else
 			throw new Error 'invalid input type'
 	
+
+	if props.type == 'line-chart'
+		return h 'div',
+			className: 'ed-in-wrap ed-line-chart-wrap'
+			h 'div',
+				className: 'ed-line-chart-label'
+				label
+			input
+			
+
+
 	h 'div',
-		className: cn 'ed-in-wrap',props.half && 'ed-in-half'
+		className: cn 'ed-in-wrap',props.half && 'ed-in-half',props.type == 'plain' && 'ed-tight'
 		label
 		h 'div',
 			className: cn 'ed-input-wrap',props.half && 'ed-in-half'

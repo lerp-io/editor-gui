@@ -244,26 +244,142 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _BoxContext__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./BoxContext */ "./components/BoxContext.coffee");
 /* harmony import */ var parse_color__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! parse-color */ "./node_modules/parse-color/index.js");
 /* harmony import */ var parse_color__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(parse_color__WEBPACK_IMPORTED_MODULE_3__);
-var In, decideInput, h, initial_state, reducer;
+var In, LineChart, h, initial_state, reducer, renderChart;
+
+
+
+
+
+
 
 
 
 h = react__WEBPACK_IMPORTED_MODULE_0__["createElement"];
 
+renderChart = function(state, props) {
+  var ctx, i, j, pan_diff, pan_x, r_height, r_left, r_top, r_width, rect, ref, step, x_length, x_max, x_min, x_val, y_pan, y_range, y_val;
+  ({ctx, rect, pan_x} = state);
+  if (!ctx) {
+    return;
+  }
+  // log rect.width,rect.height
+  // log pan_x
+  ctx.clearRect(0, 0, rect.width, rect.height);
+  ctx.fillStyle = 'red';
+  // ctx.rect(0, 0, 10, 10)
+  // ctx.rect(0, 20, 10, 10)
+  // ctx.fill()
+  y_pan = props.yRange / 2;
+  y_range = props.yRange;
+  pan_x = pan_x * -1;
+  step = props.step;
+  x_max = props.xBounds[1] - Math.floor(pan_x / step) * step;
+  x_min = Math.max(x_max - props.xRange, props.xBounds[0]);
+  x_length = Math.max(x_max - x_min, 0);
+  // log x_length
+  pan_diff = pan_x - Math.floor(pan_x / step) * step;
+  // log pan_diff
+  ctx.beginPath();
+  for (i = j = 0, ref = x_length / step; (0 <= ref ? j < ref : j > ref); i = 0 <= ref ? ++j : --j) {
+    x_val = x_min + (i * step);
+    y_val = props.getY(x_val);
+    if (!y_val) {
+      continue;
+    }
+    r_left = rect.width - rect.width / props.xRange * (i * step + pan_diff);
+    r_top = rect.height - (rect.height / y_range * (y_val + y_pan));
+    r_width = rect.width / props.xRange;
+    r_height = rect.height / y_range * y_val;
+    ctx.rect(r_left, r_top, r_width, r_height);
+    i += 1;
+  }
+  ctx.closePath();
+  return ctx.fill();
+};
 
+LineChart = function(props) {
+  var canvas, canvas_ref, canvas_state, rect, setRect, setTickStep, tick_step, wrap_ref;
+  wrap_ref = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
+  canvas_ref = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
+  canvas_state = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])({
+    pan_x: 0
+  });
+  [rect, setRect] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null);
+  [tick_step, setTickStep] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null);
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function() {
+    if (wrap_ref.current) {
+      rect = wrap_ref.current.getBoundingClientRect();
+      canvas_state.current.rect = rect;
+      return setRect(rect);
+    }
+  }, [wrap_ref.current]);
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function() {
+    if (canvas_ref.current) {
+      log('set canvas context');
+      canvas_state.current.ctx = canvas_ref.current.getContext('2d');
+      setTickStep(0);
+    }
+  }, [canvas_ref.current]);
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function() {
+    var error;
+    try {
+      renderChart(canvas_state.current, props);
+    } catch (error1) {
+      error = error1;
+      console.error(error);
+      return;
+    }
+  // setTimeout ()->
+  // 	if !canvas_ref.current
+  // 		return
+  // 	setTickStep(tick_step+1)
+  // ,100
+  }, [tick_step]);
+  if (rect) {
+    canvas = h('canvas', {
+      ref: canvas_ref,
+      width: rect.width,
+      height: rect.height,
+      onMouseDown: function(e) {
+        var onDrag, onDragEnd;
+        canvas_state.current.cx = e.clientX;
+        onDrag = function(e) {
+          var diff_x, pan_x, x, y;
+          x = e.clientX;
+          y = e.clientY;
+          rect = canvas_ref.current.getBoundingClientRect();
+          diff_x = x - canvas_state.current.cx;
+          canvas_state.current.cx = x;
+          // log (canvas_state.current.pan_x + diff_x)
+          pan_x = Math.min(Math.max(0, canvas_state.current.pan_x + diff_x), Math.abs(props.xBounds[1] - props.xBounds[0]));
+          canvas_state.current.pan_x = pan_x;
+          // log pan_x
 
-
-
-
-
-// range
-// checkbox
-// select
-// color
-// number
-// text
-// toggle
-decideInput = function(props) {};
+          // log pan_x
+          renderChart(canvas_state.current, props);
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        };
+        onDragEnd = function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          document.body.style.cursor = 'default';
+          document.body.removeEventListener('mousemove', onDrag);
+          document.body.removeEventListener('mouseup', onDragEnd);
+          return false;
+        };
+        document.body.style.cursor = 'ew-resize';
+        document.body.addEventListener('mousemove', onDrag);
+        return document.body.addEventListener('mouseup', onDragEnd);
+      }
+    });
+  }
+  return h('div', {
+    className: 'ed-full-w',
+    ref: wrap_ref
+  }, canvas);
+};
 
 reducer = function(state, action) {
   // if action.type == 'dragstart'
@@ -296,7 +412,7 @@ initial_state = {
 };
 
 In = function(props) {
-  var context, dispatch, input, input_ref, isDragging, is_dragging, label, max, min, outer_range_ref, props_range_value, props_value, range_rect, range_slider_x, setStepValue, slider_state_ref, state, step_value, value_alpha, value_label;
+  var context, dispatch, input, input_ref, isDragging, is_dragging, label, max, min, options, outer_range_ref, props_range_value, props_value, range_rect, range_slider_x, setStepValue, slider_state_ref, state, step_value, value_alpha, value_label;
   [state, dispatch] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useReducer"])(reducer, initial_state);
   [is_dragging, isDragging] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
   [step_value, setStepValue] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(void 0);
@@ -304,7 +420,6 @@ In = function(props) {
   outer_range_ref = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
   slider_state_ref = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])({});
   input_ref = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
-  // log state
   if (props.label) {
     label = h('div', {
       className: 'ed-in-label ed-flex-right'
@@ -312,35 +427,25 @@ In = function(props) {
       className: 'ed-in-label-colon'
     }, ':'));
   }
-  // log state
-
-  // useEffect ()->
-
-  // 	if outer_range_ref.current
-  // 		dispatch
-  // 			type:'slide-rect'
-  // 			value: outer_range_ref.current.getBoundingClientRect()
-  // ,[outer_range_ref.current]
-
-  // log state.color_input_value
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function() {
     if (props.value !== state.color_input_value && props.type === 'color') {
-      // log 'set color input',state.color_input_value
       dispatch({
         type: 'set-color-input',
         value: props.value
       });
     }
     if (props.step != null) {
-      // log props.value
-      // log Math.floor(step_value/props.step)*props.step
       if (Math.floor(step_value / props.step) * props.step !== Math.floor(props.value / props.step) * props.step) {
-        // log 'override step value',props.value
         return setStepValue(props.value);
       }
     }
   }, [props.value]);
   switch (props.type) {
+    case 'plain':
+      input = h('div', {
+        className: 'ed-label full-w'
+      }, props.value);
+      break;
     case 'text':
       input = h('input', {
         type: 'text',
@@ -395,18 +500,15 @@ In = function(props) {
     case 'range':
       if (outer_range_ref.current) {
         range_rect = outer_range_ref.current.getBoundingClientRect();
-        // log state.range_rect
         props_value = Number(props.value) || 1;
         if (props.step != null) {
           props_value = Math.floor(step_value / props.step) * props.step;
         }
-        // log 'set from step value',step_value
         max = props.max || 1;
         min = props.min || 0;
         props_value = Math.min(Math.max(props_value, min), max);
         value_alpha = (props_value - min) / (max - min);
         range_slider_x = value_alpha * (range_rect.width - 6);
-        // log range_slider_x
         if (props.step != null) {
           slider_state_ref.current.range_slider_x = ((step_value - min) / (max - min)) * (range_rect.width - 6);
         } else {
@@ -415,9 +517,6 @@ In = function(props) {
       } else {
         range_slider_x = 0;
       }
-      // log state.range_slider_x
-
-      // log value_alpha
       props_range_value = Number(props.value).toFixed(props.toFixed != null ? props.toFixed : 2);
       value_label = h('div', {
         className: classnames__WEBPACK_IMPORTED_MODULE_1___default()('ed-range-value', value_alpha > .5 && 'ed-range-value-left', props.snapValueToEdge && 'ed-range-value-snap')
@@ -434,7 +533,6 @@ In = function(props) {
           onDrag = function(e) {
             var diff_x, new_value, value, x, y, y_d, y_min_d;
             range_rect = outer_range_ref.current.getBoundingClientRect();
-            // range_rect = state.range_rect
             x = e.clientX;
             y = e.clientY;
             y_d = Math.abs(y - (range_rect.top + (range_rect.bottom - range_rect.top) / 2));
@@ -444,7 +542,6 @@ In = function(props) {
             } else {
               y_d = 1;
             }
-            // log slider_state_ref.current.range_slider_x
             diff_x = (x - slider_state_ref.current.cx) / y_d;
             slider_state_ref.current.cx = x;
             range_slider_x = Math.min(Math.max(0, slider_state_ref.current.range_slider_x + diff_x), range_rect.width - 6);
@@ -528,11 +625,49 @@ In = function(props) {
         }
       }));
       break;
+    case 'select':
+      // value_exists = false
+      options = Object.keys(props.options).map(function(key) {
+        return h('option', {
+          key: key,
+          value: key
+        }, props.options[key]);
+      });
+      if (!props.options[props.value]) {
+        options.unshift(h('option', {
+          key: '-',
+          value: null
+        }, props.value || '-'));
+      }
+      input = h('div', {
+        className: 'ed-flex-right ed-full-w'
+      }, h('select', {
+        className: 'ed-input-select',
+        value: props.value || '[select]',
+        onChange: (e) => {
+          return typeof props.set === "function" ? props.set(e.target.value) : void 0;
+        }
+      }, options), h('div', {
+        className: 'ed-input-select-arrow'
+      }, '▼'));
+      break;
+    case 'line-chart':
+      input = h('div', {
+        className: 'ed-line-chart'
+      }, h(LineChart, props));
+      break;
     default:
       throw new Error('invalid input type');
   }
+  if (props.type === 'line-chart') {
+    return h('div', {
+      className: 'ed-in-wrap ed-line-chart-wrap'
+    }, h('div', {
+      className: 'ed-line-chart-label'
+    }, label), input);
+  }
   return h('div', {
-    className: classnames__WEBPACK_IMPORTED_MODULE_1___default()('ed-in-wrap', props.half && 'ed-in-half')
+    className: classnames__WEBPACK_IMPORTED_MODULE_1___default()('ed-in-wrap', props.half && 'ed-in-half', props.type === 'plain' && 'ed-tight')
   }, label, h('div', {
     className: classnames__WEBPACK_IMPORTED_MODULE_1___default()('ed-input-wrap', props.half && 'ed-in-half')
   }, input));
@@ -676,7 +811,7 @@ Menu = function(props) {
     if (rect) {
       new_dim = rect.height + 'x' + rect.width;
       if (dim !== new_dim) {
-        log('set dim');
+        // log 'set dim'
         setDim(new_dim);
       }
     }
@@ -824,7 +959,7 @@ Section = function(props, state) {
     className: 'ed-section-label ed-flex-right ed-full-w'
   }, h('div', {
     className: 'ed-in-label-colon'
-  }, '### '), props.label, h('div', {
+  }, '# '), props.label, h('div', {
     className: 'ed-section-label-toggle'
   }, props.visible && ' -' || ' +'))), props.visible && (h('div', {
     className: 'ed-section-content ed-flex-down ed-full-w'
@@ -1106,7 +1241,7 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, ".noselect {\n  -webkit-touch-callout: none;\n  /* iOS Safari */\n  -webkit-user-select: none;\n  /* Safari */\n  -khtml-user-select: none;\n  /* Konqueror HTML */\n  -moz-user-select: none;\n  /* Old versions of Firefox */\n  -ms-user-select: none;\n  /* Internet Explorer/Edge */\n  user-select: none;\n  /* Non-prefixed version, currently\n                                  supported by Chrome, Edge, Opera and Firefox */\n}\n.ed-layout {\n  z-index: 100;\n  transform: translate(0, 0);\n  font-family: 'DM Mono', monospace;\n  font-size: 0.85em;\n  color: #bbbbbb;\n  position: fixed;\n  top: 0px;\n  left: 0px;\n  width: 100%;\n  height: 100%;\n  overflow: hidden;\n  pointer-events: none;\n}\n.ed-layout * {\n  pointer-events: all;\n  box-sizing: border-box;\n}\n.ed-full-w {\n  width: 100%;\n}\n.ed-flex-left,\n.ed-input-wrap {\n  display: flex;\n  flex-wrap: wrap;\n  flex-direction: row-reverse;\n  align-items: center;\n  justify-content: flex-end;\n}\n.ed-flex-right,\n.ed-in-wrap {\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: flex-start;\n}\n.ed-flex-down {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  justify-content: flex-start;\n}\n.ed-in-wrap {\n  font-size: 0.9em;\n  width: 100%;\n  padding: 0px 0.425em;\n  min-height: 24px;\n  flex-wrap: nowrap;\n  margin-bottom: 0.255em;\n}\n.ed-in-wrap.ed-in-half {\n  width: 50%;\n}\n.ed-input-wrap {\n  width: 150%;\n}\n.ed-input-wrap.ed-in-half {\n  width: fit-content;\n}\n.ed-in-label {\n  width: 100%;\n  margin-right: 0.25em;\n  white-space: normal;\n  text-align: -webkit-right;\n  align-items: flex-end;\n  justify-content: flex-end;\n  word-break: break-all;\n}\n.ed-in-label-colon {\n  color: #6b6b6b;\n}\n.ed-input {\n  width: inherit;\n  line-height: 24px;\n  height: 24px;\n  -webkit-appearance: none;\n  outline: none;\n  color: #bbbbbb;\n  background-color: rgba(27, 27, 27, 0.95);\n  border: none;\n  border-radius: none;\n  padding: 0px 0.425em;\n}\n.ed-toggle-outer {\n  width: 24px;\n  cursor: pointer;\n  height: 24px;\n  background-color: rgba(27, 27, 27, 0.95);\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.ed-toggle-outer .ed-toggle-inner {\n  width: 12px;\n  height: 12px;\n  border-radius: 6px;\n  background-color: rgba(27, 27, 27, 0.9);\n}\n.ed-toggle-outer .ed-toggle-inner.ed-toggle-active {\n  background: #bbbbbb;\n}\n.ed-box-title {\n  padding: 0px 0.425em;\n  margin: 0.425em 0px;\n  text-align: center;\n  width: 100%;\n  text-transform: uppercase !important;\n}\n.ed-box-content {\n  margin: 0.85em 0px;\n  display: flex;\n  align-self: start;\n  justify-content: start;\n  flex-direction: row;\n  flex-wrap: wrap;\n}\n.ed-box {\n  backdrop-filter: blur(10px);\n  background-color: rgba(27, 27, 27, 0.9);\n  color: #bbbbbb;\n  width: 320px;\n  min-height: 24px;\n  flex-wrap: nowrap;\n  position: absolute;\n}\n.ed-box .ed-description {\n  padding: 0px 0.85em;\n  font-size: 0.8em;\n  color: #8d8d8d;\n  margin: 0.85em 0px;\n  white-space: normal;\n}\n.ed-menu {\n  color: #bbbbbb;\n  flex-wrap: nowrap;\n  width: fit-content;\n  position: absolute;\n}\n.ed-menu.ed-flex-down > .ed-menu-item {\n  width: -webkit-fill-available;\n  height: auto;\n}\n.ed-menu.ed-flex-right > .ed-menu-item {\n  height: -webkit-fill-available;\n  width: auto;\n}\n.ed-menu .ed-menu-item-label {\n  height: 24px;\n  text-transform: uppercase;\n  background-color: rgba(27, 27, 27, 0.9);\n  backdrop-filter: blur(10px);\n  white-space: nowrap;\n  color: #8d8d8d;\n  cursor: pointer;\n  padding: 0.425em 0.85em;\n}\n.ed-menu .ed-menu-item-label.ed-selected {\n  background-color: rgba(27, 27, 27, 0.95);\n  backdrop-filter: blur(10px);\n  color: #bbbbbb;\n}\n.ed-menu .ed-menu-item-label:hover {\n  color: #bbbbbb;\n}\n.ed-menu > .ed-menu-item {\n  position: relative;\n}\n.ed-menu-item-child {\n  position: absolute;\n  left: 0px;\n  top: 0px;\n}\n.ed-hidden {\n  visibility: hidden;\n}\n.ed-range-outer {\n  height: 24px;\n  width: 100%;\n  background: rgba(27, 27, 27, 0.95);\n  position: relative;\n  cursor: ew-resize;\n}\n.ed-range-outer .ed-range-slider {\n  width: 6px;\n  height: 24px;\n  background: #bbbbbb;\n}\n.ed-range-outer .ed-range-slider.ed-active {\n  background: #bbbbbb;\n}\n.ed-range-outer .ed-range-value {\n  position: absolute;\n  left: 14px;\n  top: 50%;\n  transform: translate(0%, -50%);\n}\n.ed-range-outer .ed-range-value.ed-range-value-snap {\n  right: 8px;\n  left: initial;\n}\n.ed-range-outer .ed-range-value.ed-range-value-left {\n  right: 14px;\n  left: initial;\n}\n.ed-range-outer .ed-range-value.ed-range-value-left.ed-range-value-snap {\n  left: 8px;\n  right: initial;\n}\n.ed-button {\n  outline: none;\n  -webkit-appearance: none;\n  border: none;\n  cursor: pointer;\n  width: 100%;\n  height: 24px;\n  background: rgba(27, 27, 27, 0.95);\n  color: #8d8d8d;\n}\n.ed-button:hover {\n  color: #bbbbbb;\n}\n.ed-color-box {\n  position: relative;\n  -webkit-appearance: none;\n  width: 48px;\n  height: 24px;\n  flex-shrink: 0;\n  cursor: pointer;\n  margin-right: 0.255em;\n  border: 3px solid black;\n}\n.ed-color-box .ed-color-box-input {\n  visibility: visible;\n  opacity: 0;\n  cursor: pointer;\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  padding: 0px;\n  left: 0px;\n  top: 0px;\n}\n.ed-value-box {\n  width: 100%;\n  height: 24px;\n  background-color: rgba(27, 27, 27, 0.9);\n  margin-left: 0.153em;\n  line-height: 24px;\n  padding: 0px 0.425em;\n}\n.ed-section {\n  margin: 0px;\n  position: relative;\n  text-transform: uppercase;\n}\n.ed-section-title {\n  min-height: 24px;\n  cursor: pointer;\n  white-space: pre;\n  width: 100%;\n  padding: 0.425em;\n}\n.ed-section-label-toggle {\n  font-size: 1.275em;\n  width: 100%;\n  padding-right: 0.425em;\n  display: flex;\n  flex-direction: column;\n  align-items: flex-end;\n  justify-content: flex-end;\n}\n.ed-section-end-label {\n  padding: 0.425em;\n  display: flex;\n  width: 100%;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n}\n", ""]);
+exports.push([module.i, ".noselect {\n  -webkit-touch-callout: none;\n  /* iOS Safari */\n  -webkit-user-select: none;\n  /* Safari */\n  -khtml-user-select: none;\n  /* Konqueror HTML */\n  -moz-user-select: none;\n  /* Old versions of Firefox */\n  -ms-user-select: none;\n  /* Internet Explorer/Edge */\n  user-select: none;\n  /* Non-prefixed version, currently\n                                  supported by Chrome, Edge, Opera and Firefox */\n}\n.ed-layout {\n  z-index: 100;\n  transform: translate(0, 0);\n  font-family: 'DM Mono', monospace;\n  font-size: 0.85em;\n  color: #bbbbbb;\n  position: fixed;\n  top: 0px;\n  left: 0px;\n  width: 100%;\n  height: 100%;\n  overflow: hidden;\n  pointer-events: none;\n}\n.ed-layout * {\n  pointer-events: all;\n  box-sizing: border-box;\n}\n.ed-full-w {\n  width: 100%;\n}\n.ed-flex-left,\n.ed-input-wrap {\n  display: flex;\n  flex-wrap: wrap;\n  flex-direction: row-reverse;\n  align-items: center;\n  justify-content: flex-end;\n}\n.ed-flex-right,\n.ed-in-wrap {\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: flex-start;\n}\n.ed-flex-down {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  justify-content: flex-start;\n}\n.ed-in-wrap {\n  font-size: 0.9em;\n  width: 100%;\n  padding: 0px 0.425em;\n  min-height: 24px;\n  flex-wrap: nowrap;\n  margin-bottom: 0.255em;\n}\n.ed-in-wrap.ed-in-half {\n  width: 50%;\n}\n.ed-in-wrap.ed-tight {\n  min-height: 16px;\n}\n.ed-input-wrap {\n  width: 150%;\n}\n.ed-input-wrap.ed-in-half {\n  width: fit-content;\n}\n.ed-in-label {\n  width: 100%;\n  margin-right: 0.25em;\n  white-space: normal;\n  text-align: -webkit-right;\n  align-items: flex-end;\n  justify-content: flex-end;\n  word-break: break-all;\n}\n.ed-in-label-colon {\n  color: #6b6b6b;\n}\n.ed-input {\n  width: inherit;\n  line-height: 24px;\n  height: 24px;\n  -webkit-appearance: none;\n  outline: none;\n  color: #bbbbbb;\n  background-color: rgba(27, 27, 27, 0.95);\n  border: none;\n  border-radius: none;\n  padding: 0px 0.425em;\n}\n.ed-toggle-outer {\n  width: 24px;\n  cursor: pointer;\n  height: 24px;\n  background-color: rgba(27, 27, 27, 0.95);\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.ed-toggle-outer .ed-toggle-inner {\n  width: 12px;\n  height: 12px;\n  border-radius: 6px;\n  background-color: rgba(27, 27, 27, 0.9);\n}\n.ed-toggle-outer .ed-toggle-inner.ed-toggle-active {\n  background: #bbbbbb;\n}\n.ed-box-title {\n  padding: 0px 0.425em;\n  margin: 0.425em 0px;\n  text-align: center;\n  width: 100%;\n  text-transform: uppercase !important;\n}\n.ed-box-content {\n  margin: 0.85em 0px;\n  display: flex;\n  align-self: start;\n  justify-content: start;\n  flex-direction: row;\n  flex-wrap: wrap;\n}\n.ed-box {\n  backdrop-filter: blur(10px);\n  background-color: rgba(27, 27, 27, 0.9);\n  color: #bbbbbb;\n  width: 320px;\n  min-height: 24px;\n  flex-wrap: nowrap;\n  position: absolute;\n}\n.ed-box .ed-description {\n  padding: 0px 0.85em;\n  font-size: 0.8em;\n  color: #8d8d8d;\n  margin: 0.85em 0px;\n  white-space: normal;\n}\n.ed-menu {\n  color: #bbbbbb;\n  flex-wrap: nowrap;\n  width: fit-content;\n  position: absolute;\n}\n.ed-menu.ed-flex-down > .ed-menu-item {\n  width: -webkit-fill-available;\n  height: auto;\n}\n.ed-menu.ed-flex-right > .ed-menu-item {\n  height: -webkit-fill-available;\n  width: auto;\n}\n.ed-menu .ed-menu-item-label {\n  height: 24px;\n  text-transform: uppercase;\n  background-color: rgba(27, 27, 27, 0.9);\n  backdrop-filter: blur(10px);\n  white-space: nowrap;\n  color: #8d8d8d;\n  cursor: pointer;\n  padding: 0.425em 0.85em;\n}\n.ed-menu .ed-menu-item-label.ed-selected {\n  background-color: rgba(27, 27, 27, 0.95);\n  backdrop-filter: blur(10px);\n  color: #bbbbbb;\n}\n.ed-menu .ed-menu-item-label:hover {\n  color: #bbbbbb;\n}\n.ed-menu > .ed-menu-item {\n  position: relative;\n}\n.ed-menu-item-child {\n  position: absolute;\n  left: 0px;\n  top: 0px;\n}\n.ed-hidden {\n  visibility: hidden;\n}\n.ed-range-outer {\n  height: 24px;\n  width: 100%;\n  background: rgba(27, 27, 27, 0.95);\n  position: relative;\n  cursor: ew-resize;\n}\n.ed-range-outer .ed-range-slider {\n  width: 6px;\n  height: 24px;\n  background: #bbbbbb;\n}\n.ed-range-outer .ed-range-slider.ed-active {\n  background: #bbbbbb;\n}\n.ed-range-outer .ed-range-value {\n  position: absolute;\n  left: 14px;\n  top: 50%;\n  transform: translate(0%, -50%);\n}\n.ed-range-outer .ed-range-value.ed-range-value-snap {\n  right: 8px;\n  left: initial;\n}\n.ed-range-outer .ed-range-value.ed-range-value-left {\n  right: 14px;\n  left: initial;\n}\n.ed-range-outer .ed-range-value.ed-range-value-left.ed-range-value-snap {\n  left: 8px;\n  right: initial;\n}\n.ed-button {\n  outline: none;\n  -webkit-appearance: none;\n  border: none;\n  cursor: pointer;\n  width: 100%;\n  height: 24px;\n  background: rgba(27, 27, 27, 0.95);\n  color: #8d8d8d;\n}\n.ed-button:hover {\n  color: #bbbbbb;\n}\n.ed-color-box {\n  position: relative;\n  -webkit-appearance: none;\n  width: 48px;\n  height: 24px;\n  flex-shrink: 0;\n  cursor: pointer;\n  margin-right: 0.255em;\n  border: 3px solid black;\n}\n.ed-color-box .ed-color-box-input {\n  visibility: visible;\n  opacity: 0;\n  cursor: pointer;\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  padding: 0px;\n  left: 0px;\n  top: 0px;\n}\n.ed-value-box {\n  width: 100%;\n  height: 24px;\n  background-color: rgba(27, 27, 27, 0.9);\n  margin-left: 0.153em;\n  line-height: 24px;\n  padding: 0px 0.425em;\n}\n.ed-section {\n  margin: 0px;\n  position: relative;\n}\n.ed-section-title {\n  min-height: 24px;\n  cursor: pointer;\n  white-space: pre;\n  width: 100%;\n  padding: 0.425em;\n  text-transform: uppercase;\n}\n.ed-section-label-toggle {\n  font-size: 1.275em;\n  width: 100%;\n  padding-right: 0.425em;\n  display: flex;\n  flex-direction: column;\n  align-items: flex-end;\n  justify-content: flex-end;\n}\n.ed-section-end-label {\n  padding: 0.425em;\n  display: flex;\n  width: 100%;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n}\n.ed-input-select {\n  width: 100%;\n  outline: none;\n  -webkit-appearance: none;\n  height: 24px;\n  cursor: pointer;\n  padding: 0px 0.425em;\n  border: none;\n  color: #bbbbbb;\n  background: rgba(27, 27, 27, 0.95);\n}\n.ed-input-select-arrow {\n  position: absolute;\n  right: 14px;\n  color: #6b6b6b;\n  font-family: monospace;\n}\n.ed-line-chart {\n  width: 100%;\n  height: 80px;\n  background: rgba(27, 27, 27, 0.95);\n}\n.ed-line-chart-wrap {\n  flex-direction: column;\n  align-content: flex-start;\n  justify-content: flex-start;\n  align-items: flex-start;\n}\n.ed-line-chart-wrap canvas {\n  cursor: ew-resize;\n  width: 100%;\n  height: 100%;\n}\n.ed-line-chart-label {\n  padding: 0.425em 0px;\n}\n", ""]);
 // Exports
 module.exports = exports;
 

@@ -29,7 +29,7 @@ Menu = (props)->
 		if rect
 			new_dim = rect.height+'x'+rect.width
 			if dim != new_dim
-				log 'set dim'
+				# log 'set dim'
 				setDim(new_dim)
 	
 
