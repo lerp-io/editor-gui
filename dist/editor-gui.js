@@ -257,44 +257,51 @@ var In, LineChart, h, initial_state, reducer, renderChart;
 h = react__WEBPACK_IMPORTED_MODULE_0__["createElement"];
 
 renderChart = function(state, props) {
-  var ctx, i, j, pan_diff, pan_x, r_height, r_left, r_top, r_width, rect, ref, step, x_length, x_max, x_min, x_val, y_pan, y_range, y_val;
+  var ctx, i, pan_diff, pan_x, r_height, r_left, r_top, r_width, rect, step, x_length, x_max, x_min, x_val, y_pan, y_range, y_val;
   ({ctx, rect, pan_x} = state);
   if (!ctx) {
     return;
   }
-  // log rect.width,rect.height
-  // log pan_x
-  ctx.clearRect(0, 0, rect.width, rect.height);
-  ctx.fillStyle = 'red';
-  // ctx.rect(0, 0, 10, 10)
-  // ctx.rect(0, 20, 10, 10)
-  // ctx.fill()
-  y_pan = props.yRange / 2;
-  y_range = props.yRange;
+  y_pan = props.yRange[0];
+  y_range = props.yRange[1] - props.yRange[0];
   pan_x = pan_x * -1;
   step = props.step;
-  x_max = props.xBounds[1] - Math.floor(pan_x / step) * step;
+  x_max = props.xBounds[1] + Math.floor(pan_x / step) * step;
   x_min = Math.max(x_max - props.xRange, props.xBounds[0]);
   x_length = Math.max(x_max - x_min, 0);
-  // log x_length
   pan_diff = pan_x - Math.floor(pan_x / step) * step;
-  // log pan_diff
+  
+  // log x_min,'-',x_max
+  ctx.clearRect(0, 0, rect.width, rect.height);
   ctx.beginPath();
-  for (i = j = 0, ref = x_length / step; (0 <= ref ? j < ref : j > ref); i = 0 <= ref ? ++j : --j) {
+  ctx.fillStyle = props.color || 'white';
+  ctx.strokeStyle = props.color || 'white';
+  ctx.lineWidth = 1;
+  i = -1;
+  while (i < (x_length / step)) {
+    i += 1;
     x_val = x_min + (i * step);
     y_val = props.getY(x_val);
     if (!y_val) {
       continue;
     }
-    r_left = rect.width - rect.width / props.xRange * (i * step + pan_diff);
-    r_top = rect.height - (rect.height / y_range * (y_val + y_pan));
-    r_width = rect.width / props.xRange;
-    r_height = rect.height / y_range * y_val;
-    ctx.rect(r_left, r_top, r_width, r_height);
-    i += 1;
+    r_left = rect.width / props.xRange * (i * step - pan_diff);
+    r_top = rect.height - (rect.height / y_range * (y_val - y_pan));
+    if (props.chart_type === 'bar') {
+      r_width = rect.width / props.xRange;
+      r_height = rect.height / y_range * y_val;
+      ctx.rect(r_left, r_top, r_width, r_height);
+    } else if (props.chart_type === 'line') {
+      ctx.lineTo(r_left, r_top);
+    }
   }
-  ctx.closePath();
-  return ctx.fill();
+  
+  // ctx.closePath()
+  if (props.chart_type === 'bar') {
+    return ctx.fill();
+  } else {
+    return ctx.stroke();
+  }
 };
 
 LineChart = function(props) {
@@ -344,19 +351,27 @@ LineChart = function(props) {
         var onDrag, onDragEnd;
         canvas_state.current.cx = e.clientX;
         onDrag = function(e) {
-          var diff_x, pan_x, x, y;
+          var diff_x, pan_x, x, y, y_d, y_min_d;
           x = e.clientX;
           y = e.clientY;
           rect = canvas_ref.current.getBoundingClientRect();
-          diff_x = x - canvas_state.current.cx;
+          y_d = Math.abs(y - (rect.top + (rect.bottom - rect.top) / 2));
+          y_min_d = rect.height / 2;
+          if (y_d > y_min_d) {
+            y_d = 1 + (y_d - y_min_d) * .1;
+          } else {
+            y_d = 1;
+          }
+          diff_x = (x - canvas_state.current.cx) / (rect.width / props.xRange);
           canvas_state.current.cx = x;
           // log (canvas_state.current.pan_x + diff_x)
-          pan_x = Math.min(Math.max(0, canvas_state.current.pan_x + diff_x), Math.abs(props.xBounds[1] - props.xBounds[0]));
+          pan_x = Math.min(Math.max(0, canvas_state.current.pan_x + diff_x * y_d), props.xBounds[1] - props.xBounds[0] - props.xRange);
+          // log pan_x
           canvas_state.current.pan_x = pan_x;
           // log pan_x
 
           // log pan_x
-          renderChart(canvas_state.current, props);
+          requestAnimationFrame(renderChart.bind(null, canvas_state.current, props));
           e.preventDefault();
           e.stopPropagation();
           return false;
@@ -375,6 +390,9 @@ LineChart = function(props) {
       }
     });
   }
+  // e.preventDefault()
+  // e.stopPropagation()
+  // return false
   return h('div', {
     className: 'ed-full-w',
     ref: wrap_ref

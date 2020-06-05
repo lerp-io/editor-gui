@@ -8,16 +8,10 @@ h = createElement
 
 import './demo.less'
 
+chart_data = []
+for m in [0...100]
+	chart_data.push 120/100*m+Math.random()*20
 
-chart_data = [
-	[0,10]
-	[1,11]
-	[2,12]
-	[3,10]
-	[4,5]
-	[2,6]
-	[3,12]
-]
 
 demo = ()->
 	[is_mounted,setMounted] = useState(false)
@@ -522,17 +516,32 @@ demo = ()->
 										max: 10
 									h In,
 										type: 'line-chart'
-										label: 'line chart label'
-										set: (key,value)->
-											setValSelectA(key)
-										value: val_select_a
-										xBounds: [-200,200]
-										yRange: 10
-										xRange: 50
-										step: .5
+										label: 'bar chart'
+										chart_type: 'bar'
+										xBounds: [0,chart_data.length]
+										xRange: 40
+										yRange: [0,150]
+										step: 1
+										getY: (x)->
+											# log x
+											chart_data[x]
+											# log x
+											# Math.sin(x)
+									h In,
+										type: 'line-chart'
+										label: 'line chart'
+										chart_type: 'line'
+										color: 'cyan'
+										xBounds: [-100,100]
+										xRange: 10
+										yRange: [-2,2]
+										step: 1
 										getY: (x)->
 											# log x
 											Math.sin(x)
+											# chart_data[x]
+											# log x
+											# Math.sin(x)
 								h In,
 									type: 'select'
 									set: (key,value)->
