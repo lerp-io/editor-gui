@@ -1353,7 +1353,7 @@ Section = function(props, state) {
   return h('div', {
     className: 'ed-section ed-flex-down ed-full-w'
   }, section_bar, h('div', {
-    className: 'ed-section-title ed-flex-right',
+    className: 'ed-section-title ed-flex-right noselect',
     onClick: function() {
       return typeof props.set === "function" ? props.set(!props.visible) : void 0;
     }
