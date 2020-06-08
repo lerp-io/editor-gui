@@ -5,24 +5,25 @@ import LayoutContext from './LayoutContext'
 
 
 Layout = (props,state)->
-	autosize = props.autosize
 	layout_ref = useRef()
-	[mounted,setMounted] = useState(false)
 	[context,setContext] = useState(null)
-
-
 	useEffect ()->
-	
-		# log 'set context (after mount)'
-		rect = layout_ref.current.getBoundingClientRect()
-		setContext
-			depth: 0
-			root: yes
-			right: rect.right
-			left: rect.left
-			top: rect.top
-			bottom: rect.bottom
-	,[mounted,window.innerHeight,window.innerWidth]
+		if !context
+			onWindowResize = ()->
+				view_rect = layout_ref.current.getBoundingClientRect()
+				setContext
+					depth: 0
+					dim: props.dim || 24
+					wpad: props.wpad || 12
+					root: yes
+					selected_label: 'root'
+					view_rect: view_rect
+					getLabelWidth: props.getLabelWidth
+			onWindowResize()
+			window.addEventListener 'resize',onWindowResize
+		return ()->
+			window.removeEventListener 'resize',onWindowResize
+	,[]
 
 	h LayoutContext.Provider,
 		value: context

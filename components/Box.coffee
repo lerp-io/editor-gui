@@ -1,80 +1,97 @@
-import decidePosition from './decidePosition.coffee'
 import {createElement,useState,useEffect,useRef,useContext} from 'react'
 import LayoutContext from './LayoutContext'
 import BoxContext from './BoxContext'
 import cn from 'classnames'
 
+import {clampPosition,getPosition,fixAlign,guessAlign,adjustHeight} from './Align'
+
 h = createElement
+
+MIN_HEIGHT = 100
+
+
 Box = (props,state)->
-	[position,setPosition] = useState(props.position)
-	[dim,setDim] = useState(null)
-	[self_context,setSelfContext] = useState()
+	# [self_context,setSelfContext] = useState()
 	[visible,setVisible] = useState(false)
-	menu_ref = useRef(null)
+	[height,setHeight] = useState(null)
+	self_ref = useRef(null)
+	content_ref = useRef(null)
 	style = {}
 	
 	context = useContext(LayoutContext)
 	self_context = {}
 
-	# log visible
-
-	# log context
 	useEffect ()->
-		# log visible,menu_ref.current
-		if !visible && menu_ref.current
-			# log 'set visible',menu_ref.current
+		if !visible
 			setVisible(true)
 
-		if props.position != position
-			# log 'set position'
-			setPosition(position)
-		
-		rect = menu_ref.current?.getBoundingClientRect()
-		if rect
-			new_dim = rect.height+'x'+rect.width
-			if dim != new_dim
-				setDim(new_dim)
-	
-	
-	useEffect ()->
-		return ()->
-			# log 'select undefined',menu_ref.current
-			props.onSelect?(undefined,undefined)
-	,[]
 
 	if !context
 		return null
-	
-	# log 'DECIDE BOX POSITION',menu_ref.current?.getBoundingClientRect().height
-	decidePosition
-		style:style
-		context: context
-		menu_ref: menu_ref
-		position:position
-		left:props.left
-		right:props.right
-		top:props.top
-		bottom:props.bottom
-	
+
+
+	style = {}
+	self_width = props.width || 320
+	content_height = content_ref.current?.scrollHeight || MIN_HEIGHT
+	[style.overflowY,self_height] = adjustHeight(context,self_width,content_height)
+	style.minHeight = MIN_HEIGHT
+	style.height = self_height
+
 
 	
+	if props.align
+		align_key = props.align
+		# log 'FORCE ALIGN FOR ',context.selected_label,' : ',align_key
+	else
+		align_key = guessAlign(self_width,self_height,context)
+		# log 'GUESSED ALIGN FOR ',context.selected_label,' : ',align_key
+		[x,y] = getPosition(self_width,self_height,context,align_key)
+		align_key = fixAlign(align_key,context,self_width,self_height)
+		# log 'FIX ALIGN FOR ',context.selected_label,' : ',align_key
+
+	if props.position
+		self_x = props.position[0]
+		self_y = props.position[1]
+	else
+		[self_x,self_y] = getPosition(self_width,self_height,context,align_key)
+		# log self_x,self_y
+		[offset_x,offset_y] = clampPosition(context,self_x,self_y,self_width,self_height)
+		self_x += offset_x
+		self_y += offset_y
+		# [self_width]
+
+		
+	
+	
+	# style.zIndex = props.select && 666 || 1
+	style.zIndex = context.depth + 1 + 888
+	style.left = self_x+'px'
+	style.top = self_y+'px'
+	style.width = self_width
+	
+	
+	
+
 	h 'div',
-		ref: menu_ref
+		ref: self_ref
 		style: style
 		className: cn 'ed-box',!visible && 'ed-hidden'
-		props.title && (h 'div',
-			className: 'ed-box-title'
-			'~* '+props.title+' *~'
-		) || null
-		props.description && (h 'div',
-			className: 'ed-description'
-			props.description
-		) || null
 		h 'div',
-			className: 'ed-box-content'
-			h BoxContext.Provider,
-				value: self_context
-				props.children
+			cn:'ed-box-inner'
+			ref: content_ref
+			props.title && (h 'div',
+				className: 'ed-box-title'
+				'~* '+props.title+' *~'
+			) || null
+			props.description && (h 'div',
+				className: 'ed-description'
+				props.description
+			) || null
+			h 'div',
+				className: 'ed-box-content'
+				h BoxContext.Provider,
+					value: self_context
+					props.children
 			
 
 		

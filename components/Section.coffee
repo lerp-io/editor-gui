@@ -1,7 +1,6 @@
 import {createElement,useState,useEffect,useContext,useRef} from 'react'
 h = createElement
 import cn from 'classnames'
-import decidePosition from './decidePosition.coffee'
 import LayoutContext from './LayoutContext'
 
 Section = (props,state)->
