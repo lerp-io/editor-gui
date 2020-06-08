@@ -6,12 +6,13 @@ import LayoutContext from './LayoutContext'
 
 
 
-import {clampPosition,getPosition,fixAlign,guessAlign} from './Align'
+import {clampPosition,getPosition,fixAlign,guessAlign,adjustHeight} from './Align'
 
 
 Menu = (props)->
 	context = useContext(LayoutContext)
 	self_context = Object.assign {},context,{root:no,vert:props.vert,depth:context?.depth+1}
+	menu_ref = useRef()
 
 	useEffect ()->
 		return ()->
@@ -48,6 +49,11 @@ Menu = (props)->
 		self_height = context.dim
 		self_width = total_label_width
 	
+	[overflow_y,self_height] = adjustHeight(context,self_width,self_height)
+	scroll_top = menu_ref.current?.scrollTop || 0
+	# style.minHeight = MIN_HEIGHT
+	# style.height = self_height
+	
 	if props.align
 		align_key = props.align
 		# log 'FORCE ALIGN FOR ',context.selected_label,' : ',align_key
@@ -71,10 +77,12 @@ Menu = (props)->
 
 
 	style = {}
+	style.overflowY = overflow_y
 	style.zIndex = props.select && 666 || 1
 	style.zIndex += self_context.depth
 	style.left = self_x+'px'
 	style.top = self_y+'px'
+	style.height = self_height+'px'
 	# if offset_x || offset_y
 	# 	style.transform = "translate(#{offset_x}px,#{offset_y}px)"
 
@@ -87,10 +95,10 @@ Menu = (props)->
 	self_context.selected_label = props.select
 	if props.vert
 		self_context.sel_x = self_x
-		self_context.sel_y = self_y + context.dim * selected_label_index
+		self_context.sel_y = self_y + context.dim * selected_label_index + scroll_top
 	else
 		self_context.sel_x = self_x + selected_label_x
-		self_context.sel_y = self_y
+		self_context.sel_y = self_y + scroll_top
 	
 	self_context.sel_w = label_widths[selected_label_index]
 
@@ -139,6 +147,7 @@ Menu = (props)->
 	h 'div',
 		className: cn 'ed-menu',props.vert && 'ed-flex-down' || 'ed-flex-right'
 		style: style
+		ref: menu_ref
 		h 'div',
 			className: cn 'ed-menu-labels',props.vert && 'ed-flex-down' || 'ed-flex-right'
 			labels

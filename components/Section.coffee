@@ -13,7 +13,7 @@ Section = (props,state)->
 		section_bar
 		h 'div',
 			className: 'ed-section-title ed-flex-right noselect'
-			onClick: ->
+			onClick: (e)->
 				props.set?(!props.visible)
 			h 'div',
 				className: 'ed-section-label ed-flex-right ed-full-w'
