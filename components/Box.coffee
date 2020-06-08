@@ -11,7 +11,7 @@ MIN_HEIGHT = 100
 
 
 Box = (props,state)->
-	# [self_context,setSelfContext] = useState()
+
 	[visible,setVisible] = useState(false)
 	[height,setHeight] = useState(null)
 	self_ref = useRef(null)
@@ -24,6 +24,12 @@ Box = (props,state)->
 	useEffect ()->
 		if !visible
 			setVisible(true)
+		
+		if content_ref.current
+			current_height = content_ref.current?.scrollHeight || MIN_HEIGHT
+			if height != current_height
+				setHeight(current_height)
+
 
 
 	if !context

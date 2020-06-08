@@ -22,8 +22,8 @@ Section = (props,state)->
 					'# '
 				props.label
 				h 'div',
-					className: 'ed-section-label-toggle'
-					(props.visible && ' -' || ' +')
+					className: cn 'ed-section-label-toggle',props.visible && 'ed-section-label-toggle-active'
+					(props.visible && ' ▲' || ' ▼')
 		props.visible && (h 'div',
 			className: 'ed-section-content ed-flex-down ed-full-w'
 			props.children

@@ -293,10 +293,8 @@ demo = ()->
 					yRange: [0,150]
 					step: 1
 					getY: (x)->
-						# log x
 						chart_data[x]
-						# log x
-						# Math.sin(x)
+
 				h In,
 					type: 'line-chart'
 					label: 'line chart'

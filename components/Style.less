@@ -398,13 +398,17 @@
 	text-transform: uppercase;
 }
 .ed-section-label-toggle{
-	font-size: @fontsize*1.5;
+	font-size: @fontsize;
 	width: 100%;
 	padding-right: @padding;
 	display: flex;
+	color: @color3;
 	flex-direction: column;
 	align-items: flex-end;
 	justify-content: flex-end;
+	&.ed-section-label-toggle-active{
+		color: @color2;
+	}
 }
 .ed-section-end-label{
 	padding: @padding;
