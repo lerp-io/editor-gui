@@ -653,7 +653,7 @@ LineChart = function(props) {
       width: rect.width,
       height: rect.height,
       onMouseDown: function(e) {
-        var onDrag, onDragEnd;
+        var onDrag, onDragEnd, onMouseOut;
         canvas_state.current.cx = e.clientX;
         onDrag = function(e) {
           var diff_x, pan_x, x, y, y_d, y_min_d;
@@ -681,17 +681,35 @@ LineChart = function(props) {
           e.stopPropagation();
           return false;
         };
+        onMouseOut = function(e) {
+          var f;
+          e.stopPropagation();
+          e.preventDefault();
+          f = e.relatedTarget || e.toElement;
+          if (f && f.nodeName !== "HTML") {
+            return false;
+          }
+          document.body.style.cursor = 'default';
+          document.body.removeEventListener('mousemove', onDrag);
+          document.body.removeEventListener('mouseup', onDragEnd);
+          document.body.removeEventListener('mouseout', onMouseOut);
+          // log 'MOUSE OUT'
+          window.getSelection().removeAllRanges();
+          return false;
+        };
         onDragEnd = function(e) {
           e.preventDefault();
           e.stopPropagation();
           document.body.style.cursor = 'default';
           document.body.removeEventListener('mousemove', onDrag);
           document.body.removeEventListener('mouseup', onDragEnd);
+          document.body.removeEventListener('mouseout', onMouseOut);
           return false;
         };
         document.body.style.cursor = 'ew-resize';
         document.body.addEventListener('mousemove', onDrag);
-        return document.body.addEventListener('mouseup', onDragEnd);
+        document.body.addEventListener('mouseup', onDragEnd);
+        return document.body.addEventListener('mouseout', onMouseOut);
       }
     });
   }
@@ -851,7 +869,7 @@ In = function(props) {
           color: props.color != null ? props.color : void 0
         },
         onMouseDown: function(e) {
-          var onDrag, onDragEnd;
+          var onDrag, onDragEnd, onMouseOut;
           slider_state_ref.current.cx = e.clientX;
           onDrag = function(e) {
             var diff_x, new_value, value, x, y, y_d, y_min_d;
@@ -893,9 +911,26 @@ In = function(props) {
             document.body.removeEventListener('mouseup', onDragEnd);
             return false;
           };
+          onMouseOut = function(e) {
+            var f;
+            e.stopPropagation();
+            e.preventDefault();
+            f = e.relatedTarget || e.toElement;
+            if (f && f.nodeName !== "HTML") {
+              return false;
+            }
+            document.body.style.cursor = 'default';
+            document.body.removeEventListener('mousemove', onDrag);
+            document.body.removeEventListener('mouseup', onDragEnd);
+            document.body.removeEventListener('mouseout', onMouseOut);
+            // log 'MOUSE OUT'
+            window.getSelection().removeAllRanges();
+            return false;
+          };
           document.body.style.cursor = 'ew-resize';
           document.body.addEventListener('mousemove', onDrag);
-          return document.body.addEventListener('mouseup', onDragEnd);
+          document.body.addEventListener('mouseup', onDragEnd);
+          return document.body.addEventListener('mouseout', onMouseOut);
         }
       }, h('div', {
         className: 'ed-range-slider',

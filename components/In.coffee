@@ -137,17 +137,33 @@ LineChart = (props)->
 					e.stopPropagation()
 					return false
 
+				onMouseOut = (e)->
+					e.stopPropagation()
+					e.preventDefault()
+					f = e.relatedTarget || e.toElement
+					if f && f.nodeName != "HTML"
+						return false
+					document.body.style.cursor = 'default'
+					document.body.removeEventListener('mousemove',onDrag)
+					document.body.removeEventListener('mouseup',onDragEnd)
+					document.body.removeEventListener('mouseout',onMouseOut)
+					# log 'MOUSE OUT'
+					window.getSelection().removeAllRanges()
+					return false
+
 				onDragEnd = (e)->
 					e.preventDefault()
 					e.stopPropagation()
 					document.body.style.cursor = 'default'
 					document.body.removeEventListener('mousemove',onDrag)
 					document.body.removeEventListener('mouseup',onDragEnd)
+					document.body.removeEventListener('mouseout',onMouseOut)
 					return false
 				
 				document.body.style.cursor = 'ew-resize'
 				document.body.addEventListener 'mousemove',onDrag
 				document.body.addEventListener 'mouseup',onDragEnd
+				document.body.addEventListener 'mouseout',onMouseOut
 				# e.preventDefault()
 				# e.stopPropagation()
 				# return false
@@ -352,10 +368,25 @@ In = (props)->
 						document.body.removeEventListener('mousemove',onDrag)
 						document.body.removeEventListener('mouseup',onDragEnd)
 						return false
+					
+					onMouseOut = (e)->
+						e.stopPropagation()
+						e.preventDefault()
+						f = e.relatedTarget || e.toElement
+						if f && f.nodeName != "HTML"
+							return false
+						document.body.style.cursor = 'default'
+						document.body.removeEventListener('mousemove',onDrag)
+						document.body.removeEventListener('mouseup',onDragEnd)
+						document.body.removeEventListener('mouseout',onMouseOut)
+						# log 'MOUSE OUT'
+						window.getSelection().removeAllRanges()
+						return false
 
 					document.body.style.cursor = 'ew-resize'
 					document.body.addEventListener 'mousemove',onDrag
 					document.body.addEventListener 'mouseup',onDragEnd
+					document.body.addEventListener 'mouseout',onMouseOut
 				
 				h 'div',
 					className: 'ed-range-slider'

@@ -307,11 +307,8 @@ demo = ()->
 					yRange: [-2,2]
 					step: 1
 					getY: (x)->
-						# log x
 						Math.sin(x)
-						# chart_data[x]
-						# log x
-						# Math.sin(x)
+
 			h In,
 				type: 'select'
 				set: (key,value)->
