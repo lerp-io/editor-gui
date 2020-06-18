@@ -50,7 +50,6 @@ Box = (props,state)->
 		# log 'FORCE ALIGN FOR ',context.selected_label,' : ',align_key
 	else
 		align_key = guessAlign(self_width,self_height,context)
-		# log 'GUESSED ALIGN FOR ',context.selected_label,' : ',align_key
 		[x,y] = getPosition(self_width,self_height,context,align_key)
 		align_key = fixAlign(align_key,context,self_width,self_height)
 		# log 'FIX ALIGN FOR ',context.selected_label,' : ',align_key
@@ -84,6 +83,8 @@ Box = (props,state)->
 		className: cn 'ed-box',!visible && 'ed-hidden'
 		h 'div',
 			cn:'ed-box-inner'
+			style:
+				minHeight: MIN_HEIGHT
 			ref: content_ref
 			props.title && (h 'div',
 				className: 'ed-box-title'

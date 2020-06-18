@@ -11,6 +11,7 @@ Layout = (props,state)->
 		if !context
 			onWindowResize = ()->
 				view_rect = layout_ref.current.getBoundingClientRect()
+				# log view_rect
 				setContext
 					depth: 0
 					dim: props.dim || 24

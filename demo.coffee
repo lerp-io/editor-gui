@@ -294,7 +294,6 @@ demo = ()->
 					step: 1
 					getY: (x)->
 						chart_data[x]
-
 				h In,
 					type: 'line-chart'
 					label: 'line chart'
@@ -306,7 +305,6 @@ demo = ()->
 					step: 1
 					getY: (x)->
 						Math.sin(x)
-
 			h In,
 				type: 'select'
 				set: (key,value)->

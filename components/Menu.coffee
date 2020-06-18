@@ -85,6 +85,8 @@ Menu = (props)->
 	style.height = self_height+'px'
 	# if offset_x || offset_y
 	# 	style.transform = "translate(#{offset_x}px,#{offset_y}px)"
+	if props.style
+		Object.assign style,props.style
 
 	self_context.width = self_width
 	self_context.height = self_height
