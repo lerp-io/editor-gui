@@ -478,18 +478,18 @@ Box = function(props, state) {
   return h('div', {
     ref: self_ref,
     style: style,
-    className: classnames__WEBPACK_IMPORTED_MODULE_3___default()('ed-box', !visible && 'ed-hidden', 'ed-scroll')
+    className: classnames__WEBPACK_IMPORTED_MODULE_3___default()('ed-box', !visible && 'ed-hidden', style.overflowY === 'scroll' && 'ed-scroll')
   }, h('div', {
     cn: 'ed-box-inner',
     style: {
       minHeight: MIN_HEIGHT
     },
     ref: content_ref
-  }, props.title && (h('div', {
+  }, (props.title || props.label) && (h('div', {
     className: 'ed-box-title'
   }, h('div', {
     className: 'ed-in-label-colon'
-  }, '## '), props.title, h('div', {
+  }, '## '), props.title || props.label, h('div', {
     className: 'ed-in-label-colon'
   }, ' ##'))) || null, props.description && (h('div', {
     className: 'ed-description'

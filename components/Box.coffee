@@ -80,18 +80,18 @@ Box = (props,state)->
 	h 'div',
 		ref: self_ref
 		style: style
-		className: cn 'ed-box',!visible && 'ed-hidden','ed-scroll'
+		className: cn 'ed-box',!visible && 'ed-hidden',style.overflowY == 'scroll' && 'ed-scroll'
 		h 'div',
 			cn:'ed-box-inner'
 			style:
 				minHeight: MIN_HEIGHT
 			ref: content_ref
-			props.title && (h 'div',
+			(props.title || props.label) && (h 'div',
 				className: 'ed-box-title'
 				h 'div',
 					className: 'ed-in-label-colon'
 					'## '
-				props.title
+				(props.title || props.label)
 				h 'div',
 					className: 'ed-in-label-colon'
 					' ##'
