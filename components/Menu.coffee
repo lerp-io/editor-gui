@@ -29,16 +29,27 @@ Menu = (props)->
 	max_label_width = 0
 	total_label_width = 0
 	selected_label_index = -1
+	selected_label_y = 0
 	selected_label_x = 0
+	total_label_height = 0
 	label_widths = label_keys.map (key,i)->
+		
+		if !props.items[key]
+			return 0
+		
 		if key == props.select
 			selected_label_index = i
+			selected_label_y = total_label_height
 			selected_label_x = total_label_width
+		
 		width = context.getLabelWidth(key)
 		if width > max_label_width
 			max_label_width = width
+		
 		total_label_width += width + context.wpad*2
+		total_label_height += context.dim
 		return width + context.wpad*2
+	
 	
 	vert = props.vert
 
@@ -97,7 +108,7 @@ Menu = (props)->
 	self_context.selected_label = props.select
 	if props.vert
 		self_context.sel_x = self_x
-		self_context.sel_y = self_y + context.dim * selected_label_index + scroll_top
+		self_context.sel_y = self_y + selected_label_y + scroll_top
 	else
 		self_context.sel_x = self_x + selected_label_x
 		self_context.sel_y = self_y + scroll_top
