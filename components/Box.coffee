@@ -80,7 +80,7 @@ Box = (props,state)->
 	h 'div',
 		ref: self_ref
 		style: style
-		className: cn 'ed-box',!visible && 'ed-hidden'
+		className: cn 'ed-box',!visible && 'ed-hidden','ed-scroll'
 		h 'div',
 			cn:'ed-box-inner'
 			style:
@@ -88,7 +88,13 @@ Box = (props,state)->
 			ref: content_ref
 			props.title && (h 'div',
 				className: 'ed-box-title'
-				'~* '+props.title+' *~'
+				h 'div',
+					className: 'ed-in-label-colon'
+					'## '
+				props.title
+				h 'div',
+					className: 'ed-in-label-colon'
+					' ##'
 			) || null
 			props.description && (h 'div',
 				className: 'ed-description'

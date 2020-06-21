@@ -478,7 +478,7 @@ Box = function(props, state) {
   return h('div', {
     ref: self_ref,
     style: style,
-    className: classnames__WEBPACK_IMPORTED_MODULE_3___default()('ed-box', !visible && 'ed-hidden')
+    className: classnames__WEBPACK_IMPORTED_MODULE_3___default()('ed-box', !visible && 'ed-hidden', 'ed-scroll')
   }, h('div', {
     cn: 'ed-box-inner',
     style: {
@@ -487,7 +487,11 @@ Box = function(props, state) {
     ref: content_ref
   }, props.title && (h('div', {
     className: 'ed-box-title'
-  }, '~* ' + props.title + ' *~')) || null, props.description && (h('div', {
+  }, h('div', {
+    className: 'ed-in-label-colon'
+  }, '## '), props.title, h('div', {
+    className: 'ed-in-label-colon'
+  }, ' ##'))) || null, props.description && (h('div', {
     className: 'ed-description'
   }, props.description)) || null, h('div', {
     className: 'ed-box-content'
@@ -519,24 +523,6 @@ context = createContext({
 });
 
 /* harmony default export */ __webpack_exports__["default"] = (context);
-
-
-/***/ }),
-
-/***/ "./components/Divider.coffee":
-/*!***********************************!*\
-  !*** ./components/Divider.coffee ***!
-  \***********************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-var SectionLabel;
-
-SectionLabel = function(props, state) {};
-
-/* harmony default export */ __webpack_exports__["default"] = (SectionLabel);
 
 
 /***/ }),
@@ -1159,7 +1145,7 @@ h = react__WEBPACK_IMPORTED_MODULE_0__["createElement"];
 
 
 Menu = function(props) {
-  var align_key, context, label_keys, label_widths, labels, max_label_width, menu_ref, offset_x, offset_y, overflow_y, ref, scroll_top, selected_child, selected_label_index, selected_label_x, self_context, self_height, self_width, self_x, self_y, style, total_label_width, vert, x, y;
+  var align_key, context, label_keys, label_widths, labels, max_label_width, menu_ref, offset_x, offset_y, overflow_y, ref, scroll_top, selected_child, selected_label_index, selected_label_x, selected_label_y, self_context, self_height, self_width, self_x, self_y, style, total_label_height, total_label_width, vert, x, y;
   context = Object(react__WEBPACK_IMPORTED_MODULE_0__["useContext"])(_LayoutContext__WEBPACK_IMPORTED_MODULE_2__["default"]);
   self_context = Object.assign({}, context, {
     root: false,
@@ -1182,11 +1168,17 @@ Menu = function(props) {
   max_label_width = 0;
   total_label_width = 0;
   selected_label_index = -1;
+  selected_label_y = 0;
   selected_label_x = 0;
+  total_label_height = 0;
   label_widths = label_keys.map(function(key, i) {
     var width;
+    if (!props.items[key]) {
+      return 0;
+    }
     if (key === props.select) {
       selected_label_index = i;
+      selected_label_y = total_label_height;
       selected_label_x = total_label_width;
     }
     width = context.getLabelWidth(key);
@@ -1194,6 +1186,7 @@ Menu = function(props) {
       max_label_width = width;
     }
     total_label_width += width + context.wpad * 2;
+    total_label_height += context.dim;
     return width + context.wpad * 2;
   });
   vert = props.vert;
@@ -1249,7 +1242,7 @@ Menu = function(props) {
   self_context.selected_label = props.select;
   if (props.vert) {
     self_context.sel_x = self_x;
-    self_context.sel_y = self_y + context.dim * selected_label_index + scroll_top;
+    self_context.sel_y = self_y + selected_label_y + scroll_top;
   } else {
     self_context.sel_x = self_x + selected_label_x;
     self_context.sel_y = self_y + scroll_top;
@@ -1374,16 +1367,18 @@ Section = function(props, state) {
   }, h('div', {
     className: 'ed-section-label ed-flex-right ed-full-w'
   }, h('div', {
-    className: 'ed-in-label-colon'
+    className: 'ed-in-label-colon ed-pre'
   }, '# '), props.label, h('div', {
     className: classnames__WEBPACK_IMPORTED_MODULE_1___default()('ed-section-label-toggle', props.visible && 'ed-section-label-toggle-active')
   }, props.visible && ' ▲' || ' ▼'))), props.visible && (h('div', {
     className: 'ed-section-content ed-flex-down ed-full-w'
-  }, props.children)) || null, props.visible && (h('div', {
-    className: 'ed-section-end-label'
-  }, '-*-')) || null);
+  }, props.children)) || null);
 };
 
+// props.visible && (h 'div',
+// 	className: 'ed-section-end-label'
+// 	'-*-'
+// ) || null
 /* harmony default export */ __webpack_exports__["default"] = (Section);
 
 
@@ -1422,7 +1417,7 @@ module.exports = content.locals || {};
 /*!*********************************!*\
   !*** ./components/index.coffee ***!
   \*********************************/
-/*! exports provided: Box, In, Layout, Menu, Row, Divider, Section */
+/*! exports provided: Box, In, Layout, Menu, Row, Section */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1444,13 +1439,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Section__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Section */ "./components/Section.coffee");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Section", function() { return _Section__WEBPACK_IMPORTED_MODULE_5__["default"]; });
 
-/* harmony import */ var _Divider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Divider */ "./components/Divider.coffee");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Divider", function() { return _Divider__WEBPACK_IMPORTED_MODULE_6__["default"]; });
-
-/* harmony import */ var _Row__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Row */ "./components/Row.coffee");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Row", function() { return _Row__WEBPACK_IMPORTED_MODULE_7__["default"]; });
-
-
+/* harmony import */ var _Row__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Row */ "./components/Row.coffee");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Row", function() { return _Row__WEBPACK_IMPORTED_MODULE_6__["default"]; });
 
 
 
@@ -1482,7 +1472,7 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, ".noselect {\n  -webkit-touch-callout: none;\n  /* iOS Safari */\n  -webkit-user-select: none;\n  /* Safari */\n  -khtml-user-select: none;\n  /* Konqueror HTML */\n  -moz-user-select: none;\n  /* Old versions of Firefox */\n  -ms-user-select: none;\n  /* Internet Explorer/Edge */\n  user-select: none;\n  /* Non-prefixed version, currently\n                                  supported by Chrome, Edge, Opera and Firefox */\n}\n.ed-layout {\n  z-index: 100;\n  transform: translate(0, 0);\n  font-family: 'DM Mono', monospace;\n  font-size: 0.85em;\n  color: #bbbbbb;\n  position: fixed;\n  top: 0px;\n  left: 0px;\n  width: 100%;\n  height: 100%;\n  overflow: hidden;\n  pointer-events: none;\n}\n.ed-layout * {\n  pointer-events: all;\n  box-sizing: border-box;\n}\n.ed-full-w {\n  width: 100%;\n}\n.ed-flex-left,\n.ed-input-wrap {\n  display: flex;\n  flex-wrap: wrap;\n  flex-direction: row-reverse;\n  align-items: center;\n  justify-content: flex-end;\n}\n.ed-flex-right,\n.ed-in-wrap {\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: flex-start;\n}\n.ed-flex-down {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  justify-content: flex-start;\n}\n.ed-in-wrap {\n  font-size: 0.9em;\n  width: 100%;\n  padding: 0px 0.425em;\n  min-height: 24px;\n  flex-wrap: nowrap;\n  margin-bottom: 0.255em;\n}\n.ed-in-wrap.ed-in-half {\n  width: 50%;\n}\n.ed-in-wrap.ed-tight {\n  min-height: 16px;\n}\n.ed-input-wrap {\n  width: 150%;\n}\n.ed-input-wrap.ed-in-half {\n  width: fit-content;\n}\n.ed-in-label {\n  width: 100%;\n  margin-right: 0.25em;\n  white-space: normal;\n  text-align: -webkit-right;\n  align-items: flex-end;\n  justify-content: flex-end;\n  word-break: break-all;\n}\n.ed-in-label-colon {\n  color: #6b6b6b;\n}\n.ed-input {\n  width: inherit;\n  line-height: 24px;\n  height: 24px;\n  -webkit-appearance: none;\n  outline: none;\n  color: #bbbbbb;\n  background-color: rgba(0, 0, 0, 0.5);\n  border: none;\n  border-radius: none;\n  padding: 0px 0.425em;\n}\n.ed-toggle-outer {\n  width: 24px;\n  cursor: pointer;\n  height: 24px;\n  background-color: rgba(0, 0, 0, 0.5);\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.ed-toggle-outer .ed-toggle-inner {\n  width: 12px;\n  height: 12px;\n  border-radius: 6px;\n  background-color: rgba(27, 27, 27, 0.9);\n}\n.ed-toggle-outer .ed-toggle-inner.ed-toggle-active {\n  background: #bbbbbb;\n}\n.ed-box-title {\n  padding: 0.425em;\n  text-align: center;\n  width: 100%;\n  text-transform: uppercase !important;\n}\n.ed-box-content {\n  display: flex;\n  align-self: start;\n  justify-content: start;\n  flex-direction: row;\n  flex-wrap: wrap;\n  padding-bottom: 0.85em;\n}\n.ed-scroll::-webkit-scrollbar {\n  -webkit-appearance: none;\n  background-color: rgba(0, 0, 0, 0.5);\n  width: 4px;\n  height: 4px;\n  border-radius: 0px;\n}\n.ed-scroll::-webkit-scrollbar-corner {\n  background-color: rgba(0, 0, 0, 0.5);\n}\n.ed-scroll::-webkit-scrollbar-thumb {\n  border-radius: 0px;\n  background-color: #7F7F7F;\n}\n.ed-scroll::-webkit-scrollbar-thumb:hover {\n  background-color: #8F8F8F;\n}\n.ed-box {\n  backdrop-filter: blur(10px);\n  background-color: rgba(27, 27, 27, 0.9);\n  color: #bbbbbb;\n  position: fixed;\n  width: 320px;\n  flex-wrap: nowrap;\n}\n.ed-box.ed-scroll {\n  overflow-y: scroll;\n  overflow-x: hidden;\n  width: 324px;\n}\n.ed-box .ed-description {\n  padding: 0px 0.85em;\n  font-size: 0.8em;\n  color: #8d8d8d;\n  margin: 0.85em 0px;\n  white-space: normal;\n}\n.ed-menu-child-wrapper {\n  position: relative;\n  left: -100%;\n  top: 12px;\n}\n.ed-menu {\n  color: #bbbbbb;\n  flex-wrap: nowrap;\n  width: fit-content;\n  height: fit-content;\n  position: fixed;\n}\n.ed-menu.ed-scroll {\n  overflow-y: scroll;\n  overflow-x: hidden;\n}\n.ed-menu.ed-flex-down > .ed-menu-item {\n  width: -webkit-fill-available;\n  height: auto;\n}\n.ed-menu.ed-flex-right > .ed-menu-item {\n  height: -webkit-fill-available;\n  width: auto;\n}\n.ed-menu .ed-menu-labels {\n  background-color: rgba(27, 27, 27, 0.9);\n  backdrop-filter: blur(10px);\n}\n.ed-menu .ed-menu-item-label {\n  white-space: pre;\n  width: -webkit-fill-available;\n  height: 24px;\n  text-transform: uppercase;\n  display: flex;\n  align-items: center;\n  color: #8d8d8d;\n  cursor: pointer;\n  padding: 0px 12px;\n}\n.ed-menu .ed-menu-item-label.ed-selected {\n  background-color: rgba(0, 0, 0, 0.5);\n  backdrop-filter: blur(10px);\n  color: #bbbbbb;\n}\n.ed-menu .ed-menu-item-label:hover {\n  color: #bbbbbb;\n}\n.ed-menu .ed-menu-item {\n  position: relative;\n}\n.ed-hidden {\n  visibility: hidden;\n}\n.ed-range-outer {\n  height: 24px;\n  width: 100%;\n  background: rgba(0, 0, 0, 0.5);\n  position: relative;\n  cursor: ew-resize;\n}\n.ed-range-outer .ed-range-slider {\n  width: 6px;\n  height: 24px;\n  background: #bbbbbb;\n}\n.ed-range-outer .ed-range-slider.ed-active {\n  background: #bbbbbb;\n}\n.ed-range-outer .ed-range-value {\n  position: absolute;\n  left: 14px;\n  top: 50%;\n  transform: translate(0%, -50%);\n}\n.ed-range-outer .ed-range-value.ed-range-value-snap {\n  right: 8px;\n  left: initial;\n}\n.ed-range-outer .ed-range-value.ed-range-value-left {\n  right: 14px;\n  left: initial;\n}\n.ed-range-outer .ed-range-value.ed-range-value-left.ed-range-value-snap {\n  left: 8px;\n  right: initial;\n}\n.ed-button {\n  outline: none;\n  -webkit-appearance: none;\n  border: none;\n  cursor: pointer;\n  width: 100%;\n  height: 24px;\n  background: rgba(0, 0, 0, 0.5);\n  color: #8d8d8d;\n}\n.ed-button:hover {\n  color: #bbbbbb;\n}\n.ed-color-box {\n  position: relative;\n  -webkit-appearance: none;\n  width: 48px;\n  height: 24px;\n  flex-shrink: 0;\n  cursor: pointer;\n  margin-right: 0.255em;\n  border: 3px solid black;\n}\n.ed-color-box .ed-color-box-input {\n  visibility: visible;\n  opacity: 0;\n  cursor: pointer;\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  padding: 0px;\n  left: 0px;\n  top: 0px;\n}\n.ed-value-box {\n  width: 100%;\n  height: 24px;\n  background-color: rgba(27, 27, 27, 0.9);\n  margin-left: 0.153em;\n  line-height: 24px;\n  padding: 0px 0.425em;\n}\n.ed-section {\n  margin: 0px;\n  position: relative;\n}\n.ed-section-title {\n  min-height: 24px;\n  cursor: pointer;\n  white-space: pre;\n  width: 100%;\n  padding: 0.425em;\n  text-transform: uppercase;\n}\n.ed-section-label-toggle {\n  font-size: 0.85em;\n  width: 100%;\n  padding-right: 0.425em;\n  display: flex;\n  color: #6b6b6b;\n  flex-direction: column;\n  align-items: flex-end;\n  justify-content: flex-end;\n}\n.ed-section-label-toggle.ed-section-label-toggle-active {\n  color: #8d8d8d;\n}\n.ed-section-end-label {\n  padding: 0.425em;\n  display: flex;\n  width: 100%;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n}\n.ed-input-select {\n  width: 100%;\n  outline: none;\n  -webkit-appearance: none;\n  height: 24px;\n  cursor: pointer;\n  padding: 0px 0.425em;\n  border: none;\n  color: #bbbbbb;\n  background: rgba(0, 0, 0, 0.5);\n}\n.ed-input-select-arrow {\n  position: absolute;\n  right: 14px;\n  color: #6b6b6b;\n  font-family: monospace;\n}\n.ed-line-chart {\n  width: 100%;\n  height: 80px;\n  background: rgba(0, 0, 0, 0.5);\n}\n.ed-line-chart-wrap {\n  flex-direction: column;\n  align-content: flex-start;\n  justify-content: flex-start;\n  align-items: flex-start;\n}\n.ed-line-chart-wrap canvas {\n  cursor: ew-resize;\n  width: 100%;\n  height: 100%;\n}\n.ed-line-chart-label {\n  padding: 0.425em 0px;\n}\n", ""]);
+exports.push([module.i, ".noselect {\n  -webkit-touch-callout: none;\n  /* iOS Safari */\n  -webkit-user-select: none;\n  /* Safari */\n  -khtml-user-select: none;\n  /* Konqueror HTML */\n  -moz-user-select: none;\n  /* Old versions of Firefox */\n  -ms-user-select: none;\n  /* Internet Explorer/Edge */\n  user-select: none;\n  /* Non-prefixed version, currently\n                                  supported by Chrome, Edge, Opera and Firefox */\n}\n.ed-layout {\n  z-index: 100;\n  transform: translate(0, 0);\n  font-family: 'DM Mono', monospace;\n  font-size: 0.85em;\n  color: #bbbbbb;\n  position: fixed;\n  top: 0px;\n  left: 0px;\n  width: 100%;\n  height: 100%;\n  overflow: hidden;\n  pointer-events: none;\n}\n.ed-layout * {\n  pointer-events: all;\n  box-sizing: border-box;\n}\n.ed-full-w {\n  width: 100%;\n}\n.ed-flex-left,\n.ed-input-wrap {\n  display: flex;\n  flex-wrap: wrap;\n  flex-direction: row-reverse;\n  align-items: center;\n  justify-content: flex-end;\n}\n.ed-flex-right,\n.ed-in-wrap {\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: flex-start;\n}\n.ed-flex-down {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  justify-content: flex-start;\n}\n.ed-in-wrap {\n  font-size: 0.9em;\n  width: 100%;\n  padding: 0px 0.425em;\n  min-height: 24px;\n  flex-wrap: nowrap;\n  margin-bottom: 0.255em;\n}\n.ed-in-wrap.ed-in-half {\n  width: 50%;\n}\n.ed-in-wrap.ed-tight {\n  min-height: 16px;\n}\n.ed-input-wrap {\n  width: 150%;\n}\n.ed-input-wrap.ed-in-half {\n  width: fit-content;\n}\n.ed-in-label {\n  width: 100%;\n  margin-right: 0.25em;\n  white-space: normal;\n  text-align: -webkit-right;\n  align-items: flex-end;\n  justify-content: flex-end;\n  word-break: break-all;\n}\n.ed-in-label-colon {\n  color: #6b6b6b;\n}\n.ed-input {\n  width: inherit;\n  line-height: 24px;\n  height: 24px;\n  -webkit-appearance: none;\n  outline: none;\n  color: #bbbbbb;\n  background-color: rgba(0, 0, 0, 0.5);\n  border: none;\n  border-radius: none;\n  padding: 0px 0.425em;\n}\n.ed-toggle-outer {\n  width: 24px;\n  cursor: pointer;\n  height: 24px;\n  background-color: rgba(0, 0, 0, 0.5);\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.ed-toggle-outer .ed-toggle-inner {\n  width: 12px;\n  height: 12px;\n  border-radius: 6px;\n  background-color: rgba(27, 27, 27, 0.9);\n}\n.ed-toggle-outer .ed-toggle-inner.ed-toggle-active {\n  background: #bbbbbb;\n}\n.ed-box-title {\n  padding: 0.425em;\n  font-weight: 800;\n  text-align: center;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  flex-direction: row;\n  width: 100%;\n  text-transform: uppercase !important;\n}\n.ed-box-title * {\n  white-space: pre;\n}\n.ed-box-content {\n  display: flex;\n  align-self: start;\n  justify-content: start;\n  flex-direction: row;\n  flex-wrap: wrap;\n  padding-bottom: 0.85em;\n}\n.ed-scroll::-webkit-scrollbar {\n  -webkit-appearance: none;\n  background-color: rgba(0, 0, 0, 0.5);\n  width: 4px;\n  height: 4px;\n  border-radius: 0px;\n}\n.ed-scroll::-webkit-scrollbar-corner {\n  background-color: rgba(0, 0, 0, 0.5);\n}\n.ed-scroll::-webkit-scrollbar-thumb {\n  border-radius: 0px;\n  background-color: #7F7F7F;\n}\n.ed-scroll::-webkit-scrollbar-thumb:hover {\n  background-color: #8F8F8F;\n}\n.ed-box {\n  backdrop-filter: blur(10px);\n  background-color: rgba(27, 27, 27, 0.9);\n  color: #bbbbbb;\n  position: fixed;\n  width: 320px;\n  flex-wrap: nowrap;\n}\n.ed-box.ed-scroll {\n  overflow-y: scroll;\n  overflow-x: hidden;\n  width: 324px;\n}\n.ed-box .ed-description {\n  padding: 0px 0.85em;\n  font-size: 0.8em;\n  color: #8d8d8d;\n  margin: 0.85em 0px;\n  white-space: normal;\n}\n.ed-menu-child-wrapper {\n  position: relative;\n  left: -100%;\n  top: 12px;\n}\n.ed-menu {\n  color: #bbbbbb;\n  flex-wrap: nowrap;\n  width: fit-content;\n  height: fit-content;\n  position: fixed;\n}\n.ed-menu.ed-scroll {\n  overflow-y: scroll;\n  overflow-x: hidden;\n}\n.ed-menu.ed-flex-down > .ed-menu-item {\n  width: -webkit-fill-available;\n  height: auto;\n}\n.ed-menu.ed-flex-right > .ed-menu-item {\n  height: -webkit-fill-available;\n  width: auto;\n}\n.ed-menu .ed-menu-labels {\n  background-color: rgba(27, 27, 27, 0.9);\n  backdrop-filter: blur(10px);\n}\n.ed-menu .ed-menu-item-label {\n  white-space: pre;\n  width: -webkit-fill-available;\n  height: 24px;\n  text-transform: uppercase;\n  display: flex;\n  align-items: center;\n  color: #8d8d8d;\n  cursor: pointer;\n  padding: 0px 12px;\n}\n.ed-menu .ed-menu-item-label.ed-selected {\n  background-color: rgba(0, 0, 0, 0.5);\n  backdrop-filter: blur(10px);\n  color: #bbbbbb;\n}\n.ed-menu .ed-menu-item-label:hover {\n  color: #bbbbbb;\n}\n.ed-menu .ed-menu-item {\n  position: relative;\n}\n.ed-hidden {\n  visibility: hidden;\n}\n.ed-range-outer {\n  height: 24px;\n  width: 100%;\n  background: rgba(0, 0, 0, 0.5);\n  position: relative;\n  cursor: ew-resize;\n}\n.ed-range-outer .ed-range-slider {\n  width: 6px;\n  height: 24px;\n  background: #bbbbbb;\n}\n.ed-range-outer .ed-range-slider.ed-active {\n  background: #bbbbbb;\n}\n.ed-range-outer .ed-range-value {\n  position: absolute;\n  left: 14px;\n  top: 50%;\n  transform: translate(0%, -50%);\n}\n.ed-range-outer .ed-range-value.ed-range-value-snap {\n  right: 8px;\n  left: initial;\n}\n.ed-range-outer .ed-range-value.ed-range-value-left {\n  right: 14px;\n  left: initial;\n}\n.ed-range-outer .ed-range-value.ed-range-value-left.ed-range-value-snap {\n  left: 8px;\n  right: initial;\n}\n.ed-button {\n  outline: none;\n  -webkit-appearance: none;\n  border: none;\n  cursor: pointer;\n  width: 100%;\n  height: 24px;\n  background: rgba(0, 0, 0, 0.5);\n  color: #8d8d8d;\n}\n.ed-button:hover {\n  color: #bbbbbb;\n}\n.ed-color-box {\n  position: relative;\n  -webkit-appearance: none;\n  width: 48px;\n  height: 24px;\n  flex-shrink: 0;\n  cursor: pointer;\n  margin-right: 0.255em;\n  border: 3px solid black;\n}\n.ed-color-box .ed-color-box-input {\n  visibility: visible;\n  opacity: 0;\n  cursor: pointer;\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  padding: 0px;\n  left: 0px;\n  top: 0px;\n}\n.ed-value-box {\n  width: 100%;\n  height: 24px;\n  background-color: rgba(27, 27, 27, 0.9);\n  margin-left: 0.153em;\n  line-height: 24px;\n  padding: 0px 0.425em;\n}\n.ed-section {\n  margin: 0px;\n  position: relative;\n  margin-bottom: 2px;\n  border-top: 1px solid rgba(107, 107, 107, 0.3);\n  border-bottom: 1px solid rgba(107, 107, 107, 0.3);\n}\n.ed-section-title {\n  min-height: 24px;\n  cursor: pointer;\n  white-space: pre;\n  font-weight: 800;\n  width: 100%;\n  padding: 0.425em;\n  text-transform: uppercase;\n}\n.ed-section-label-toggle {\n  font-size: 0.85em;\n  width: 100%;\n  padding-right: 0.425em;\n  display: flex;\n  color: #6b6b6b;\n  flex-direction: column;\n  align-items: flex-end;\n  justify-content: flex-end;\n}\n.ed-section-label-toggle.ed-section-label-toggle-active {\n  color: #8d8d8d;\n}\n.ed-section-end-label {\n  padding: 0.425em;\n  display: flex;\n  width: 100%;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n}\n.ed-input-select {\n  width: 100%;\n  outline: none;\n  -webkit-appearance: none;\n  height: 24px;\n  cursor: pointer;\n  padding: 0px 0.425em;\n  border: none;\n  color: #bbbbbb;\n  background: rgba(0, 0, 0, 0.5);\n}\n.ed-input-select-arrow {\n  position: absolute;\n  right: 14px;\n  color: #6b6b6b;\n  font-family: monospace;\n}\n.ed-line-chart {\n  width: 100%;\n  height: 80px;\n  background: rgba(0, 0, 0, 0.5);\n}\n.ed-line-chart-wrap {\n  flex-direction: column;\n  align-content: flex-start;\n  justify-content: flex-start;\n  align-items: flex-start;\n}\n.ed-line-chart-wrap canvas {\n  cursor: ew-resize;\n  width: 100%;\n  height: 100%;\n}\n.ed-line-chart-label {\n  padding: 0.425em 0px;\n}\n", ""]);
 // Exports
 module.exports = exports;
 

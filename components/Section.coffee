@@ -18,7 +18,7 @@ Section = (props,state)->
 			h 'div',
 				className: 'ed-section-label ed-flex-right ed-full-w'
 				h 'div',
-					className: 'ed-in-label-colon'
+					className: 'ed-in-label-colon ed-pre'
 					'# '
 				props.label
 				h 'div',
@@ -28,9 +28,9 @@ Section = (props,state)->
 			className: 'ed-section-content ed-flex-down ed-full-w'
 			props.children
 		) || null
-		props.visible && (h 'div',
-			className: 'ed-section-end-label'
-			'-*-'
-		) || null
+		# props.visible && (h 'div',
+		# 	className: 'ed-section-end-label'
+		# 	'-*-'
+		# ) || null
 
 export default Section

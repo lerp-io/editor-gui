@@ -4,6 +4,7 @@
 @color1: rgb(187, 187, 187);
 @color2: rgb(141, 141, 141);
 @color3: rgb(107, 107, 107);
+@color4: rgba(107, 107, 107,0.3);
 
 @mainfont: 'DM Mono', monospace;
 @fontsize: .85em;
@@ -146,7 +147,15 @@
 
 .ed-box-title{
 	padding: @padding;
+	font-weight: 800;
 	text-align: center;
+	display: flex;
+	*{
+		white-space: pre;
+	}
+	align-items:center;
+	justify-content: center;
+	flex-direction: row;
 	width: 100%;
 	text-transform: uppercase !important;
 }
@@ -383,14 +392,17 @@
 	// margin: 0px -@padding;
 	position: relative;
 	// text-transform: uppercase;
-	// border-top: 2px dashed @color3;
-	// border-bottom: 2px dashed @color3;
+	margin-bottom: 2px;
+	border-top: 1px solid @color4;
+	border-bottom: 1px solid @color4;
 	// padding: @padding;
 }
 .ed-section-title{
 	min-height: @dim;
 	cursor: pointer;
 	white-space: pre;
+	
+	font-weight: 800;
 	width: 100%;
 	padding: @padding;
 	text-transform: uppercase;
