@@ -12,7 +12,7 @@ Section = (props,state)->
 		className: 'ed-section ed-flex-down ed-full-w'
 		section_bar
 		h 'div',
-			className: 'ed-section-title ed-flex-right noselect'
+			className: cn 'ed-section-title ed-flex-right noselect',!props.visible? && 'ed-section-label-toggle-off'
 			onClick: (e)->
 				props.set?(!props.visible)
 			h 'div',
@@ -21,10 +21,11 @@ Section = (props,state)->
 					className: 'ed-in-label-colon ed-pre'
 					'# '
 				props.label
-				h 'div',
-					className: cn 'ed-section-label-toggle',props.visible && 'ed-section-label-toggle-active'
-					(props.visible && ' ▲' || ' ▼')
-		props.visible && (h 'div',
+				props.visible? && (h 'div',
+					className: cn 'ed-section-label-toggle',props.visible == true || !props.visible? && 'ed-section-label-toggle-active'
+					(props.visible == true && ' ▲' || ' ▼')
+				) || null
+		(props.visible == true || !props.visible?) && (h 'div',
 			className: 'ed-section-content ed-flex-down ed-full-w'
 			props.children
 		) || null

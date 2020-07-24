@@ -90,11 +90,9 @@ Box = (props,state)->
 				className: 'ed-box-title'
 				h 'div',
 					className: 'ed-in-label-colon'
-					'## '
+					'# '
 				(props.title || props.label)
-				h 'div',
-					className: 'ed-in-label-colon'
-					' ##'
+				
 			) || null
 			props.description && (h 'div',
 				className: 'ed-description'

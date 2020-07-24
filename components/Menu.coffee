@@ -123,11 +123,11 @@ Menu = (props)->
 			if !child
 				return null
 			
-			if child.onClick
+			if child.onClick || child.onSelect
 				return h 'div',
 					key:key
 					className: cn 'ed-menu-item-label',props.select == key && 'ed-selected','noselect'
-					onClick: child.onClick
+					onClick: child.onClick || child.onSelect
 					key
 
 			title = key+'-'+i

@@ -232,7 +232,7 @@ In = (props)->
 				value: props.value
 
 		if props.step?
-			if Math.floor(step_value/props.step)*props.step !=  Math.floor(props.value/props.step)*props.step
+			if Math.floor(step_value/props.step)*props.step != Math.floor(props.value/props.step)*props.step
 				setStepValue(props.value)
 		
 	,[props.value]
@@ -245,19 +245,19 @@ In = (props)->
 				className: 'ed-label full-w'
 				props.value
 				
-		when 'text'
+		when 'text','number'
 			input = h 'input',
-				type: 'text'
+				type: props.type
 				className: 'ed-input'
 				onChange: (e)->
 					if props.commit || context.dispatch
 						dispatch
-							type: 'text'
+							type: props.type
 							value: e.target.value
 					
 					if context.dispatch
 						context.dispatch
-							type: 'text'
+							type: props.type
 							value: e.target.value
 					
 					if !props.commit && !context.commit && props.set
@@ -289,7 +289,7 @@ In = (props)->
 		when 'range'
 			if outer_range_ref.current
 				range_rect = outer_range_ref.current.getBoundingClientRect()
-				props_value = Number(props.value) || 1
+				props_value = Number(props.value)
 				if props.step?
 					props_value = Math.floor(step_value/props.step)*props.step
 				
@@ -298,7 +298,9 @@ In = (props)->
 
 				props_value = Math.min(Math.max(props_value,min),max)
 				value_alpha = (props_value-min) / (max - min)
+				
 				range_slider_x = value_alpha * (range_rect.width-6)
+				# log value_alpha,(range_rect.width-6),range_slider_x,props.step
 				
 				if props.step?
 					slider_state_ref.current.range_slider_x = ((step_value-min) / (max - min)) * (range_rect.width-6)
@@ -339,22 +341,21 @@ In = (props)->
 
 						
 						diff_x = ( x - slider_state_ref.current.cx ) / y_d
+						
 						slider_state_ref.current.cx = x
 						range_slider_x = Math.min(Math.max(0,slider_state_ref.current.range_slider_x + diff_x),range_rect.width-6)
-						
-
 						value_alpha = range_slider_x/(range_rect.width-6)
 						min =  (props.min || 0)
 						max = (props.max || 1)
 						value = min + (max - min)*value_alpha
 						
-						
+
 						if props.step?
-							new_value = Math.floor(value/props.step)*props.step
-							
+							# log value,'/',props.step,'*',props.step
+							new_value = Math.min(Math.max(Math.floor(value/props.step)*props.step,min),max)
 							setStepValue(value)
 							if new_value != props.value
-								props.set(Math.min(Math.max(new_value,min),max))
+								props.set(new_value)
 						else
 							props.set(value)
 						e.preventDefault()
@@ -401,7 +402,7 @@ In = (props)->
 			input = h 'button',
 				className: 'ed-button'
 				onClick: (e)->
-					props.onSelect(e)
+					props.onSelect?(e) || props.onClick?(e) || props.set?(e)
 				props.value || 'button'
 
 		when 'color'
