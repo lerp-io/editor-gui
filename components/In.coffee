@@ -98,7 +98,7 @@ LineChart = (props)->
 		# 	setTickStep(tick_step+1)
 		# ,100
 		return
-	,[tick_step]
+	,[tick_step,props.tick_step]
 
 
 	if rect
@@ -223,7 +223,7 @@ In = (props)->
 			props.label
 			h 'div',
 				className:'ed-in-label-colon'
-				':'
+				props.type != 'toggle' && ':'
 
 	useEffect ()->
 		if props.value != state.color_input_value && props.type == 'color'
@@ -240,7 +240,7 @@ In = (props)->
 
 
 	switch props.type
-		when 'plain'
+		when 'plain','label'
 			input = h 'div',
 				className: 'ed-label full-w'
 				props.value
@@ -398,9 +398,12 @@ In = (props)->
 				props.snapValueToEdge && value_label || undefined
 
 		when 'button'
-
+			# log 'SET COLOR',props.color
 			input = h 'button',
 				className: 'ed-button'
+				style:
+					color: props.color
+					background: props.backgroundColor
 				onClick: (e)->
 					props.onSelect?(e) || props.onClick?(e) || props.set?(e)
 				props.value || 'button'
@@ -475,6 +478,16 @@ In = (props)->
 				className: 'ed-line-chart-label'
 				label
 			input
+	
+	if props.type == 'toggle' 
+		return h 'div',
+			className: cn 'ed-in-wrap','ed-in-wrap-toggle',props.half && 'ed-in-half',props.type == 'plain' && 'ed-tight'
+			h 'div',
+				className: 'ed-in-wrap-toggle-input'
+				input
+			h 'div',
+				className: 'ed-in-wrap-toggle-label'
+				label
 			
 
 

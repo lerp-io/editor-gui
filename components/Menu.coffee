@@ -17,7 +17,7 @@ Menu = (props)->
 	useEffect ()->
 		return ()->
 			# log 'DECELECT'
-			props.onSelect(undefined,undefined)
+			props.onSelect?(undefined,undefined)
 	,[]
 
 	if !context

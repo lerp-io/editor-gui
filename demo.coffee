@@ -3,7 +3,7 @@ global.log = console.log.bind(console)
 import 'normalize.css'
 import {createElement,useState,useEffect,useRef,useReducer} from 'react'
 import {render} from 'react-dom'
-import {Layout,In,Box,Row,Menu,Section,SectionLabel,Style} from './components'
+import {Layout,In,Box,Row,Menu,Section,SectionLabel,Style,Separator} from './components'
 h = createElement
 
 import './demo.less'
@@ -233,6 +233,7 @@ demo = ()->
 				value: 'hello 2'
 				onSelect: ->
 					alert('hellow wurld')
+			h Separator
 			h In,
 				type: 'color'
 				label: 'color 1'

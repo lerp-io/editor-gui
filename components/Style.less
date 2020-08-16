@@ -1,5 +1,5 @@
-@bg1: rgba(0, 0, 0, 0.6);
-@bg2:rgba(0, 0, 0, 0.7);
+@bg1:rgba(42,42,42, 1.0);
+@bg2:rgba(20,20,20, 1.0);
 
 @color1: rgb(255, 255, 255);
 @color2: rgb(235, 235, 235);
@@ -85,6 +85,16 @@
 	&.ed-tight{
 		min-height: 16px;
 	}
+}
+
+.ed-in-wrap-toggle-input{
+	width: auto;
+	flex-shrink: 0;
+	margin-right: 4px;
+}
+
+.ed-in-wrap-toggle-label{
+	width: auto;
 }
 
 .ed-input-wrap{
@@ -443,6 +453,11 @@
 	color: @color3;
 	font-family: monospace;
 
+}
+
+.ed-separator{
+	height: 24px;
+	padding: 0px @padding;
 }
 
 .ed-line-chart{
