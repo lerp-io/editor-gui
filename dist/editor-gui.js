@@ -1266,11 +1266,12 @@ Menu = function(props) {
   selected_child = null;
   if (props.items) {
     labels = label_keys.map(function(key, i) {
-      var child, title;
+      var child, label, title;
       child = props.items[key];
       if (!child) {
         return null;
       }
+      label = child.label || key;
       if (child.onClick || child.onSelect) {
         return h('div', {
           key: key,
@@ -1283,6 +1284,8 @@ Menu = function(props) {
       if (props.select === key) {
         if (typeof child === 'function') {
           selected_child = child();
+        } else if (child.render) {
+          selected_child = child.render();
         } else {
           selected_child = child;
         }
@@ -1304,7 +1307,7 @@ Menu = function(props) {
           return false;
         }) || void 0,
         className: classnames__WEBPACK_IMPORTED_MODULE_1___default()('ed-menu-item-label', props.select === key && 'ed-selected', 'noselect')
-      }, key);
+      }, label);
     });
   }
   return h('div', {

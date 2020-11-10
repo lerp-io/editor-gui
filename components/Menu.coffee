@@ -84,7 +84,7 @@ Menu = (props)->
 		[offset_x,offset_y] = clampPosition(context,self_x,self_y,self_width,self_height)
 		self_x += offset_x
 		self_y += offset_y
-		
+
 
 
 	style = {}
@@ -122,7 +122,11 @@ Menu = (props)->
 			child = props.items[key]
 			if !child
 				return null
-			
+
+
+			label = child.label || key
+
+
 			if child.onClick || child.onSelect
 				return h 'div',
 					key:key
@@ -136,6 +140,8 @@ Menu = (props)->
 			if props.select == key
 				if (typeof child == 'function')
 					selected_child = child()
+				else if child.render
+					selected_child = child.render()
 				else
 					selected_child = child
 
@@ -154,7 +160,7 @@ Menu = (props)->
 					return false
 				) || undefined
 				className: cn 'ed-menu-item-label',props.select == key && 'ed-selected','noselect'
-				key
+				label
 
 
 	h 'div',
