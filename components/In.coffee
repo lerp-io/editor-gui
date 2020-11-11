@@ -298,6 +298,7 @@ In = (props)->
 
 				props_value = Math.min(Math.max(props_value,min),max)
 				value_alpha = (props_value-min) / (max - min)
+				# log props_value,value_alpha
 				
 				range_slider_x = value_alpha * (range_rect.width-6)
 				# log value_alpha,(range_rect.width-6),range_slider_x,props.step
@@ -324,7 +325,7 @@ In = (props)->
 				onMouseDown: (e)->
 					
 					slider_state_ref.current.cx = e.clientX 
-					
+					old_value = null
 					onDrag = (e)->
 						range_rect = outer_range_ref.current.getBoundingClientRect()
 						
@@ -354,8 +355,9 @@ In = (props)->
 							# log value,'/',props.step,'*',props.step
 							new_value = Math.min(Math.max(Math.floor(value/props.step)*props.step,min),max)
 							setStepValue(value)
-							if new_value != props.value
+							if new_value != old_value
 								props.set(new_value)
+								old_value = new_value
 						else
 							props.set(value)
 						e.preventDefault()

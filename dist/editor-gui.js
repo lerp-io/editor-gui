@@ -843,6 +843,7 @@ In = function(props) {
         min = props.min || 0;
         props_value = Math.min(Math.max(props_value, min), max);
         value_alpha = (props_value - min) / (max - min);
+        // log props_value,value_alpha
         range_slider_x = value_alpha * (range_rect.width - 6);
         // log value_alpha,(range_rect.width-6),range_slider_x,props.step
         if (props.step != null) {
@@ -864,8 +865,9 @@ In = function(props) {
           color: props.color != null ? props.color : void 0
         },
         onMouseDown: function(e) {
-          var onDrag, onDragEnd, onMouseOut;
+          var old_value, onDrag, onDragEnd, onMouseOut;
           slider_state_ref.current.cx = e.clientX;
+          old_value = null;
           onDrag = function(e) {
             var diff_x, new_value, value, x, y, y_d, y_min_d;
             range_rect = outer_range_ref.current.getBoundingClientRect();
@@ -889,8 +891,9 @@ In = function(props) {
               // log value,'/',props.step,'*',props.step
               new_value = Math.min(Math.max(Math.floor(value / props.step) * props.step, min), max);
               setStepValue(value);
-              if (new_value !== props.value) {
+              if (new_value !== old_value) {
                 props.set(new_value);
+                old_value = new_value;
               }
             } else {
               props.set(value);
@@ -1191,6 +1194,9 @@ Menu = function(props) {
     if (!props.items[key]) {
       return 0;
     }
+    if (props.items[key].label) {
+      key = props.items[key].label;
+    }
     if (key === props.select) {
       selected_label_index = i;
       selected_label_y = total_label_height;
@@ -1286,6 +1292,8 @@ Menu = function(props) {
           selected_child = child();
         } else if (child.render) {
           selected_child = child.render();
+        } else if (child.label) {
+          selected_child = null;
         } else {
           selected_child = child;
         }

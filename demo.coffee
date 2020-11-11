@@ -40,7 +40,7 @@ demo = ()->
 	[val_range_a,setValRangeA] = useState(5.0)
 	[val_range_b,setValRangeB] = useState(20)
 	[val_range_c,setValRangeC] = useState(5.4)
-	
+	[val_range_d,setValRangeD] = useState(0)
 	[val_number_a,setValNumberA] = useState(1.4)
 	[val_number_b,setValNumberB] = useState(1.4)
 	
@@ -55,8 +55,8 @@ demo = ()->
 	[val_toggle_b,setValToggleB] = useState(false)
 	[val_toggle_c,setValToggleC] = useState(true)
 
-	[section_visible_a,setSectionVisibleA] = useState(false)
-	[section_visible_b,setSectionVisibleB] = useState(false)
+	[section_visible_a,setSectionVisibleA] = useState(true)
+	[section_visible_b,setSectionVisibleB] = useState(true)
 
 	[val_select_a,setValSelectA] = useState(null)
 
@@ -108,6 +108,7 @@ demo = ()->
 	renderMenu: ()->
 
 	renderBox = ()->
+		
 		h Box,
 			# top: no
 			# top: yes
@@ -207,6 +208,17 @@ demo = ()->
 				step: 1
 				snapValueToEdge: yes
 				color: 'yellow'
+			h In,
+				type: 'range'
+				label: 'stepped by 1'
+				value: val_range_d
+				set: setValRangeD
+				# toFixed: 0
+				min: 0
+				max: 10
+				step: 1
+				snapValueToEdge: yes
+				color: 'orange'
 			h In,
 				type: 'range'
 				label: 'stepped by 10 and fixed to 2 decimals'

@@ -34,8 +34,12 @@ Menu = (props)->
 	total_label_height = 0
 	label_widths = label_keys.map (key,i)->
 		
+		
 		if !props.items[key]
 			return 0
+		
+		if props.items[key].label
+			key = props.items[key].label
 		
 		if key == props.select
 			selected_label_index = i
@@ -116,7 +120,7 @@ Menu = (props)->
 	self_context.sel_w = label_widths[selected_label_index]
 
 	selected_child = null
-	
+
 	if props.items
 		labels = label_keys.map (key,i)->
 			child = props.items[key]
@@ -142,6 +146,8 @@ Menu = (props)->
 					selected_child = child()
 				else if child.render
 					selected_child = child.render()
+				else if child.label
+					selected_child = null
 				else
 					selected_child = child
 
