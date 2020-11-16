@@ -11,13 +11,22 @@ import {clampPosition,getPosition,fixAlign,guessAlign,adjustHeight} from './Alig
 
 Menu = (props)->
 	context = useContext(LayoutContext)
-	self_context = Object.assign {},context,{root:no,vert:props.vert,depth:context?.depth+1}
+	
+	if props.autoDeselect?
+		autoDeselect = props.autoDeselect
+	else if context?.autoDeselect?
+		autoDeselect = context.autoDeselect
+	else
+		autoDeselect = yes
+	
+	self_context = Object.assign {},context,{autoDeselect:autoDeselect,root:no,vert:props.vert,depth:context?.depth+1}
 	menu_ref = useRef()
 
 	useEffect ()->
 		return ()->
 			# log 'DECELECT'
-			props.onSelect?(undefined,undefined)
+			if self_context.autoDeselect
+				props.onSelect?(undefined,undefined)
 	,[]
 
 	if !context

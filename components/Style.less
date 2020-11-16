@@ -120,10 +120,18 @@
 	color: @color3;
 }
 
+input:disabled{
+	color: @color3 !important;
+	-webkit-user-select: none !important;
+	user-select: none !important;
+	cursor: default !important;
+}
+
 .ed-input{
 	width: inherit;
 	line-height: @dim;
 	height: @dim;
+	font-family: @mainfont;
 	-webkit-appearance: none;
 	outline: none;
 	color: @color1;
@@ -132,6 +140,7 @@
 	border-radius: none;
 	padding: 0px @padding;
 	// margin-left: @padding2;
+	
 }
 
 .ed-toggle-outer{

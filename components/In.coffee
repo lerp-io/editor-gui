@@ -248,6 +248,7 @@ In = (props)->
 		when 'text','number'
 			input = h 'input',
 				type: props.type
+				disabled: props.disabled
 				className: 'ed-input'
 				onChange: (e)->
 					if props.commit || context.dispatch
@@ -419,7 +420,7 @@ In = (props)->
 						background: props.value
 					h 'input',
 						ref: input_ref
-						className: 'ed-color-box-input'
+						className: cn 'ed-color-box-input',(props.disabled && 'ed-disabled')
 						onChange: (e)->
 							if !context.commit && props.set
 								props.set(e.target.value)
@@ -427,6 +428,7 @@ In = (props)->
 
 				h 'input',
 					type: 'text'
+					disabled: props.disabled
 					className: 'ed-input'
 					value: state.color_input_value || ''
 					onChange: (e)->
