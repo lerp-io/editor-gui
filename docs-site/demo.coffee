@@ -3,7 +3,7 @@ global.log = console.log.bind(console)
 import 'normalize.css'
 import {createElement,useState,useEffect,useRef,useReducer} from 'react'
 import {render} from 'react-dom'
-import {Layout,In,Box,Row,Menu,Section,SectionLabel,Style,Separator} from './components'
+import {Layout,In,Box,Row,Menu,Section,SectionLabel,Style,Separator} from '../components'
 h = createElement
 
 import './demo.less'
@@ -24,7 +24,7 @@ menuToggleReducer = (state,{menu_name,item_name})->
 
 menuToggleReducerState = {}
 
-demo = ()->
+export default Demo = ()->
 	[is_mounted,setMounted] = useState(false)
 	[size,setSize] = useState(null)
 	useEffect ()->
@@ -417,4 +417,3 @@ demo = ()->
 	
 	return dev()
 
-render(h(demo),window.demo)
