@@ -42,7 +42,7 @@ findNavKey = (tree,scrollY,select)->
 	# log tree
 	for key,it of tree
 		# log it.top,it.bot,scrollY
-		if scrollY < it.bot #&& scrollY >= it.top
+		if scrollY < it.bot && scrollY >= it.top
 			select.push key
 			findNavKey(it.children,scrollY,select)
 			return select

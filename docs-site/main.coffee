@@ -6,24 +6,46 @@ import {createElement,useState,useEffect,useRef,useReducer} from 'react'
 import {render} from 'react-dom'
 import {Layout,In,Box,Row,Menu,Section,SectionLabel,Style,Separator} from '../components'
 
+import gfm from 'remark-gfm'
+
 global.h = createElement
 global.log = console.log.bind(console)
 
-
-
+import Markdown from 'react-markdown'
 import {NavBar,NavBarSection} from './NavBar.coffee'
 
 
-Snippet = (props)->
+
+Mark = (md)->
+	h Markdown,
+		plugins:[gfm]
+		md
+
+
+
+Example = (props)->
 	h 'div',
-		cn: 'snippet'
-		'snippet'
+		cn: 'example'
+		h 'div',
+			cn: 'example-title'
+			props.title
+		h 'div',
+			cn: 'text example-markdown'
+			Mark(props.md)
+
+
 
 Component = (props)->
 	h 'div',
 		cn: 'component'
-		'component'
-
+		h 'div',
+			cn: 'component-name'
+			'<'+props.name+'>'
+		h 'div',
+			cn: 'text component-markdown'
+			Mark(props.md)
+			# props.name
+			# 'component'
 
 
 
@@ -32,6 +54,7 @@ Component = (props)->
 ---------------------------------------------------------------
 ---------------------------------------------------------------
 ###
+
 
 
 # COMPONENTS
@@ -42,6 +65,8 @@ import MenuMD from '../components/Menu.md'
 import RowMD from '../components/Row.md'
 import SectionMD from '../components/Section.md'
 import SeparatorMD from '../components/Separator.md'
+
+import About from '../About.md'
 
 COMPONENTS =
 	Box: 
@@ -62,19 +87,19 @@ COMPONENTS =
 
 
 
-# SNIPPETS
-import TestSnippetMD from '../snippets/test.md'
-import TestSnippet from '../snippets/test.coffee'
-import TestSnippetCoffee from '!raw-loader!../snippets/test.coffee'
-import TestSnippetTS from '!raw-loader!../snippets/test.ts'
+# EXAMPLES
+import TestExampleMD from '../examples/test.md'
+import TestExample from '../examples/test.coffee'
+import TestExampleCoffee from '!raw-loader!../examples/test.coffee'
+import TestExampleTS from '!raw-loader!../examples/test.ts'
 
 
-SNIPPETS =
-	"Testing ": 
-		component: TestSnippet
-		coffee_source: TestSnippetCoffee
-		ts_source: TestSnippetTS
-		md: TestSnippetMD
+EXAMPLES =
+	"Testing":
+		component: TestExample
+		coffee_source: TestExampleCoffee
+		ts_source: TestExampleTS
+		md: TestExampleMD
 
 
 
@@ -89,16 +114,19 @@ main = ->
 	[nav_select,selectNav] = useState(null)
 	header = h 'div',
 		cn: 'banner'
-		'editor-gui.js'
+		'editor-gui'
+		h 'span',
+			cn: 'banner-text-c'
+			'.js'
 		# h Demo
 
 
-	render_snippets = []
-	for title,snip of SNIPPETS
-		render_snippets.push h NavBarSection,
+	render_examples = []
+	for title,snip of EXAMPLES
+		render_examples.push h NavBarSection,
 			nav_key: title
 			key: title
-			h Snippet,
+			h Example,
 				title: title
 				coffee_source: snip.coffee_source
 				ts_source: snip.ts_source
@@ -118,10 +146,11 @@ main = ->
 				md: comp.md
 	
 	# log render_components
-	render_components.unshift h 'p',
-		key: 'about'
-		cn: 'text'
-		'this is some text'
+	# render_components.unshift h 'div',
+	# 	key: 'about'
+	# 	cn: 'text'
+		
+		
 
 
 	h 'div',
@@ -130,11 +159,17 @@ main = ->
 		h NavBar,
 			select: nav_select
 			h NavBarSection,
+				nav_key: 'about'
+				h 'div',
+					cn: 'text'
+					h Markdown,{},About
+			
+			h NavBarSection,
+				nav_key: 'examples'
+				render_examples
+			h NavBarSection,
 				nav_key: 'components'
 				render_components
-			h NavBarSection,
-				nav_key: 'snippets'
-				render_snippets
 
 
 render(h(main),window.main)

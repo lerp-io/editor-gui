@@ -32,6 +32,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-virtualized": "^9.21.2",
+    "remark-gfm": "^1.0.0",
     "style-loader": "^1.2.1",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11",

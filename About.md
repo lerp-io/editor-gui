@@ -1,0 +1,3 @@
+### A simple react libray for quickly creating menus and editor panels
+
+**editor-gui.js** helps you create menus and panels quickly using **react**. This library was inspired by other libraries like *imgui* and *datgui*. Although far from being as robust or useful as *imgui*, it gets the job done for simple browser based projects. Menus are easy to create and will work well in any position of the screen.

@@ -205,6 +205,8 @@ initial_state =
 	range_slider_x: 0
 	color_input_value: null
 
+
+
 In = (props)->
 	[state,dispatch] = useReducer(reducer,initial_state) 
 	[is_dragging,isDragging] = useState(false)
