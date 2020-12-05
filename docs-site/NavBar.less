@@ -1,7 +1,6 @@
 
 .navtree-root{
 	position: sticky;
-	right: 0px;
 	top: 0px;
 	width: fit-content;
 	padding: 12px;
@@ -10,8 +9,10 @@
 
 .nav-context{
 	position: relative;
-	display: flex;
-	flex-direction: row-reverse;
+    display: flex;
+    flex-wrap: wrap-reverse;
+    flex-direction: row-reverse;
+    align-items: flex-end;
 }
 
 .nav-content{
@@ -19,7 +20,7 @@
 }
 
 .nav-content-root{
-	width: 100%;
+	max-width: 900px;
 }
 
 

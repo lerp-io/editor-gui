@@ -32,6 +32,7 @@ export default Demo = ()->
 			setMounted(yes)
 			
 	,[]
+
 	[show_menu_item_a,setMenuItemA] = useState('🐠 another menu 🐠')
 	[show_menu_item_b,setMenuItemB] = useState("0")
 	[show_menu_item_c,setMenuItemC] = useState(undefined)
@@ -338,6 +339,7 @@ export default Demo = ()->
 					'option-a': 'Option 1'
 					'option-b': 'Option 2'
 					'option-c': 'Option 3'
+	
 	onSelectRecursiveMenuItem = (menu_name,item_name)->
 		# log 'on SELECT',menu_name,'->',item_name
 		dispatchMenuState
@@ -411,9 +413,5 @@ export default Demo = ()->
 							'R15': renderRecursiveMenu.bind(null,'r')
 							'R16': renderRecursiveMenu.bind(null,'r')
 
-										
-									
 
-	
 	return dev()
-

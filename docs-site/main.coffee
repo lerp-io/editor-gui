@@ -14,12 +14,61 @@ global.log = console.log.bind(console)
 import Markdown from 'react-markdown'
 import {NavBar,NavBarSection} from './NavBar.coffee'
 
+import hljs from 'highlight.js/lib/core';
+import javascript from 'highlight.js/lib/languages/javascript'
+hljs.registerLanguage('javascript', javascript)
+import 'highlight.js/styles/stackoverflow-dark.css'
+import 'highlight.js/styles/atom-one-dark.css'
 
 
 Mark = (md)->
 	h Markdown,
 		plugins:[gfm]
 		md
+
+
+
+renderSourceCodeView = (props)->
+	pre_ref = useRef()
+	[code_type,setCodeType] = useState('js')
+	
+	useEffect ()->
+		if pre_ref.current
+			hljs.highlightBlock(pre_ref.current)
+		
+		return 
+	,[code_type]
+	
+	if code_type == 'js'
+		code_text = props.js
+	else
+		code_text = props.coffee
+
+	h 'div',
+		cn: 'example-code'
+		h 'div',
+			cn: 'scroll'
+			h 'pre',
+				cn: 'code'
+				ref: pre_ref
+				code_text
+		h 'div',
+			cn: 'lang-select-box'
+			h 'div',
+				cn: 'lang-select-button '+(code_type == 'js' && 'select')
+				onClick: setCodeType.bind(null,'js')
+				'.js'
+			h 'div',
+				cn: 'lang-select-button '+(code_type == 'coffee' && 'select')
+				onClick: setCodeType.bind(null,'coffee')
+				'.coffee'
+
+
+
+renderExample = (component)->
+	h 'div',
+		cn: 'example-render'
+		h component
 
 
 
@@ -32,6 +81,11 @@ Example = (props)->
 		h 'div',
 			cn: 'text example-markdown'
 			Mark(props.md)
+		
+		# renderExample(props.component)
+		renderSourceCodeView
+			js: props.js_source
+			coffee: props.coffee_source
 
 
 
@@ -91,14 +145,13 @@ COMPONENTS =
 import TestExampleMD from '../examples/test.md'
 import TestExample from '../examples/test.coffee'
 import TestExampleCoffee from '!raw-loader!../examples/test.coffee'
-import TestExampleTS from '!raw-loader!../examples/test.ts'
-
+import TestExampleJS from '!raw-loader!../examples/test.js'
 
 EXAMPLES =
 	"Testing":
 		component: TestExample
 		coffee_source: TestExampleCoffee
-		ts_source: TestExampleTS
+		js_source: TestExampleJS
 		md: TestExampleMD
 
 
@@ -109,6 +162,7 @@ EXAMPLES =
 ---------------------------------------------------------------
 ###
 # import Demo from './demo'
+
 
 main = ->
 	[nav_select,selectNav] = useState(null)
@@ -129,7 +183,7 @@ main = ->
 			h Example,
 				title: title
 				coffee_source: snip.coffee_source
-				ts_source: snip.ts_source
+				js_source: snip.js_source
 				component: snip.component
 				md: snip.md
 
@@ -144,13 +198,6 @@ main = ->
 			h Component,
 				name: name
 				md: comp.md
-	
-	# log render_components
-	# render_components.unshift h 'div',
-	# 	key: 'about'
-	# 	cn: 'text'
-		
-		
 
 
 	h 'div',
