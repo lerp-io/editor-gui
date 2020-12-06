@@ -4,7 +4,7 @@
   "description": "basic react web ui components",
   "main": "./components/index.coffee",
   "scripts": {
-    "dev-docs": "coffee -c -b -w --output ./examples/ ./examples/*.coffee & webpack-dev-server --config ./scripts/docs.config.js --mode development",
+    "dev": "coffee -c -b -w --output ./examples/ ./examples/*.coffee & webpack-dev-server --config ./scripts/docs.config.js --mode development",
     "prod": "coffee -c -b --output ./examples/ ./examples/*.coffee && NODE_ENV=production webpack --config ./scripts/lib.config.js --progress --mode development && NODE_ENV=production webpack --config ./scripts/lib.config.js --progress --mode development && webpack --config ./scripts/docs.config.js --progress --mode production",
     "lib": "coffee -cmw --output ./dist/ ./components & webpack --config ./scripts/lib.config.js --watch --progress --mode development"
   },

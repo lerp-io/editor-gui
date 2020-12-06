@@ -169,7 +169,7 @@ Menu = (props)->
 				else
 					selected_child = child
 
-			return h 'div',
+			return h 'button',
 				key:key
 				title: title
 				style:

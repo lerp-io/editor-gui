@@ -43,7 +43,7 @@ export default test = function() {
     // getLabelWidth: (label)->
     // 	label.length * 8.15
     fontSize: 13,
-    fontFamily: 'Nunito'
+    fontFamily: 'Arial'
   }, h(MenuAnchor, {
     handlePosition: 'bottom',
     align: 'left-down',

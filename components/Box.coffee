@@ -19,7 +19,9 @@ Box = (props,state)->
 	style = {}
 	
 	context = useContext(LayoutContext)
-	self_context = {}
+	self_context = 
+		startDrag: context.startDrag
+		stopDrag: context.stopDrag
 
 	useEffect ()->
 		if !visible

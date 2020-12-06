@@ -43,6 +43,14 @@
 	}
 }
 
+.ed-layout-dragging{
+	pointer-events: all;
+	cursor: ew-resize;
+	*{
+		pointer-events: none;
+	}
+}
+
 .ed-full-w{
 	width: 100%;
 }
@@ -291,6 +299,9 @@ input:disabled{
 		display: flex;
 		align-items: center;
 		color: @color2;
+		background: none;
+		border: none;
+		outline: none;
 		
 		&.ed-selected{
 			background-color: @bg2;

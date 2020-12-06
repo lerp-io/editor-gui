@@ -52,7 +52,7 @@ export default ExampleDemoBox = ()->
 	[upd,setUpdate] = useState(null)
 	global.setUpdate = setUpdate
 
-	[menu_state,dispatchMenuState] = useReducer(menuToggleReducer,menuToggleReducerState) 
+	# [menu_state,dispatchMenuState] = useReducer(menuToggleReducer,menuToggleReducerState) 
 	# log menu_state
 
 	renderSettingsBoxB = (props,state)->

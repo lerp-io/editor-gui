@@ -10,6 +10,7 @@ Layout = (props,state)->
 	[context,setContext] = useState(null)
 	measure_text = useRef(new Map)
 	canvas_ref = useRef()
+	[is_dragging,isDragging] = useState(false)
 	
 
 	useEffect ()->
@@ -17,7 +18,17 @@ Layout = (props,state)->
 		return
 	,[props.fontFamily,props.fontSize]
 	
-	
+	startDrag = (onDrag,onDragEnd,onMouseOut)->
+		isDragging(true)
+		layout_ref.current.addEventListener('mousemove',onDrag)
+		layout_ref.current.addEventListener('mouseup',onDragEnd)
+		layout_ref.current.addEventListener('mouseout',onMouseOut)
+
+	stopDrag = (onDrag,onDragEnd,onMouseOut)->
+		isDragging(false)
+		layout_ref.current.removeEventListener('mousemove',onDrag)
+		layout_ref.current.removeEventListener('mouseup',onDragEnd)
+		layout_ref.current.removeEventListener('mouseout',onMouseOut)
 	
 	getLabelWidth = (label)->
 		# log 'get label width'
@@ -40,7 +51,7 @@ Layout = (props,state)->
 
 	useEffect ()->
 
-		canvas = document.createElement("canvas"); 
+		canvas = document.createElement("canvas");
 		
 		if !context
 			onWindowResize = ()->
@@ -55,6 +66,8 @@ Layout = (props,state)->
 					selected_label: 'root'
 					view_rect: view_rect
 					getLabelWidth: getLabelWidth
+					stopDrag: stopDrag
+					startDrag: startDrag
 			onWindowResize()
 			window.addEventListener 'resize',onWindowResize
 			return
@@ -69,7 +82,7 @@ Layout = (props,state)->
 			style:
 				fontSize: props.fontSize
 				fontFamily: props.fontFamily
-			className: 'ed-layout'
+			className: 'ed-layout '+(is_dragging && 'ed-layout-dragging' || '')
 			props.children
 
 export default Layout

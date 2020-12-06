@@ -67,6 +67,7 @@ LineChart = (props)->
 	canvas_state = useRef({
 		pan_x: 0
 	})
+	context = useContext(BoxContext)
 	[rect,setRect] = useState(null)
 	[tick_step,setTickStep] = useState(null)
 	
@@ -132,7 +133,7 @@ LineChart = (props)->
 					# log pan_x
 					
 					# log pan_x
-					requestAnimationFrame renderChart.bind(null,canvas_state.current,props)
+					requestAnimationFrame renderChart.bind(null,canvas_state.current,props,context)
 					e.preventDefault()
 					e.stopPropagation()
 					return false
@@ -143,10 +144,11 @@ LineChart = (props)->
 					f = e.relatedTarget || e.toElement
 					if f && f.nodeName != "HTML"
 						return false
-					document.body.style.cursor = 'default'
-					document.body.removeEventListener('mousemove',onDrag)
-					document.body.removeEventListener('mouseup',onDragEnd)
-					document.body.removeEventListener('mouseout',onMouseOut)
+					# context.body.style.cursor = 'default'
+					# context.body.removeEventListener('mousemove',onDrag)
+					# context.body.removeEventListener('mouseup',onDragEnd)
+					# context.body.removeEventListener('mouseout',onMouseOut)
+					context.stopDrag(onDrag,onDragEnd,onMouseOut)
 					# log 'MOUSE OUT'
 					window.getSelection().removeAllRanges()
 					return false
@@ -154,16 +156,18 @@ LineChart = (props)->
 				onDragEnd = (e)->
 					e.preventDefault()
 					e.stopPropagation()
-					document.body.style.cursor = 'default'
-					document.body.removeEventListener('mousemove',onDrag)
-					document.body.removeEventListener('mouseup',onDragEnd)
-					document.body.removeEventListener('mouseout',onMouseOut)
+					# context.body.style.cursor = 'default'
+					# context.body.removeEventListener('mousemove',onDrag)
+					# context.body.removeEventListener('mouseup',onDragEnd)
+					# context.body.removeEventListener('mouseout',onMouseOut)
+					context.stopDrag(onDrag,onDragEnd,onMouseOut)
 					return false
 				
-				document.body.style.cursor = 'ew-resize'
-				document.body.addEventListener 'mousemove',onDrag
-				document.body.addEventListener 'mouseup',onDragEnd
-				document.body.addEventListener 'mouseout',onMouseOut
+				# context.body.style.cursor = 'ew-resize'
+				# context.body.addEventListener 'mousemove',onDrag
+				# context.body.addEventListener 'mouseup',onDragEnd
+				# context.body.addEventListener 'mouseout',onMouseOut
+				context.startDrag(onDrag,onDragEnd,onMouseOut)
 				# e.preventDefault()
 				# e.stopPropagation()
 				# return false
@@ -370,9 +374,7 @@ In = (props)->
 					onDragEnd = (e)->
 						e.preventDefault()
 						e.stopPropagation()
-						document.body.style.cursor = 'default'
-						document.body.removeEventListener('mousemove',onDrag)
-						document.body.removeEventListener('mouseup',onDragEnd)
+						context.stopDrag(onDrag,onDragEnd,onMouseOut)
 						return false
 					
 					onMouseOut = (e)->
@@ -381,18 +383,16 @@ In = (props)->
 						f = e.relatedTarget || e.toElement
 						if f && f.nodeName != "HTML"
 							return false
-						document.body.style.cursor = 'default'
-						document.body.removeEventListener('mousemove',onDrag)
-						document.body.removeEventListener('mouseup',onDragEnd)
-						document.body.removeEventListener('mouseout',onMouseOut)
+						context.stopDrag(onDrag,onDragEnd,onMouseOut)
 						# log 'MOUSE OUT'
 						window.getSelection().removeAllRanges()
 						return false
 
-					document.body.style.cursor = 'ew-resize'
-					document.body.addEventListener 'mousemove',onDrag
-					document.body.addEventListener 'mouseup',onDragEnd
-					document.body.addEventListener 'mouseout',onMouseOut
+					# context.body.style.cursor = 'ew-resize'
+					context.startDrag(onDrag,onDragEnd,onMouseOut)
+					# context.body.addEventListener 'mousemove',onDrag
+					# context.body.addEventListener 'mouseup',onDragEnd
+					# context.body.addEventListener 'mouseout',onMouseOut
 				
 				h 'div',
 					className: 'ed-range-slider'

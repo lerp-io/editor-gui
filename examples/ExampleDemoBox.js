@@ -30,7 +30,7 @@ for (m = i = 0; i < 100; m = ++i) {
 }
 
 export default ExampleDemoBox = function() {
-  var box_visible_a, dispatchMenuState, is_mounted, menu_state, pos_a, renderBox, renderSettingsBoxB, section_visible_a, section_visible_b, setBoxVisibleA, setMenuItemA, setMenuItemB, setMenuItemC, setMenuItemD, setMounted, setSectionVisibleA, setSectionVisibleB, setSize, setUpdate, setValColorA, setValColorB, setValColorC, setValNumberA, setValNumberB, setValRangeA, setValRangeB, setValRangeC, setValRangeD, setValSelectA, setValTextA, setValTextB, setValToggleA, setValToggleB, setValToggleC, show_menu_item_a, show_menu_item_b, show_menu_item_c, show_menu_item_d, size, upd, val_color_a, val_color_b, val_color_c, val_number_a, val_number_b, val_range_a, val_range_b, val_range_c, val_range_d, val_select_a, val_text_a, val_text_b, val_toggle_a, val_toggle_b, val_toggle_c;
+  var box_visible_a, is_mounted, pos_a, renderBox, renderSettingsBoxB, section_visible_a, section_visible_b, setBoxVisibleA, setMenuItemA, setMenuItemB, setMenuItemC, setMenuItemD, setMounted, setSectionVisibleA, setSectionVisibleB, setSize, setUpdate, setValColorA, setValColorB, setValColorC, setValNumberA, setValNumberB, setValRangeA, setValRangeB, setValRangeC, setValRangeD, setValSelectA, setValTextA, setValTextB, setValToggleA, setValToggleB, setValToggleC, show_menu_item_a, show_menu_item_b, show_menu_item_c, show_menu_item_d, size, upd, val_color_a, val_color_b, val_color_c, val_number_a, val_number_b, val_range_a, val_range_b, val_range_c, val_range_d, val_select_a, val_text_a, val_text_b, val_toggle_a, val_toggle_b, val_toggle_c;
   [is_mounted, setMounted] = useState(false);
   [size, setSize] = useState(null);
   useEffect(function() {
@@ -63,8 +63,7 @@ export default ExampleDemoBox = function() {
   pos_a = useRef([0, 0]);
   [upd, setUpdate] = useState(null);
   global.setUpdate = setUpdate;
-  [menu_state, dispatchMenuState] = useReducer(menuToggleReducer, menuToggleReducerState);
-  
+  // [menu_state,dispatchMenuState] = useReducer(menuToggleReducer,menuToggleReducerState) 
   // log menu_state
   renderSettingsBoxB = function(props, state) {
     return h(Box, {
