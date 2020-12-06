@@ -16,9 +16,11 @@ import {NavBar,NavBarSection} from './NavBar.coffee'
 
 import hljs from 'highlight.js/lib/core';
 import javascript from 'highlight.js/lib/languages/javascript'
+import coffeescript from 'highlight.js/lib/languages/coffeescript'
 hljs.registerLanguage('javascript', javascript)
-import 'highlight.js/styles/stackoverflow-dark.css'
-import 'highlight.js/styles/atom-one-dark.css'
+hljs.registerLanguage('coffeescript', coffeescript)
+# import 'highlight.js/styles/stackoverflow-dark.css'
+import 'highlight.js/styles/monokai-sublime.css'
 
 
 Mark = (md)->
@@ -30,45 +32,69 @@ Mark = (md)->
 
 renderSourceCodeView = (props)->
 	pre_ref = useRef()
-	[code_type,setCodeType] = useState('js')
+	[code_type,setCodeType] = useState(undefined)
+	[show_code,toggleShowCode] = useState(false)
 	
 	useEffect ()->
-		if pre_ref.current
+		if pre_ref.current && code_type
 			hljs.highlightBlock(pre_ref.current)
-		
-		return 
-	,[code_type]
+			render(h(main),window.main)
+		return
+	,[pre_ref.current,code_type]
 	
 	if code_type == 'js'
 		code_text = props.js
-	else
+		code_lang = 'javascript'
+	else if code_type == 'coffee'
 		code_text = props.coffee
+		code_lang = 'coffeescript'
+
+	if code_type
+		code = h 'div',
+			cn: 'scroll'
+			h 'pre',
+				cn: 'code language-'+code_lang
+				ref: pre_ref
+				code_text
 
 	h 'div',
 		cn: 'example-code'
-		h 'div',
-			cn: 'scroll'
-			h 'pre',
-				cn: 'code'
-				ref: pre_ref
-				code_text
+		
 		h 'div',
 			cn: 'lang-select-box'
+
+			# h 'div',
+			# 	cn: 'lang-select-button '+(show_code && 'select' || '')
+			# 	onClick: toggleShowCode.bind(null,!show_code)
+			# 	'</>'
 			h 'div',
-				cn: 'lang-select-button '+(code_type == 'js' && 'select')
-				onClick: setCodeType.bind(null,'js')
+				cn: 'lang-select-button '+(code_type == 'js' && 'select' ||'')
+				onClick: setCodeType.bind(null,if code_type == 'js' then undefined else 'js')
 				'.js'
 			h 'div',
-				cn: 'lang-select-button '+(code_type == 'coffee' && 'select')
-				onClick: setCodeType.bind(null,'coffee')
+				cn: 'lang-select-button '+(code_type == 'coffee' && 'select'||'')
+				onClick: setCodeType.bind(null,if code_type == 'coffee' then undefined else 'coffee')
 				'.coffee'
+			
+		
+		code
 
 
 
 renderExample = (component)->
-	h 'div',
+	# log component
+	iframe_ref = useRef({})
+	useEffect ()->
+		if iframe_ref.current
+			doc = iframe_ref.current.contentDocument
+			doc.head.innerHTML = document.head.innerHTML
+			doc.body.innerHTML = '<div id="example"></div>'
+			render(h(component),doc.getElementById('example'))
+		return
+	,[]
+	h 'iframe',
 		cn: 'example-render'
-		h component
+		ref: iframe_ref
 
 
 
@@ -82,7 +108,7 @@ Example = (props)->
 			cn: 'text example-markdown'
 			Mark(props.md)
 		
-		# renderExample(props.component)
+		renderExample(props.component)
 		renderSourceCodeView
 			js: props.js_source
 			coffee: props.coffee_source
@@ -168,7 +194,7 @@ main = ->
 	[nav_select,selectNav] = useState(null)
 	header = h 'div',
 		cn: 'banner'
-		'editor-gui'
+		'<editor-gui>'
 		h 'span',
 			cn: 'banner-text-c'
 			'.js'

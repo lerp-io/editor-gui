@@ -87,14 +87,19 @@ Menu = (props)->
 		[x,y] = getPosition(self_width,self_height,context,align_key)
 		align_key = fixAlign(align_key,context,self_width,self_height)
 		# log 'FIX ALIGN FOR ',context.selected_label,' : ',align_key
+	
+	
 
 	if props.position
 		self_x = props.position[0]
 		self_y = props.position[1]
+	else if context.root
+		self_x = context.x
+		self_y = context.y
 	else
 		[self_x,self_y] = getPosition(self_width,self_height,context,align_key)
 		# log 'GOT POSITION FOR',context.selected_label,'[',self_x,',',self_y,']'
-		[offset_x,offset_y] = clampPosition(context,self_x,self_y,self_width,self_height)
+		[offset_x,offset_y] = clampPosition(context,self_x,self_y,self_width,self_height,align_key)
 		self_x += offset_x
 		self_y += offset_y
 
@@ -117,6 +122,7 @@ Menu = (props)->
 	self_context.x = self_x
 	self_context.y = self_y
 	self_context.vert = props.vert
+	self_context.root = false
 	self_context.align = align_key
 	self_context.selected_label = props.select
 	if props.vert
@@ -144,8 +150,11 @@ Menu = (props)->
 				return h 'div',
 					key:key
 					className: cn 'ed-menu-item-label',props.select == key && 'ed-selected','noselect'
+					style:
+						paddingLeft: context.paddingLeft
+						minWidth: label_widths[i]
 					onClick: child.onClick || child.onSelect
-					key
+					label
 
 			title = key+'-'+i
 			label_keys.push(key)
@@ -163,6 +172,9 @@ Menu = (props)->
 			return h 'div',
 				key:key
 				title: title
+				style:
+					minWidth: label_widths[i]
+					paddingLeft: context.paddingLeft
 				onClick: props.onSelect && ( (e)->
 					if e.target.title != title
 						return

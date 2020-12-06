@@ -60,7 +60,7 @@ Box = (props,state)->
 	else
 		[self_x,self_y] = getPosition(self_width,self_height,context,align_key)
 		# log self_x,self_y
-		[offset_x,offset_y] = clampPosition(context,self_x,self_y,self_width,self_height)
+		[offset_x,offset_y] = clampPosition(context,self_x,self_y,self_width,self_height,align_key)
 		self_x += offset_x
 		self_y += offset_y
 		# [self_width]

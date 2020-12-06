@@ -191,9 +191,11 @@ getPosition = (width,height,ctx,align_key)->
 	
 	return [x,y]
 
-clampPosition = (ctx,x,y,width,height)->
+clampPosition = (ctx,x,y,width,height,align_key)->
 	offset_x = 0 
 	offset_y = 0
+	add_offset_x = 0
+	add_offset_y = 0
 	if x + width > ctx.view_rect.right 
 		offset_x = ctx.view_rect.right - (x + width)
 	else if x < ctx.view_rect.left
@@ -204,7 +206,52 @@ clampPosition = (ctx,x,y,width,height)->
 	else if y < ctx.view_rect.top
 		offset_y = ctx.view_rect.top - y
 	
+	# log align_key
+	if offset_y && !offset_x
+		if align_key == 'top-left' || align_key == 'bottom-left'
+			add_offset_x = -ctx.dim/2
+		else if align_key == 'top-right' || align_key == 'bottom-right'
+			add_offset_x = ctx.dim/2
+		# else if align_key == 'left-up' || align_key == 'left-down'
+		# 	add_offset_x = -ctx.dim/2
+		# else if align_key == 'right-up' || align_key == 'right-down'
+		# 	add_offset_x = ctx.dim/2
+	
+	if offset_x && !offset_y
+		# if align_key == 'top-left' || align_key == 'bottom-left'
+		# 	add_offset_y = -ctx.dim/2
+		# else if align_key == 'top-right' || align_key == 'bottom-right'
+		# 	add_offset_y = ctx.dim/2
+		if align_key == 'right-down' || align_key == 'left-down'
+			add_offset_y = -ctx.dim/2
+		else if align_key == 'right-up' || align_key == 'left-up'
+			add_offset_y = ctx.dim/2
+
+
+
+	offset_x += add_offset_x
+	offset_y += add_offset_y
+	# if offset_x && !offset_y
+	# 	offset_y -= ctx.dim/2
+		
+
+
+				
 	# log offset_x,offset_y
+	# if align_key
+	# 	if align_key == 'right-down' || align_key == 'right-down' || align_key == 'left-down' || align_key == 'left-up'
+	# 		if offset_x
+	# 			log align_key,offset_x
+	# 			offset_y += ctx.dim/2
+	# 		else 
+	# 	else
+	# 		if offset_x
+	# 			log align_key,offset_x
+	# 			offset_y -= ctx.dim/2
+	# 		else if offset_y
+	# 			log align_key,offset_y
+	# 			offset_x -= ctx.dim/2
+
 	return [offset_x,offset_y]
 
 

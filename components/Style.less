@@ -295,7 +295,7 @@ input:disabled{
 			color: @color1;
 		}
 		cursor: pointer;
-		padding: 0px 12px;
+		// padding: 0px 12px;
 		&:hover{
 			color: @color1;
 		}
@@ -489,4 +489,30 @@ input:disabled{
 .ed-line-chart-label{
 	// width: 50%;
 	padding: @padding 0px;
+}
+
+.ed-anchor{
+	display: flex;
+	flex-direction: row;
+	position: fixed;
+	.ed-anchor-handle{
+		position: fixed;
+		background: black;
+		cursor: move;
+		display: flex;
+		justify-content: center;
+		align-content: center;
+		align-items: center;
+		.ed-anchor-dot{
+			pointer-events: none;
+			background: white;
+			width: 4px;
+			height: 4px;
+		}
+	}
+	.ed-anchor-content{
+
+	}
+	
+	
 }

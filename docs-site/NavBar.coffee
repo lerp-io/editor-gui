@@ -126,10 +126,10 @@ NavBarSection = (props)->
 		hash: 23
 
 	useEffect ()->
+		# log 'set nav bar hash'
 		self_context.hash *= (ref.current.offsetTop+ref.current.clientHeight)*31
 		context.setNav(props.nav_key,ref.current.offsetTop,ref.current.offsetTop+ref.current.clientHeight,self_context.nav_children,self_context.hash)
-		return
-	,[]
+		return 
 
 	h NavBarContext.Provider,
 		value: self_context
