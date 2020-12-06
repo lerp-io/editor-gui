@@ -81,7 +81,7 @@ LineChart = (props)->
 
 	useEffect ()->
 		if canvas_ref.current
-			log 'set canvas context'
+			# log 'set canvas context'
 			canvas_state.current.ctx = canvas_ref.current.getContext('2d')
 			setTickStep(0)
 		return
@@ -226,10 +226,12 @@ In = (props)->
 	if props.label
 		label = h 'div',
 			className: 'ed-in-label ed-flex-right'
+			style:
+				color: props.labelColor
 			props.label
-			h 'div',
-				className:'ed-in-label-colon'
-				props.type != 'toggle' && ':'
+			# h 'div',
+			# 	className:'ed-in-label-colon'
+			# 	props.type != 'toggle' && ':'
 
 	useEffect ()->
 		if props.value != state.color_input_value && props.type == 'color'
@@ -248,7 +250,10 @@ In = (props)->
 	switch props.type
 		when 'plain','label'
 			input = h 'div',
-				className: 'ed-label full-w'
+				className: 'ed-input full-w ed-input-plain'
+				style:
+					background: props.backgroundColor
+					color: props.valueColor
 				props.value
 				
 		when 'text','number'
@@ -256,6 +261,9 @@ In = (props)->
 				type: props.type
 				disabled: props.disabled
 				className: 'ed-input'
+				style:
+					background: props.backgroundColor
+					color: props.valueColor
 				onChange: (e)->
 					if props.commit || context.dispatch
 						dispatch
@@ -275,6 +283,8 @@ In = (props)->
 		when 'toggle'
 			input = h 'div',
 				className: 'ed-toggle-outer'
+				style:
+					backgroundColor: props.backgroundColor
 				onClick: ()->
 					if props.commit || context.dispatch
 						dispatch
@@ -291,7 +301,7 @@ In = (props)->
 				h 'div',
 					className: cn 'ed-toggle-inner',props.value && 'ed-toggle-active'
 					style:
-						backgroundColor: props.value && props.color || undefined
+						backgroundColor: props.value && props.valueColor || undefined
 		
 		when 'range'
 			if outer_range_ref.current
@@ -328,7 +338,8 @@ In = (props)->
 				className: cn 'ed-range-outer'
 				ref: outer_range_ref
 				style:
-					color: if props.color? then props.color else undefined 
+					color: if props.valueColor? then props.valueColor else undefined 
+					backgroundColor: props.backgroundColor
 				onMouseDown: (e)->
 					
 					slider_state_ref.current.cx = e.clientX 
@@ -398,7 +409,7 @@ In = (props)->
 					className: 'ed-range-slider'
 					style:
 						transform: "translate(#{range_slider_x}px,#{0}%)"
-						backgroundColor: if props.color? then props.color else undefined
+						backgroundColor: props.valueColor
 					!props.snapValueToEdge && value_label || undefined
 				props.snapValueToEdge && value_label || undefined
 
@@ -407,7 +418,7 @@ In = (props)->
 			input = h 'button',
 				className: 'ed-button'
 				style:
-					color: props.color
+					color: props.valueColor
 					background: props.backgroundColor
 				onClick: (e)->
 					props.onSelect?(e) || props.onClick?(e) || props.set?(e)
@@ -487,22 +498,22 @@ In = (props)->
 	
 	if props.type == 'toggle' 
 		return h 'div',
-			className: cn 'ed-in-wrap','ed-in-wrap-toggle',props.half && 'ed-in-half',props.type == 'plain' && 'ed-tight'
+			className: cn 'ed-in-wrap','ed-in-wrap-toggle',props.half && 'ed-in-half'
 			h 'div',
 				className: 'ed-in-wrap-toggle-input'
 				input
-			h 'div',
-				className: 'ed-in-wrap-toggle-label'
-				label
+			# h 'div',
+			# 	className: 'ed-in-wrap-toggle-label'
+			label
 			
 
 
 	h 'div',
 		className: cn 'ed-in-wrap',props.half && 'ed-in-half',props.type == 'plain' && 'ed-tight'
-		label
 		h 'div',
 			className: cn 'ed-input-wrap',props.half && 'ed-in-half'
 			input
+		label
 
 
 	

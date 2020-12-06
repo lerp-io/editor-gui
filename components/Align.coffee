@@ -1,4 +1,4 @@
-
+BAR_DIM = 12
 #neveragain
 
 guessAlign = (width,height,ctx)->
@@ -139,12 +139,12 @@ fixAlign = (align_key,ctx,width,height)->
 				else return 'top-left'
 
 
-adjustHeight = (ctx,width,height)->
-	if height >= ctx.view_rect.height
-		scroll = 'scroll'
-		height = ctx.view_rect.height
-	return [scroll,height]
-		
+clampHeight = (ctx,height)->
+	if ctx.root && ctx.clamp_height
+		return Math.min(ctx.view_rect.height-BAR_DIM,Math.min(ctx.clamp_height,height))
+	else
+		return Math.min(height,ctx.view_rect.height - BAR_DIM)
+
 
 
 getAlignDirections = (align_key)->
@@ -255,4 +255,4 @@ clampPosition = (ctx,x,y,width,height,align_key)->
 	return [offset_x,offset_y]
 
 
-export {clampPosition,getPosition,fixAlign,guessAlign,adjustHeight}
+export {clampPosition,getPosition,fixAlign,guessAlign,clampHeight}

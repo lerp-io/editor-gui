@@ -91,7 +91,7 @@ module.exports =
 /*!*********************************!*\
   !*** ./components/Align.coffee ***!
   \*********************************/
-/*! exports provided: clampPosition, getPosition, fixAlign, guessAlign, adjustHeight */
+/*! exports provided: clampPosition, getPosition, fixAlign, guessAlign, clampHeight */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -100,10 +100,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPosition", function() { return getPosition; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fixAlign", function() { return fixAlign; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "guessAlign", function() { return guessAlign; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "adjustHeight", function() { return adjustHeight; });
-//neveragain
-var adjustHeight, checkFitAlignDown, checkFitAlignLeft, checkFitAlignRight, checkFitAlignUp, checkFitPositionBottom, checkFitPositionTop, checkfitPositionLeft, checkfitPositionRight, clampPosition, fixAlign, getAlignDirections, getPosition, guessAlign;
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clampHeight", function() { return clampHeight; });
+var BAR_DIM, checkFitAlignDown, checkFitAlignLeft, checkFitAlignRight, checkFitAlignUp, checkFitPositionBottom, checkFitPositionTop, checkfitPositionLeft, checkfitPositionRight, clampHeight, clampPosition, fixAlign, getAlignDirections, getPosition, guessAlign;
 
+BAR_DIM = 12;
+
+//neveragain
 guessAlign = function(width, height, ctx) {
   switch (ctx.align) {
     case 'right-down':
@@ -300,13 +302,12 @@ fixAlign = function(align_key, ctx, width, height) {
   }
 };
 
-adjustHeight = function(ctx, width, height) {
-  var scroll;
-  if (height >= ctx.view_rect.height) {
-    scroll = 'scroll';
-    height = ctx.view_rect.height;
+clampHeight = function(ctx, height) {
+  if (ctx.root && ctx.clamp_height) {
+    return Math.min(ctx.view_rect.height - BAR_DIM, Math.min(ctx.clamp_height, height));
+  } else {
+    return Math.min(height, ctx.view_rect.height - BAR_DIM);
   }
-  return [scroll, height];
 };
 
 getAlignDirections = function(align_key) {
@@ -460,57 +461,72 @@ var Box, MIN_HEIGHT, h;
 
 h = react__WEBPACK_IMPORTED_MODULE_0__["createElement"];
 
-MIN_HEIGHT = 100;
+MIN_HEIGHT = 50;
 
 Box = function(props, state) {
-  var align_key, content_height, content_ref, context, height, offset_x, offset_y, ref, self_context, self_height, self_ref, self_width, self_x, self_y, setHeight, setVisible, style, visible, x, y;
+  var align_key, content_ref, context, height, height_overflow, offset_x, offset_y, self_context, self_ref, self_width, self_x, self_y, setHeight, setVisible, style, visible, x, y;
   [visible, setVisible] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
-  [height, setHeight] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null);
+  [height_overflow, setHeight] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([MIN_HEIGHT, 0]);
   self_ref = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
   content_ref = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
-  style = {};
+  height = height_overflow[0];
+  // log height
+  style = {
+    overflowY: height_overflow[1]
+  };
   context = Object(react__WEBPACK_IMPORTED_MODULE_0__["useContext"])(_LayoutContext__WEBPACK_IMPORTED_MODULE_1__["default"]);
   self_context = {
     startDrag: context.startDrag,
     stopDrag: context.stopDrag
   };
+  self_width = props.width || 320;
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function() {
-    var current_height, ref;
-    if (!visible) {
-      setVisible(true);
-    }
+    var content_height, overflow_y, ref, set_height;
     if (content_ref.current) {
-      current_height = ((ref = content_ref.current) != null ? ref.scrollHeight : void 0) || MIN_HEIGHT;
-      if (height !== current_height) {
-        return setHeight(current_height);
+      content_height = ((ref = content_ref.current) != null ? ref.scrollHeight : void 0) || MIN_HEIGHT;
+      set_height = Object(_Align__WEBPACK_IMPORTED_MODULE_4__["clampHeight"])(context, content_height);
+      // log content_height,self_height
+      if (set_height !== height_overflow[0]) {
+        self_ref.current.style.height = set_height;
+        if (set_height < content_height) {
+          overflow_y = 'scroll';
+        }
+        setHeight([set_height, overflow_y]);
+      }
+      if (!visible) {
+        return setVisible(true);
       }
     }
   });
   if (!context) {
     return null;
   }
-  style = {};
-  self_width = props.width || 320;
-  content_height = ((ref = content_ref.current) != null ? ref.scrollHeight : void 0) || MIN_HEIGHT;
-  [style.overflowY, self_height] = Object(_Align__WEBPACK_IMPORTED_MODULE_4__["adjustHeight"])(context, self_width, content_height);
+  
+  // content_height = content_ref.current?.scrollHeight || MIN_HEIGHT
+  // [style.overflowY,self_height] = adjustHeight(context,self_width,content_height)
+  // log content_height,self_height
+  // log self_height
   style.minHeight = MIN_HEIGHT;
-  style.height = self_height;
+  style.height = height;
   if (props.align) {
     align_key = props.align;
   } else {
     // log 'FORCE ALIGN FOR ',context.selected_label,' : ',align_key
-    align_key = Object(_Align__WEBPACK_IMPORTED_MODULE_4__["guessAlign"])(self_width, self_height, context);
-    [x, y] = Object(_Align__WEBPACK_IMPORTED_MODULE_4__["getPosition"])(self_width, self_height, context, align_key);
-    align_key = Object(_Align__WEBPACK_IMPORTED_MODULE_4__["fixAlign"])(align_key, context, self_width, self_height);
+    align_key = Object(_Align__WEBPACK_IMPORTED_MODULE_4__["guessAlign"])(self_width, height, context);
+    [x, y] = Object(_Align__WEBPACK_IMPORTED_MODULE_4__["getPosition"])(self_width, height, context, align_key);
+    align_key = Object(_Align__WEBPACK_IMPORTED_MODULE_4__["fixAlign"])(align_key, context, self_width, height);
   }
   // log 'FIX ALIGN FOR ',context.selected_label,' : ',align_key
   if (props.position) {
     self_x = props.position[0];
     self_y = props.position[1];
+  } else if (context.root) {
+    self_x = context.x;
+    self_y = context.y;
   } else {
-    [self_x, self_y] = Object(_Align__WEBPACK_IMPORTED_MODULE_4__["getPosition"])(self_width, self_height, context, align_key);
+    [self_x, self_y] = Object(_Align__WEBPACK_IMPORTED_MODULE_4__["getPosition"])(self_width, height, context, align_key);
     // log self_x,self_y
-    [offset_x, offset_y] = Object(_Align__WEBPACK_IMPORTED_MODULE_4__["clampPosition"])(context, self_x, self_y, self_width, self_height, align_key);
+    [offset_x, offset_y] = Object(_Align__WEBPACK_IMPORTED_MODULE_4__["clampPosition"])(context, self_x, self_y, self_width, height, align_key);
     self_x += offset_x;
     self_y += offset_y;
   }
@@ -524,7 +540,7 @@ Box = function(props, state) {
   return h('div', {
     ref: self_ref,
     style: style,
-    className: classnames__WEBPACK_IMPORTED_MODULE_3___default()('ed-box', !visible && 'ed-hidden', style.overflowY === 'scroll' && 'ed-scroll')
+    className: classnames__WEBPACK_IMPORTED_MODULE_3___default()('ed-box', !visible && 'ed-hidden', style.overflowY === 'scroll' && 'ed-scroll', 'noselect')
   }, h('div', {
     cn: 'ed-box-inner',
     style: {
@@ -532,11 +548,10 @@ Box = function(props, state) {
     },
     ref: content_ref
   }, (props.title || props.label) && (h('div', {
-    className: 'ed-box-title'
-  // h 'div',
-  // 	className: 'ed-in-label-colon'
-  // 	'# '
-  }, props.title || props.label)) || null, props.description && (h('div', {
+    className: classnames__WEBPACK_IMPORTED_MODULE_3___default()('ed-box-title', props.stickyTitle && 'ed-box-title-sticky')
+  }, h('div', {
+    className: 'ed-in-label-colon'
+  }, '# '), props.title || props.label)) || null, props.description && (h('div', {
     className: 'ed-description'
   }, props.description)) || null, h('div', {
     className: 'ed-box-content'
@@ -667,7 +682,7 @@ LineChart = function(props) {
   }, [wrap_ref.current]);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function() {
     if (canvas_ref.current) {
-      log('set canvas context');
+      // log 'set canvas context'
       canvas_state.current.ctx = canvas_ref.current.getContext('2d');
       setTickStep(0);
     }
@@ -807,11 +822,15 @@ In = function(props) {
   input_ref = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
   if (props.label) {
     label = h('div', {
-      className: 'ed-in-label ed-flex-right'
-    }, props.label, h('div', {
-      className: 'ed-in-label-colon'
-    }, props.type !== 'toggle' && ':'));
+      className: 'ed-in-label ed-flex-right',
+      style: {
+        color: props.labelColor
+      }
+    }, props.label);
   }
+  // h 'div',
+  // 	className:'ed-in-label-colon'
+  // 	props.type != 'toggle' && ':'
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function() {
     if (props.value !== state.color_input_value && props.type === 'color') {
       dispatch({
@@ -829,7 +848,11 @@ In = function(props) {
     case 'plain':
     case 'label':
       input = h('div', {
-        className: 'ed-label full-w'
+        className: 'ed-input full-w ed-input-plain',
+        style: {
+          background: props.backgroundColor,
+          color: props.valueColor
+        }
       }, props.value);
       break;
     case 'text':
@@ -838,6 +861,10 @@ In = function(props) {
         type: props.type,
         disabled: props.disabled,
         className: 'ed-input',
+        style: {
+          background: props.backgroundColor,
+          color: props.valueColor
+        },
         onChange: function(e) {
           if (props.commit || context.dispatch) {
             dispatch({
@@ -861,6 +888,9 @@ In = function(props) {
     case 'toggle':
       input = h('div', {
         className: 'ed-toggle-outer',
+        style: {
+          backgroundColor: props.backgroundColor
+        },
         onClick: function() {
           if (props.commit || context.dispatch) {
             dispatch({
@@ -881,7 +911,7 @@ In = function(props) {
       }, h('div', {
         className: classnames__WEBPACK_IMPORTED_MODULE_1___default()('ed-toggle-inner', props.value && 'ed-toggle-active'),
         style: {
-          backgroundColor: props.value && props.color || void 0
+          backgroundColor: props.value && props.valueColor || void 0
         }
       }));
       break;
@@ -915,7 +945,8 @@ In = function(props) {
         className: classnames__WEBPACK_IMPORTED_MODULE_1___default()('ed-range-outer'),
         ref: outer_range_ref,
         style: {
-          color: props.color != null ? props.color : void 0
+          color: props.valueColor != null ? props.valueColor : void 0,
+          backgroundColor: props.backgroundColor
         },
         onMouseDown: function(e) {
           var old_value, onDrag, onDragEnd, onMouseOut;
@@ -984,7 +1015,7 @@ In = function(props) {
         className: 'ed-range-slider',
         style: {
           transform: `translate(${range_slider_x}px,${0}%)`,
-          backgroundColor: props.color != null ? props.color : void 0
+          backgroundColor: props.valueColor
         }
       }, !props.snapValueToEdge && value_label || void 0), props.snapValueToEdge && value_label || void 0);
       break;
@@ -993,7 +1024,7 @@ In = function(props) {
       input = h('button', {
         className: 'ed-button',
         style: {
-          color: props.color,
+          color: props.valueColor,
           background: props.backgroundColor
         },
         onClick: function(e) {
@@ -1080,18 +1111,18 @@ In = function(props) {
   }
   if (props.type === 'toggle') {
     return h('div', {
-      className: classnames__WEBPACK_IMPORTED_MODULE_1___default()('ed-in-wrap', 'ed-in-wrap-toggle', props.half && 'ed-in-half', props.type === 'plain' && 'ed-tight')
+      className: classnames__WEBPACK_IMPORTED_MODULE_1___default()('ed-in-wrap', 'ed-in-wrap-toggle', props.half && 'ed-in-half')
     }, h('div', {
       className: 'ed-in-wrap-toggle-input'
-    }, input), h('div', {
-      className: 'ed-in-wrap-toggle-label'
-    }, label));
+    // h 'div',
+    // 	className: 'ed-in-wrap-toggle-label'
+    }, input), label);
   }
   return h('div', {
     className: classnames__WEBPACK_IMPORTED_MODULE_1___default()('ed-in-wrap', props.half && 'ed-in-half', props.type === 'plain' && 'ed-tight')
-  }, label, h('div', {
+  }, h('div', {
     className: classnames__WEBPACK_IMPORTED_MODULE_1___default()('ed-input-wrap', props.half && 'ed-in-half')
-  }, input));
+  }, input), label);
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (In);
@@ -1126,15 +1157,20 @@ h = react__WEBPACK_IMPORTED_MODULE_0__["createElement"];
 _measure_text = new Map();
 
 Layout = function(props, state) {
-  var canvas_ref, context, getLabelWidth, isDragging, is_dragging, layout_ref, measure_text, setContext, startDrag, stopDrag;
+  var _forceUpdate, canvas_ref, context, forceUpdate, force_update_t, getLabelWidth, isDragging, is_dragging, layout_ref, measure_text, setContext, startDrag, stopDrag;
   layout_ref = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])();
   [context, setContext] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null);
   measure_text = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(new Map());
   canvas_ref = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])();
   [is_dragging, isDragging] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
+  [force_update_t, forceUpdate] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function() {
     measure_text.current = new Map();
   }, [props.fontFamily, props.fontSize]);
+  _forceUpdate = function() {
+    log('force update');
+    return forceUpdate(force_update_t + 1);
+  };
   startDrag = function(onDrag, onDragEnd, onMouseOut) {
     isDragging(true);
     layout_ref.current.addEventListener('mousemove', onDrag);
@@ -1183,6 +1219,7 @@ Layout = function(props, state) {
           view_rect: view_rect,
           getLabelWidth: getLabelWidth,
           stopDrag: stopDrag,
+          forceUpdate: _forceUpdate,
           startDrag: startDrag
         });
       };
@@ -1261,7 +1298,7 @@ h = react__WEBPACK_IMPORTED_MODULE_0__["createElement"];
 
 
 Menu = function(props) {
-  var align_key, autoDeselect, context, label_keys, label_widths, labels, max_label_width, menu_ref, offset_x, offset_y, overflow_y, ref, scroll_top, selected_child, selected_label_index, selected_label_x, selected_label_y, self_context, self_height, self_width, self_x, self_y, style, total_label_height, total_label_width, vert, x, y;
+  var align_key, autoDeselect, context, label_keys, label_widths, labels, max_label_width, menu_ref, new_height, offset_x, offset_y, overflow_y, ref, scroll_top, selected_child, selected_label_index, selected_label_x, selected_label_y, self_context, self_height, self_width, self_x, self_y, style, total_label_height, total_label_width, vert, x, y;
   context = Object(react__WEBPACK_IMPORTED_MODULE_0__["useContext"])(_LayoutContext__WEBPACK_IMPORTED_MODULE_2__["default"]);
   if (props.autoDeselect != null) {
     autoDeselect = props.autoDeselect;
@@ -1326,7 +1363,9 @@ Menu = function(props) {
     self_height = context.dim;
     self_width = total_label_width;
   }
-  [overflow_y, self_height] = Object(_Align__WEBPACK_IMPORTED_MODULE_3__["adjustHeight"])(context, self_width, self_height);
+  new_height = Object(_Align__WEBPACK_IMPORTED_MODULE_3__["clampHeight"])(context, self_height);
+  overflow_y = new_height < self_height;
+  self_height = new_height;
   scroll_top = ((ref = menu_ref.current) != null ? ref.scrollTop : void 0) || 0;
   // style.minHeight = MIN_HEIGHT
   // style.height = self_height
@@ -1439,7 +1478,7 @@ Menu = function(props) {
     });
   }
   return h('div', {
-    className: classnames__WEBPACK_IMPORTED_MODULE_1___default()('ed-menu', props.vert && 'ed-flex-down' || 'ed-flex-right'),
+    className: classnames__WEBPACK_IMPORTED_MODULE_1___default()('ed-menu', props.vert && 'ed-flex-down' || 'ed-flex-right', self_context.depth % 2 === 0 && 'ed-menu-alt'),
     style: style,
     ref: menu_ref
   }, h('div', {
@@ -1469,7 +1508,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _LayoutContext__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./LayoutContext */ "./components/LayoutContext.coffee");
 /* harmony import */ var _Align__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Align */ "./components/Align.coffee");
-var AUTO_HANDLE_SET_THRESHOLD, AUTO_HANDLE_SNAP_THRESHOLD, BAR_DIM, DOT_DIM, MenuAnchor, h;
+var AUTO_HANDLE_SET_THRESHOLD, AUTO_HANDLE_SNAP_THRESHOLD, BAR_DIM, DOT_DIM, MenuAnchor, REBAR_DIM, h;
 
 
 
@@ -1483,6 +1522,8 @@ h = react__WEBPACK_IMPORTED_MODULE_0__["createElement"];
 
 BAR_DIM = 12;
 
+REBAR_DIM = 4;
+
 AUTO_HANDLE_SET_THRESHOLD = 20;
 
 AUTO_HANDLE_SNAP_THRESHOLD = 12;
@@ -1490,36 +1531,55 @@ AUTO_HANDLE_SNAP_THRESHOLD = 12;
 DOT_DIM = 4;
 
 MenuAnchor = function(props) {
-  var anchor_ref, bar_height, bar_left, bar_top, bar_width, content, content_ref, content_x, content_y, context, d_bottom, d_left, d_right, d_top, dim, dot_height, dot_width, drag_start_pos, handle_pos, i, is_dragging, self_context, self_height, self_width, setDim, setDragStartPos, setDragging, setHandlePos, set_handle_pos;
+  var anchor_ref, bar_height, bar_left, bar_top, bar_width, checkAnchorDim, content, content_ref, content_x, content_y, context, d_bottom, d_left, d_right, d_top, dim, dot_height, dot_width, drag_start_pos, handle_pos, i, is_dragging, rebar_left, rebar_top, ref, ref1, resize_bar, resize_start_pos, self_context, self_height, self_width, setDim, setDragStartPos, setDragging, setHandlePos, setResizeStartPos, setZIndex, set_handle_pos, snap_bot, updateZIndex, z_index;
   anchor_ref = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])('ed-anchor', anchor_ref);
   context = Object(react__WEBPACK_IMPORTED_MODULE_0__["useContext"])(_LayoutContext__WEBPACK_IMPORTED_MODULE_2__["default"]);
   content_ref = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])();
   [dim, setDim] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({});
   [drag_start_pos, setDragStartPos] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(void 0);
+  [resize_start_pos, setResizeStartPos] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(void 0);
   [set_handle_pos, setHandlePos] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(void 0);
   [is_dragging, setDragging] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
-  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function() {
+  [z_index, setZIndex] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0);
+  updateZIndex = function(z_index) {
+    return setZIndex(z_index);
+  };
+  
+  // log 'render'
+  checkAnchorDim = function() {
     var rect;
     if (content_ref.current) {
       rect = content_ref.current.children[0].getBoundingClientRect();
+      // log 'on_update',rect
       if (dim.width !== rect.width || dim.height !== rect.height) {
-        setDim({
+        // log 'SET DIM',rect
+        return setDim({
           width: rect.width,
           height: rect.height
         });
       }
     }
+  };
+  // log dim
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function() {
+    checkAnchorDim();
   });
   if (!context) {
     return null;
   }
+  
+  // log dim
   if (dim.width && dim.height) {
-    d_left = props.position[0];
-    d_top = props.position[1];
-    d_bottom = context.view_rect.height - (props.position[1] + dim.height + BAR_DIM);
-    d_right = context.view_rect.width - (props.position[0] + dim.width + BAR_DIM);
+    d_left = Math.max(0, props.position[0]);
+    d_top = Math.max(0, props.position[1]);
+    d_bottom = Math.max(0, context.view_rect.height - (props.position[1] + dim.height + BAR_DIM));
+    d_right = Math.max(0, context.view_rect.width - (props.position[0] + dim.width + BAR_DIM));
   }
+  // if (props.position[1] + dim.height + BAR_DIM)
+
+  // log d_left,d_top,d_bottom,d_right
   // log d_top,d_bottom
+  snap_bot = false;
   if (d_left <= Math.min(d_right, Math.min(d_top, d_bottom)) && d_left < AUTO_HANDLE_SET_THRESHOLD) {
     handle_pos = 'left';
     if (props.autoSnapHandlePosition) {
@@ -1536,16 +1596,16 @@ MenuAnchor = function(props) {
   } else if (d_right <= Math.min(d_left, Math.min(d_top, d_bottom)) && d_right < AUTO_HANDLE_SET_THRESHOLD) {
     handle_pos = 'right';
     if (props.autoSnapHandlePosition) {
-      // setTimeout ()->
-      props.position[0] = context.view_rect.width - dim.width - BAR_DIM;
+      props.position[0] = Math.max(0, context.view_rect.width - dim.width - BAR_DIM);
     }
   } else if (d_bottom <= Math.min(d_top, Math.min(d_left, d_right)) && d_bottom < AUTO_HANDLE_SET_THRESHOLD) {
     handle_pos = 'bottom';
     if (props.autoSnapHandlePosition) {
-      props.position[1] = context.view_rect.height - dim.height - BAR_DIM;
+      snap_bot = true;
+      props.position[1] = Math.max(0, context.view_rect.height - dim.height - BAR_DIM);
     }
   } else {
-    handle_pos = set_handle_pos;
+    handle_pos = 'top';
   }
   if (props.autoHandlePosition && handle_pos !== set_handle_pos) {
     setHandlePos(handle_pos);
@@ -1553,6 +1613,8 @@ MenuAnchor = function(props) {
   if (!props.autoHandlePosition) {
     handle_pos = props.handlePosition || 'left';
   }
+  
+  // log handle_pos
   dot_width = DOT_DIM;
   dot_height = DOT_DIM;
   if (dim.width && dim.height) {
@@ -1562,6 +1624,8 @@ MenuAnchor = function(props) {
         bar_height = dim.height;
         bar_left = props.position[0];
         bar_top = props.position[1];
+        rebar_left = props.position[0] + dim.width;
+        rebar_top = props.position[1];
         self_width = dim.width + BAR_DIM;
         self_height = dim.height;
         content_x = props.position[0] + BAR_DIM;
@@ -1575,6 +1639,8 @@ MenuAnchor = function(props) {
         bar_height = dim.height;
         bar_left = props.position[0] + dim.width;
         bar_top = props.position[1];
+        rebar_left = props.position[0] - REBAR_DIM;
+        rebar_top = props.position[1];
         self_width = dim.width + BAR_DIM;
         self_height = dim.height;
         content_x = props.position[0];
@@ -1588,6 +1654,8 @@ MenuAnchor = function(props) {
         bar_height = BAR_DIM;
         bar_left = props.position[0];
         bar_top = props.position[1];
+        rebar_left = props.position[0];
+        rebar_top = props.position[1] + dim.height + BAR_DIM;
         self_height = dim.height + BAR_DIM;
         self_width = dim.width;
         content_x = props.position[0];
@@ -1601,6 +1669,8 @@ MenuAnchor = function(props) {
         bar_height = BAR_DIM;
         bar_left = props.position[0];
         bar_top = props.position[1] + dim.height;
+        rebar_left = props.position[0];
+        rebar_top = props.position[1] - REBAR_DIM;
         self_width = dim.width;
         self_height = dim.height + BAR_DIM;
         content_x = props.position[0];
@@ -1612,12 +1682,19 @@ MenuAnchor = function(props) {
   }
   
   // if props.handlePosition == 'right'
+
+  // log props.position
+  // log props.size
   self_context = Object.assign({}, context, {
     align: props.align,
+    clamp_width: ((ref = props.size) != null ? ref[0] : void 0) || 0,
+    clamp_height: ((ref1 = props.size) != null ? ref1[1] : void 0) || 0,
     x: content_x,
     y: content_y,
-    root: true
+    root: true,
+    checkAnchorDim: checkAnchorDim
   });
+  // log self_context.view_rect
   if (props.visible || ((dim.width == null) || (dim.height == null))) {
     content = h('div', {
       cn: 'ed-anchor-content',
@@ -1628,20 +1705,57 @@ MenuAnchor = function(props) {
       value: self_context
     }, props.children));
   }
-  
-  // log props.position[0]
+  if (props.size && props.visible) {
+    resize_bar = h('div', {
+      style: {
+        background: props.barColor || 'black',
+        top: rebar_top,
+        left: rebar_left,
+        height: (handle_pos === 'left' || handle_pos === 'right') && bar_height || REBAR_DIM,
+        width: (handle_pos === 'left' || handle_pos === 'right') && REBAR_DIM || bar_width,
+        flexDirection: (handle_pos === 'left' || handle_pos === 'right') && 'column' || 'row'
+      },
+      cn: 'ed-anchor-handle-resize',
+      onMouseDown: function(e) {
+        setResizeStartPos([e.clientX, e.clientY, props.size[0], props.size[1]]);
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      }
+    });
+  }
   return h('div', {
     style: {
       top: 0,
       left: 0,
-      width: drag_start_pos && '100vw' || void 0,
-      height: drag_start_pos && '100vh' || void 0
+      zIndex: z_index,
+      width: (resize_start_pos || drag_start_pos) && '100vw' || void 0,
+      height: (resize_start_pos || drag_start_pos) && '100vh' || void 0
     },
-    cn: 'ed-anchor',
+    cn: classnames__WEBPACK_IMPORTED_MODULE_1___default()('ed-anchor', (resize_start_pos || drag_start_pos) && 'ed-anchor-drag'),
     ref: anchor_ref,
     onMouseMove: function(e) {
-      var offset_x, offset_y, self_x, self_y;
-      if (drag_start_pos) {
+      var offset_x, offset_y, self_x, self_y, set_height;
+      if (resize_start_pos) {
+        if (!is_dragging) {
+          setDragging(true);
+        }
+        // self_width = resize_start_pos[2]+e.clientX-resize_start_pos[0]
+        if (snap_bot) {
+          self_height = resize_start_pos[3] - e.clientY + resize_start_pos[1];
+        } else {
+          self_height = resize_start_pos[3] + e.clientY - resize_start_pos[1];
+        }
+        set_height = Object(_Align__WEBPACK_IMPORTED_MODULE_3__["clampHeight"])(context, self_height);
+        
+        // log self_height,set_height
+
+        // if self_height != set_height
+        props.setSize(0, set_height);
+        e.stopPropagation();
+        e.preventDefault();
+        return false;
+      } else if (drag_start_pos) {
         if (!is_dragging) {
           setDragging(true);
         }
@@ -1652,8 +1766,11 @@ MenuAnchor = function(props) {
         self_y += offset_y;
         props.setPosition(self_x, self_y);
         if (!props.visible) {
-          return props.onBarClick();
+          props.onBarClick();
         }
+        e.stopPropagation();
+        e.preventDefault();
+        return false;
       }
     },
     onMouseUp: function(e) {
@@ -1661,13 +1778,35 @@ MenuAnchor = function(props) {
         setDragStartPos(void 0);
         setDragging(false);
         if (!is_dragging) {
-          return props.onBarClick();
+          props.onBarClick();
         }
+        e.stopPropagation();
+        e.preventDefault();
+        return false;
+      } else if (resize_start_pos !== void 0) {
+        setResizeStartPos(void 0);
+        setDragging(false);
+        if (!is_dragging) {
+          props.onBarClick();
+        }
+        e.stopPropagation();
+        e.preventDefault();
+        return false;
       }
     },
+    onMouseEnter: function() {
+      // log 'mouse enter'
+      return setZIndex(1);
+    },
     onMouseLeave: function() {
+      setZIndex(0);
+      // log 'mouse leave'
       if (drag_start_pos !== void 0) {
         setDragStartPos(void 0);
+        setDragging(false);
+      }
+      if (resize_start_pos !== void 0) {
+        setResizeStartPos(void 0);
         return setDragging(false);
       }
     }
@@ -1682,12 +1821,15 @@ MenuAnchor = function(props) {
       background: props.barColor || 'black'
     },
     onMouseDown: function(e) {
-      return setDragStartPos([e.clientX, e.clientY, props.position[0], props.position[1]]);
+      setDragStartPos([e.clientX, e.clientY, props.position[0], props.position[1]]);
+      e.stopPropagation();
+      e.preventDefault();
+      return false;
     }
   }, (function() {
-    var j, ref, results;
+    var j, ref2, results;
     results = [];
-    for (i = j = 0, ref = props.dotCount || 1; (0 <= ref ? j < ref : j > ref); i = 0 <= ref ? ++j : --j) {
+    for (i = j = 0, ref2 = props.dotCount || 1; (0 <= ref2 ? j < ref2 : j > ref2); i = 0 <= ref2 ? ++j : --j) {
       results.push(h('div', {
         cn: 'ed-anchor-dot',
         key: i,
@@ -1699,7 +1841,7 @@ MenuAnchor = function(props) {
       }));
     }
     return results;
-  })()), content);
+  })()), resize_bar, content);
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (MenuAnchor);
@@ -1920,7 +2062,7 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, ".noselect {\n  -webkit-touch-callout: none;\n  /* iOS Safari */\n  -webkit-user-select: none;\n  /* Safari */\n  -khtml-user-select: none;\n  /* Konqueror HTML */\n  -moz-user-select: none;\n  /* Old versions of Firefox */\n  -ms-user-select: none;\n  /* Internet Explorer/Edge */\n  user-select: none;\n  /* Non-prefixed version, currently\n                                  supported by Chrome, Edge, Opera and Firefox */\n}\n.ed-layout {\n  z-index: 100;\n  font-family: 'DM Mono', monospace;\n  font-size: 0.85em;\n  color: #ffffff;\n  position: fixed;\n  top: 0px;\n  left: 0px;\n  width: 100%;\n  height: 100%;\n  overflow: hidden;\n  pointer-events: none;\n}\n.ed-layout * {\n  pointer-events: all;\n  box-sizing: border-box;\n}\n.ed-layout-dragging {\n  pointer-events: all;\n  cursor: ew-resize;\n}\n.ed-layout-dragging * {\n  pointer-events: none;\n}\n.ed-full-w {\n  width: 100%;\n}\n.ed-flex-left,\n.ed-input-wrap {\n  display: flex;\n  flex-wrap: wrap;\n  flex-direction: row-reverse;\n  align-items: center;\n  justify-content: flex-end;\n}\n.ed-flex-right,\n.ed-in-wrap {\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: flex-start;\n}\n.ed-flex-down {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  justify-content: flex-start;\n}\n.ed-in-wrap {\n  font-size: 0.9em;\n  width: 100%;\n  padding: 0px 0.425em;\n  min-height: 24px;\n  flex-wrap: nowrap;\n  margin-bottom: 0.255em;\n}\n.ed-in-wrap.ed-in-half {\n  width: 50%;\n}\n.ed-in-wrap.ed-tight {\n  min-height: 16px;\n}\n.ed-in-wrap-toggle-input {\n  width: auto;\n  flex-shrink: 0;\n  margin-right: 4px;\n}\n.ed-in-wrap-toggle-label {\n  width: auto;\n}\n.ed-input-wrap {\n  width: 150%;\n}\n.ed-input-wrap.ed-in-half {\n  width: fit-content;\n}\n.ed-in-label {\n  width: 100%;\n  margin-right: 0.25em;\n  white-space: normal;\n  text-align: -webkit-right;\n  align-items: flex-end;\n  justify-content: flex-end;\n  word-break: break-all;\n}\n.ed-in-label-colon {\n  color: #c8c8c8;\n}\ninput:disabled {\n  color: #c8c8c8 !important;\n  -webkit-user-select: none !important;\n  user-select: none !important;\n  cursor: default !important;\n}\n.ed-input {\n  width: inherit;\n  line-height: 24px;\n  height: 24px;\n  font-family: 'DM Mono', monospace;\n  -webkit-appearance: none;\n  outline: none;\n  color: #ffffff;\n  background-color: #141414;\n  border: none;\n  border-radius: none;\n  padding: 0px 0.425em;\n}\n.ed-toggle-outer {\n  width: 24px;\n  cursor: pointer;\n  height: 24px;\n  background-color: #141414;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.ed-toggle-outer .ed-toggle-inner {\n  width: 12px;\n  height: 12px;\n  border-radius: 6px;\n  background-color: #2a2a2a;\n}\n.ed-toggle-outer .ed-toggle-inner.ed-toggle-active {\n  background: #ffffff;\n}\n.ed-box-title {\n  padding: 0.85em;\n  padding-bottom: 0px;\n  margin-bottom: 0.425em;\n  font-weight: 800;\n  text-align: center;\n  display: flex;\n  color: white;\n  align-items: flex-start;\n  justify-content: flex-start;\n  flex-direction: row;\n  width: 100%;\n  text-transform: uppercase !important;\n}\n.ed-box-title * {\n  white-space: pre;\n}\n.ed-box-title .ed-in-label-colon {\n  color: white;\n}\n.ed-box-content {\n  display: flex;\n  align-self: start;\n  justify-content: start;\n  flex-direction: row;\n  flex-wrap: wrap;\n  padding-bottom: 0.85em;\n}\n.ed-scroll::-webkit-scrollbar {\n  -webkit-appearance: none;\n  background-color: #141414;\n  width: 4px;\n  height: 4px;\n  border-radius: 0px;\n}\n.ed-scroll::-webkit-scrollbar-corner {\n  background-color: #141414;\n}\n.ed-scroll::-webkit-scrollbar-thumb {\n  border-radius: 0px;\n  background-color: #7F7F7F;\n}\n.ed-scroll::-webkit-scrollbar-thumb:hover {\n  background-color: #8F8F8F;\n}\n.ed-box {\n  background-color: #2a2a2a;\n  color: #ffffff;\n  position: fixed;\n  width: 320px;\n  flex-wrap: nowrap;\n}\n.ed-box.ed-scroll {\n  overflow-y: scroll;\n  overflow-x: hidden;\n  width: 324px;\n}\n.ed-box .ed-description {\n  padding: 0px 0.85em;\n  font-size: 0.8em;\n  color: #ebebeb;\n  margin: 0.85em 0px;\n  margin-top: 0px;\n  white-space: normal;\n}\n.ed-menu-child-wrapper {\n  position: relative;\n  left: -100%;\n  top: 12px;\n}\n.ed-menu {\n  color: #ffffff;\n  flex-wrap: nowrap;\n  width: fit-content;\n  height: fit-content;\n  position: fixed;\n}\n.ed-menu.ed-scroll {\n  overflow-y: scroll;\n  overflow-x: hidden;\n}\n.ed-menu.ed-flex-down > .ed-menu-item {\n  width: -webkit-fill-available;\n  height: auto;\n}\n.ed-menu.ed-flex-right > .ed-menu-item {\n  height: -webkit-fill-available;\n  width: auto;\n}\n.ed-menu .ed-menu-labels {\n  background-color: #2a2a2a;\n}\n.ed-menu .ed-menu-item-label {\n  white-space: pre;\n  width: -webkit-fill-available;\n  height: 24px;\n  text-transform: uppercase;\n  display: flex;\n  align-items: center;\n  color: #ebebeb;\n  background: none;\n  border: none;\n  outline: none;\n  cursor: pointer;\n}\n.ed-menu .ed-menu-item-label.ed-selected {\n  background-color: #141414;\n  color: #ffffff;\n}\n.ed-menu .ed-menu-item-label:hover {\n  color: #ffffff;\n}\n.ed-menu .ed-menu-item {\n  position: relative;\n}\n.ed-hidden {\n  visibility: hidden;\n}\n.ed-range-outer {\n  height: 24px;\n  width: 100%;\n  background: #141414;\n  position: relative;\n  cursor: ew-resize;\n}\n.ed-range-outer .ed-range-slider {\n  width: 6px;\n  height: 24px;\n  background: #ffffff;\n}\n.ed-range-outer .ed-range-slider.ed-active {\n  background: #ffffff;\n}\n.ed-range-outer .ed-range-value {\n  position: absolute;\n  left: 14px;\n  top: 50%;\n  transform: translate(0%, -50%);\n}\n.ed-range-outer .ed-range-value.ed-range-value-snap {\n  right: 8px;\n  left: initial;\n}\n.ed-range-outer .ed-range-value.ed-range-value-left {\n  right: 14px;\n  left: initial;\n}\n.ed-range-outer .ed-range-value.ed-range-value-left.ed-range-value-snap {\n  left: 8px;\n  right: initial;\n}\n.ed-button {\n  outline: none;\n  -webkit-appearance: none;\n  border: none;\n  cursor: pointer;\n  width: 100%;\n  height: 24px;\n  background: #141414;\n  color: #ebebeb;\n}\n.ed-button:hover {\n  color: #ffffff;\n}\n.ed-color-box {\n  position: relative;\n  -webkit-appearance: none;\n  width: 48px;\n  height: 24px;\n  flex-shrink: 0;\n  cursor: pointer;\n  margin-right: 0.255em;\n  border: 3px solid black;\n}\n.ed-color-box .ed-color-box-input {\n  visibility: visible;\n  opacity: 0;\n  cursor: pointer;\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  padding: 0px;\n  left: 0px;\n  top: 0px;\n}\n.ed-value-box {\n  width: 100%;\n  height: 24px;\n  background-color: #2a2a2a;\n  margin-left: 0.153em;\n  line-height: 24px;\n  padding: 0px 0.425em;\n}\n.ed-section {\n  margin: 0px;\n  position: relative;\n  margin-bottom: 2px;\n  border-top: 1px solid rgba(150, 150, 150, 0.3);\n  border-bottom: 1px solid rgba(150, 150, 150, 0.3);\n}\n.ed-section-title {\n  min-height: 24px;\n  cursor: pointer;\n  white-space: pre;\n  font-weight: 800;\n  width: 100%;\n  padding: 0.425em;\n  text-transform: uppercase;\n}\n.ed-section-label-toggle-off {\n  cursor: default;\n}\n.ed-section-label-toggle {\n  font-size: 0.85em;\n  width: 100%;\n  padding-right: 0.425em;\n  display: flex;\n  color: #c8c8c8;\n  flex-direction: column;\n  align-items: flex-end;\n  justify-content: flex-end;\n}\n.ed-section-label-toggle.ed-section-label-toggle-active {\n  color: #ebebeb;\n}\n.ed-section-end-label {\n  padding: 0.425em;\n  display: flex;\n  width: 100%;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n}\n.ed-input-select {\n  width: 100%;\n  outline: none;\n  -webkit-appearance: none;\n  height: 24px;\n  cursor: pointer;\n  padding: 0px 0.425em;\n  border: none;\n  color: #ffffff;\n  background: #141414;\n}\n.ed-input-select-arrow {\n  position: absolute;\n  right: 14px;\n  color: #c8c8c8;\n  font-family: monospace;\n}\n.ed-separator {\n  height: 24px;\n  padding: 0px 0.425em;\n}\n.ed-line-chart {\n  width: 100%;\n  height: 80px;\n  background: #141414;\n}\n.ed-line-chart-wrap {\n  flex-direction: column;\n  align-content: flex-start;\n  justify-content: flex-start;\n  align-items: flex-start;\n}\n.ed-line-chart-wrap canvas {\n  cursor: ew-resize;\n  width: 100%;\n  height: 100%;\n}\n.ed-line-chart-label {\n  padding: 0.425em 0px;\n}\n.ed-anchor {\n  display: flex;\n  flex-direction: row;\n  position: fixed;\n}\n.ed-anchor .ed-anchor-handle {\n  position: fixed;\n  background: black;\n  cursor: move;\n  display: flex;\n  justify-content: center;\n  align-content: center;\n  align-items: center;\n}\n.ed-anchor .ed-anchor-handle .ed-anchor-dot {\n  margin: 4px;\n  pointer-events: none;\n  background: white;\n  width: 4px;\n  height: 4px;\n}\n.ed-hidden {\n  visibility: hidden;\n}\n", ""]);
+exports.push([module.i, ".noselect {\n  -webkit-touch-callout: none;\n  /* iOS Safari */\n  -webkit-user-select: none;\n  /* Safari */\n  -khtml-user-select: none;\n  /* Konqueror HTML */\n  -moz-user-select: none;\n  /* Old versions of Firefox */\n  -ms-user-select: none;\n  /* Internet Explorer/Edge */\n  user-select: none;\n  /* Non-prefixed version, currently\n                                  supported by Chrome, Edge, Opera and Firefox */\n}\n.ed-layout {\n  z-index: 100;\n  text-rendering: optimizeSpeed;\n  line-height: 95%;\n  font-family: 'DM Mono', monospace;\n  font-size: 0.85em;\n  color: #ffffff;\n  position: fixed;\n  top: 0px;\n  left: 0px;\n  width: 100%;\n  height: 100%;\n  overflow: hidden;\n  pointer-events: none;\n}\n.ed-layout * {\n  pointer-events: all;\n  box-sizing: border-box;\n}\n.ed-layout-dragging {\n  pointer-events: all;\n  cursor: ew-resize;\n}\n.ed-layout-dragging * {\n  pointer-events: none !important;\n}\n.ed-full-w {\n  width: 100%;\n}\n.ed-flex-left,\n.ed-input-wrap {\n  display: flex;\n  flex-wrap: wrap;\n  position: relative;\n  flex-direction: row-reverse;\n  align-items: center;\n  justify-content: flex-end;\n}\n.ed-flex-right,\n.ed-in-wrap {\n  display: flex;\n  position: relative;\n  flex-direction: row;\n  align-items: center;\n  justify-content: flex-start;\n}\n.ed-flex-down {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  justify-content: flex-start;\n}\n.ed-in-wrap {\n  font-size: 0.9em;\n  width: 100%;\n  padding: 0px 0.425em;\n  min-height: 24px;\n  flex-wrap: nowrap;\n  margin-bottom: 0.255em;\n}\n.ed-in-wrap.ed-in-half {\n  width: 50%;\n}\n.ed-in-wrap.ed-tight {\n  min-height: 16px;\n}\n.ed-in-wrap-toggle-input {\n  width: auto;\n  flex-shrink: 0;\n}\n.ed-in-wrap-toggle-label {\n  width: auto;\n}\n.ed-input-wrap {\n  width: 150%;\n}\n.ed-input-wrap.ed-in-half {\n  width: fit-content;\n}\n.ed-in-label {\n  width: 100%;\n  margin-left: 0.4em;\n  color: #c8c8c8;\n  white-space: normal;\n  text-align: -webkit-left;\n  align-items: flex-start;\n  justify-content: flex-start;\n  word-break: break-all;\n}\n.ed-in-label-colon {\n  color: #c8c8c8;\n}\ninput:disabled {\n  color: #c8c8c8 !important;\n  -webkit-user-select: none !important;\n  user-select: none !important;\n  cursor: default !important;\n}\n.ed-input {\n  width: inherit;\n  line-height: 24px;\n  height: 24px;\n  font-family: 'DM Mono', monospace;\n  -webkit-appearance: none;\n  outline: none;\n  color: #ffffff;\n  background-color: #141414;\n  border: none;\n  border-radius: none;\n  padding: 0px 0.425em;\n}\n.ed-input-plain {\n  background-color: #1e1e1e;\n}\n.ed-toggle-outer {\n  width: 24px;\n  cursor: pointer;\n  height: 24px;\n  background-color: #141414;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.ed-toggle-outer .ed-toggle-inner {\n  width: 12px;\n  height: 12px;\n  border-radius: 6px;\n  background-color: #2a2a2a;\n}\n.ed-toggle-outer .ed-toggle-inner.ed-toggle-active {\n  background: #ffffff;\n}\n.ed-box-title {\n  padding: 0.425em;\n  font-weight: 800;\n  text-align: center;\n  display: flex;\n  color: white;\n  align-items: flex-start;\n  justify-content: flex-start;\n  flex-direction: row;\n  width: 100%;\n  z-index: 1;\n  background: #2a2a2a;\n  text-transform: uppercase !important;\n}\n.ed-box-title * {\n  white-space: pre;\n}\n.ed-box-title .ed-in-label-colon {\n  color: #c8c8c8;\n}\n.ed-box-title-sticky {\n  position: sticky;\n  top: 0;\n}\n.ed-box-content {\n  display: flex;\n  align-self: start;\n  justify-content: start;\n  flex-direction: row;\n  flex-wrap: wrap;\n  padding-bottom: 0.85em;\n}\n.ed-scroll::-webkit-scrollbar {\n  -webkit-appearance: none;\n  background-color: #141414;\n  width: 4px;\n  height: 4px;\n  border-radius: 0px;\n}\n.ed-scroll::-webkit-scrollbar-corner {\n  background-color: #141414;\n}\n.ed-scroll::-webkit-scrollbar-thumb {\n  border-radius: 0px;\n  background-color: #7F7F7F;\n}\n.ed-scroll::-webkit-scrollbar-thumb:hover {\n  background-color: #8F8F8F;\n}\n.ed-box {\n  background-color: #2a2a2a;\n  color: #ffffff;\n  position: fixed;\n  width: 320px;\n  flex-wrap: nowrap;\n}\n.ed-box.ed-scroll {\n  overflow-y: scroll;\n  overflow-x: hidden;\n  width: 324px;\n}\n.ed-box .ed-description {\n  padding: 0px 0.425em;\n  font-size: 0.8em;\n  color: #ebebeb;\n  margin: 0.425em 0px;\n  margin-top: 0px;\n  white-space: normal;\n}\n.ed-menu-child-wrapper {\n  position: relative;\n  left: -100%;\n  top: 12px;\n}\n.ed-menu {\n  color: #ffffff;\n  flex-wrap: nowrap;\n  width: fit-content;\n  height: fit-content;\n  position: fixed;\n}\n.ed-menu.ed-scroll {\n  overflow-y: scroll;\n  overflow-x: hidden;\n}\n.ed-menu.ed-flex-down > .ed-menu-item {\n  width: -webkit-fill-available;\n  height: auto;\n}\n.ed-menu.ed-flex-right > .ed-menu-item {\n  height: -webkit-fill-available;\n  width: auto;\n}\n.ed-menu .ed-menu-labels {\n  background-color: #2a2a2a;\n}\n.ed-menu .ed-menu-item-label {\n  white-space: pre;\n  width: -webkit-fill-available;\n  height: 24px;\n  text-transform: uppercase;\n  display: flex;\n  align-items: center;\n  color: #ebebeb;\n  background: none;\n  border: none;\n  outline: none;\n  cursor: pointer;\n}\n.ed-menu .ed-menu-item-label.ed-selected {\n  background-color: #141414;\n  color: #ffffff;\n}\n.ed-menu .ed-menu-item-label:hover {\n  color: #ffffff;\n}\n.ed-menu .ed-menu-item {\n  position: relative;\n}\n.ed-menu.ed-menu-alt > .ed-menu-labels > .ed-menu-item-label {\n  background-color: #141414;\n}\n.ed-menu.ed-menu-alt > .ed-menu-labels > .ed-menu-item-label.ed-selected {\n  background-color: #2a2a2a;\n}\n.ed-hidden {\n  visibility: hidden;\n}\n.ed-range-outer {\n  height: 24px;\n  width: 100%;\n  background: #141414;\n  position: relative;\n  cursor: ew-resize;\n}\n.ed-range-outer .ed-range-slider {\n  width: 6.5px;\n  height: 24px;\n  background: #ffffff;\n}\n.ed-range-outer .ed-range-slider.ed-active {\n  background: #ffffff;\n}\n.ed-range-outer .ed-range-value {\n  position: absolute;\n  left: 14px;\n  top: 50%;\n  transform: translate(0%, -50%);\n}\n.ed-range-outer .ed-range-value.ed-range-value-snap {\n  right: 8px;\n  left: initial;\n}\n.ed-range-outer .ed-range-value.ed-range-value-left {\n  right: 14px;\n  left: initial;\n}\n.ed-range-outer .ed-range-value.ed-range-value-left.ed-range-value-snap {\n  left: 8px;\n  right: initial;\n}\n.ed-button {\n  outline: none;\n  -webkit-appearance: none;\n  border: none;\n  cursor: pointer;\n  width: 100%;\n  height: 24px;\n  background: #141414;\n  color: #ebebeb;\n}\n.ed-button:hover {\n  color: #ffffff;\n}\n.ed-color-box {\n  position: relative;\n  -webkit-appearance: none;\n  width: 48px;\n  height: 24px;\n  flex-shrink: 0;\n  cursor: pointer;\n  margin-right: 0.255em;\n  border: 3px solid black;\n}\n.ed-color-box .ed-color-box-input {\n  visibility: visible;\n  opacity: 0;\n  cursor: pointer;\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  padding: 0px;\n  left: 0px;\n  top: 0px;\n}\n.ed-value-box {\n  width: 100%;\n  height: 24px;\n  background-color: #2a2a2a;\n  margin-left: 0.153em;\n  line-height: 24px;\n  padding: 0px 0.425em;\n}\n.ed-section {\n  margin: 0px;\n  position: relative;\n  margin-bottom: 2px;\n  border-top: 1px solid rgba(150, 150, 150, 0.3);\n  border-bottom: 1px solid rgba(150, 150, 150, 0.3);\n}\n.ed-section-title {\n  min-height: 24px;\n  cursor: pointer;\n  white-space: pre;\n  font-weight: 800;\n  width: 100%;\n  padding: 0.425em;\n  text-transform: uppercase;\n}\n.ed-section-label-toggle-off {\n  cursor: default;\n}\n.ed-section-label-toggle {\n  font-size: 0.85em;\n  width: 100%;\n  padding-right: 0.425em;\n  display: flex;\n  color: #c8c8c8;\n  flex-direction: column;\n  align-items: flex-end;\n  justify-content: flex-end;\n}\n.ed-section-label-toggle.ed-section-label-toggle-active {\n  color: #ebebeb;\n}\n.ed-section-end-label {\n  padding: 0.425em;\n  display: flex;\n  width: 100%;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n}\n.ed-input-select {\n  width: 100%;\n  outline: none;\n  -webkit-appearance: none;\n  height: 24px;\n  cursor: pointer;\n  padding: 0px 0.425em;\n  border: none;\n  color: #ffffff;\n  background: #141414;\n}\n.ed-input-select-arrow {\n  position: absolute;\n  right: 14px;\n  color: #c8c8c8;\n  font-family: monospace;\n}\n.ed-separator {\n  height: 24px;\n  padding: 0px 0.425em;\n}\n.ed-line-chart {\n  width: 100%;\n  height: 80px;\n  background: #141414;\n}\n.ed-line-chart-wrap {\n  flex-direction: column;\n  align-content: flex-start;\n  justify-content: flex-start;\n  align-items: flex-start;\n}\n.ed-line-chart-wrap canvas {\n  cursor: ew-resize;\n  width: 100%;\n  height: 100%;\n}\n.ed-line-chart-label {\n  padding: 0.425em 0px;\n}\n.ed-anchor {\n  display: flex;\n  flex-direction: row;\n  position: fixed;\n}\n.ed-anchor .ed-anchor-handle {\n  position: fixed;\n  background: black;\n  cursor: move;\n  display: flex;\n  justify-content: center;\n  align-content: center;\n  align-items: center;\n}\n.ed-anchor .ed-anchor-handle .ed-anchor-dot {\n  margin: 4px;\n  pointer-events: none;\n  background: white;\n  width: 4px;\n  height: 4px;\n}\n.ed-anchor .ed-anchor-handle-resize {\n  width: 12px;\n  height: 12px;\n  background: black;\n  position: absolute;\n  cursor: ns-resize;\n  top: 0;\n  left: 0;\n  z-index: 1;\n}\n.ed-anchor.ed-anchor-drag {\n  pointer-events: all;\n  cursor: move;\n}\n.ed-anchor.ed-anchor-drag * {\n  pointer-events: none !important;\n}\n", ""]);
 // Exports
 module.exports = exports;
 

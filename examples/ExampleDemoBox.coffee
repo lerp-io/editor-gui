@@ -93,12 +93,19 @@ export default ExampleDemoBox = ()->
 	renderMenu: ()->
 
 	renderBox = ()->
+
+		# return h Box,
+		# 	# top: no
+		# 	# top: yes
+		# 	title: 'box title'
+		# 	description: 'this is some sort of test description with a semi long line of text!'
 		
 		h Box,
 			# top: no
 			# top: yes
 			title: 'box title'
-			description: 'this is some sort of test description with a semi long line of text!'
+			stickyTitle: yes
+			# description: 'this is some sort of test description with a semi long line of text!'
 			# h In,
 			# 	type: 'text'
 			# 	label: 'some text this is some sort of test description with a semi long line of text!'
@@ -114,6 +121,9 @@ export default ExampleDemoBox = ()->
 			h In,
 				type: 'plain'
 				label: 'plain value 2'
+				backgroundColor: 'red'
+				valueColor: 'black'
+				labelColor: 'yellow'
 				value: '10293.1020310.123'
 			h In,
 				type: 'text'
@@ -136,7 +146,7 @@ export default ExampleDemoBox = ()->
 				label: 'full toggle'
 				value: val_toggle_b
 				set: setValToggleB
-				color: 'red'
+				valueColor: 'red'
 			h In,
 				type: 'toggle'
 				half: yes
@@ -150,14 +160,15 @@ export default ExampleDemoBox = ()->
 				label: 'toggle B'
 				value: val_toggle_b
 				set: setValToggleB
-				color: 'red'
+				valueColor: 'cyan'
 			h In,
 				type: 'toggle'
 				half: yes
 				label: 'toggle A'
 				value: val_toggle_a
 				set: setValToggleA
-				color: 'red'
+				valueColor: 'yellow'
+				backgroundColor: 'red'
 			h In,
 				type: 'toggle'
 				half: yes
@@ -168,6 +179,8 @@ export default ExampleDemoBox = ()->
 			h In,
 				type: 'range'
 				label: 'range A'
+				backgroundColor: 'pink'
+				valueColor: 'black'
 				value: val_range_a
 				set: setValRangeA
 				toFixed: 3
@@ -192,7 +205,7 @@ export default ExampleDemoBox = ()->
 				max: 100
 				step: 1
 				snapValueToEdge: yes
-				color: 'yellow'
+				valueColor: 'yellow'
 			h In,
 				type: 'range'
 				label: 'stepped by 1'

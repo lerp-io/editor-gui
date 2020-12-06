@@ -47,14 +47,19 @@ ExampleRecursiveMenu = function(props) {
     return h(ExampleDemoBox);
   };
   renderRecursiveMenu = function(menu_name, level = 0, vert) {
-    var i, items, j, ref;
+    var i, item_count, items, j, ref;
     items = {};
-    for (i = j = 0, ref = level + 3; (0 <= ref ? j < ref : j > ref); i = 0 <= ref ? ++j : --j) {
-      items[`${menu_name}-${i}`] = renderRecursiveMenu.bind(null, `${menu_name}-${i}`, level + 1);
-      items[`${menu_name}-${i}-box`] = renderBox;
+    if (level % 2 === 0) {
+      item_count = 2;
+    } else {
+      item_count = (level + 1) * 2;
+    }
+    for (i = j = 0, ref = item_count; (0 <= ref ? j < ref : j > ref); i = 0 <= ref ? ++j : --j) {
+      items[`${menu_name}${i}`] = renderRecursiveMenu.bind(null, `${menu_name}${i}`, level + 1);
+      items[`${menu_name}${i}-box`] = renderBox;
     }
     return h(Menu, {
-      vert: vert != null ? vert : level % 2 === 0,
+      vert: props.vert != null ? props.vert : level % 2 === 1,
       select: menu_state[menu_name],
       onSelect: function(item_name) {
         return onSelectRecursiveMenuItem(menu_name, item_name);

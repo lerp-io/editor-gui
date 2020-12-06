@@ -6,7 +6,7 @@ import LayoutContext from './LayoutContext'
 
 
 
-import {clampPosition,getPosition,fixAlign,guessAlign,adjustHeight} from './Align'
+import {clampPosition,getPosition,fixAlign,guessAlign,clampHeight} from './Align'
 
 
 Menu = (props)->
@@ -73,7 +73,9 @@ Menu = (props)->
 		self_height = context.dim
 		self_width = total_label_width
 	
-	[overflow_y,self_height] = adjustHeight(context,self_width,self_height)
+	new_height = clampHeight(context,self_height)
+	overflow_y = new_height < self_height
+	self_height = new_height
 	scroll_top = menu_ref.current?.scrollTop || 0
 	# style.minHeight = MIN_HEIGHT
 	# style.height = self_height
@@ -191,7 +193,7 @@ Menu = (props)->
 
 
 	h 'div',
-		className: cn 'ed-menu',props.vert && 'ed-flex-down' || 'ed-flex-right'
+		className: cn 'ed-menu',props.vert && 'ed-flex-down' || 'ed-flex-right',self_context.depth % 2 == 0 && 'ed-menu-alt'
 		style: style
 		ref: menu_ref
 		h 'div',

@@ -11,12 +11,16 @@ Layout = (props,state)->
 	measure_text = useRef(new Map)
 	canvas_ref = useRef()
 	[is_dragging,isDragging] = useState(false)
-	
+	[force_update_t,forceUpdate] = useState(0)
 
 	useEffect ()->
 		measure_text.current = new Map
 		return
 	,[props.fontFamily,props.fontSize]
+
+	_forceUpdate = ()->
+		log 'force update'
+		forceUpdate(force_update_t+1)
 	
 	startDrag = (onDrag,onDragEnd,onMouseOut)->
 		isDragging(true)
@@ -67,6 +71,7 @@ Layout = (props,state)->
 					view_rect: view_rect
 					getLabelWidth: getLabelWidth
 					stopDrag: stopDrag
+					forceUpdate: _forceUpdate
 					startDrag: startDrag
 			onWindowResize()
 			window.addEventListener 'resize',onWindowResize

@@ -24,8 +24,10 @@ import {
 
 import ExampleRecursiveMenu from './ExampleRecursiveMenu.coffee';
 
+import ExampleDemoBox from './ExampleDemoBox.coffee';
+
 export default test = function() {
-  var anchor2_pos, anchor_pos, is_mounted, menu_1_visible, menu_2_visible, setAnchor2Pos, setAnchorPos, setMenu1Visible, setMenu2Visible, setMounted, setSize, size;
+  var anchor2_pos, anchor_pos, dim_2, is_mounted, menu_1_visible, menu_2_visible, setAnchor2Dim, setAnchor2Pos, setAnchorPos, setMenu1Visible, setMenu2Visible, setMounted, setSize, size;
   [is_mounted, setMounted] = useState(false);
   [size, setSize] = useState(null);
   useEffect(function() {
@@ -35,6 +37,7 @@ export default test = function() {
   }, []);
   [menu_1_visible, setMenu1Visible] = useState(true);
   [menu_2_visible, setMenu2Visible] = useState(false);
+  [dim_2, setAnchor2Dim] = useState([250, 250]);
   [anchor_pos, setAnchorPos] = useState([0, 30]);
   [anchor2_pos, setAnchor2Pos] = useState([150, 400]);
   
@@ -42,8 +45,8 @@ export default test = function() {
   return h(Layout, {
     // getLabelWidth: (label)->
     // 	label.length * 8.15
-    fontSize: 13,
-    fontFamily: 'Arial'
+    fontSize: 15,
+    fontFamily: 'Inconsolata'
   }, h(MenuAnchor, {
     handlePosition: 'bottom',
     align: 'left-down',
@@ -60,26 +63,31 @@ export default test = function() {
     }
   }, h(ExampleRecursiveMenu, {
     name: 'menu',
-    vert: false
+    vert: true
   })), h(MenuAnchor, {
     handlePosition: 'bottom',
     align: 'left-down',
     autoHandlePosition: true,
     autoSnapHandlePosition: true,
     autoAlign: false,
-    dotColor: 'cyan',
+    dotColor: 'green',
     dotCount: 2,
-    barColor: 'red',
+    barColor: 'yellow',
     position: anchor2_pos,
+    size: dim_2,
     visible: menu_2_visible,
     onBarClick: function() {
       return setMenu2Visible(!menu_2_visible);
     },
     setPosition: function(x, y) {
       return setAnchor2Pos([x, y]);
+    },
+    setSize: function(width, height) {
+      return setAnchor2Dim([width, height]);
     }
-  }, h(ExampleRecursiveMenu, {
-    name: 'menu2',
-    vert: false
-  })));
+  }, h(ExampleDemoBox)));
 };
+
+// h ExampleRecursiveMenu,
+// 	name: 'menu2'
+// 	# vert: true

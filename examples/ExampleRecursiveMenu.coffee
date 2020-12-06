@@ -24,14 +24,20 @@ ExampleRecursiveMenu = (props)->
 
 	renderRecursiveMenu = (menu_name,level=0,vert)->
 		items = {}
-		for i in [0...(level+3)]
-			items["#{menu_name}-#{i}"] = renderRecursiveMenu.bind(null,"#{menu_name}-#{i}",level+1)
-			items["#{menu_name}-#{i}-box"] = renderBox
+		
+		if level % 2 == 0
+			item_count = 2
+		else
+			item_count = (level+1)*2
+		
+		for i in [0...item_count]
+			items["#{menu_name}#{i}"] = renderRecursiveMenu.bind(null,"#{menu_name}#{i}",level+1)
+			items["#{menu_name}#{i}-box"] = renderBox
 
 
 
 		h Menu,
-			vert: if vert? then vert else level % 2 == 0
+			vert: if props.vert? then props.vert else level % 2 == 1
 			select: menu_state[menu_name]
 			onSelect: (item_name)->
 				onSelectRecursiveMenuItem(menu_name,item_name)
