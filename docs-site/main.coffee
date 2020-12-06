@@ -67,11 +67,11 @@ renderSourceCodeView = (props)->
 			# 	cn: 'lang-select-button '+(show_code && 'select' || '')
 			# 	onClick: toggleShowCode.bind(null,!show_code)
 			# 	'</>'
-			h 'div',
+			h 'button',
 				cn: 'lang-select-button '+(code_type == 'js' && 'select' ||'')
 				onClick: setCodeType.bind(null,if code_type == 'js' then undefined else 'js')
 				'.js'
-			h 'div',
+			h 'button',
 				cn: 'lang-select-button '+(code_type == 'coffee' && 'select'||'')
 				onClick: setCodeType.bind(null,if code_type == 'coffee' then undefined else 'coffee')
 				'.coffee'
@@ -206,6 +206,7 @@ main = ->
 		render_examples.push h NavBarSection,
 			nav_key: title
 			key: title
+			
 			h Example,
 				title: title
 				coffee_source: snip.coffee_source
@@ -219,7 +220,7 @@ main = ->
 		# log name
 		render_components.push h NavBarSection,
 			nav_key: name 
-			dot_color: 'green'
+			className: 'yellow'
 			key: name
 			h Component,
 				name: name

@@ -88,9 +88,9 @@ Box = (props,state)->
 			ref: content_ref
 			(props.title || props.label) && (h 'div',
 				className: 'ed-box-title'
-				h 'div',
-					className: 'ed-in-label-colon'
-					'# '
+				# h 'div',
+				# 	className: 'ed-in-label-colon'
+				# 	'# '
 				(props.title || props.label)
 				
 			) || null

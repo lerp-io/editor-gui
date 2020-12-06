@@ -163,7 +163,10 @@ input:disabled{
 }
 
 .ed-box-title{
-	padding: @padding;
+	
+	padding: @padding2;
+	padding-bottom: 0px;
+	margin-bottom: @padding;
 	font-weight: 800;
 	text-align: center;
 	display: flex;
@@ -504,6 +507,7 @@ input:disabled{
 		align-content: center;
 		align-items: center;
 		.ed-anchor-dot{
+			margin: 4px;
 			pointer-events: none;
 			background: white;
 			width: 4px;
@@ -513,6 +517,8 @@ input:disabled{
 	.ed-anchor-content{
 
 	}
-	
-	
+
+}
+.ed-hidden{
+	visibility: hidden;
 }

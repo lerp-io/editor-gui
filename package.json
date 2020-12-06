@@ -4,11 +4,8 @@
   "description": "basic react web ui components",
   "main": "./components/index.coffee",
   "scripts": {
-    "dev": "webpack-dev-server --config ./scripts/demo.config.js --mode development",
     "dev-docs": "coffee -c -b -w --output ./examples/ ./examples/*.coffee & webpack-dev-server --config ./scripts/docs.config.js --mode development",
-    "docs": "coffee -c -b --output ./examples/ ./examples/*.coffee & webpack --config ./scripts/docs.config.js --mode production",
-    "examples": "coffee -c -b --output ./examples/ ./examples/*.coffee",
-    "prod": "NODE_ENV=production webpack --config ./scripts/lib.config.js --progress --mode development && NODE_ENV=production webpack --config ./scripts/lib.config.js --progress --mode development && webpack --config ./scripts/demo.config.js --progress --mode production",
+    "prod": "coffee -c -b --output ./examples/ ./examples/*.coffee && NODE_ENV=production webpack --config ./scripts/lib.config.js --progress --mode development && NODE_ENV=production webpack --config ./scripts/lib.config.js --progress --mode development && webpack --config ./scripts/docs.config.js --progress --mode production",
     "lib": "coffee -cmw --output ./dist/ ./components & webpack --config ./scripts/lib.config.js --watch --progress --mode development"
   },
   "repository": {

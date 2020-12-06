@@ -146,7 +146,7 @@ MenuAnchor = (props)->
 		root: yes
 	
 	
-	if props.visible
+	if props.visible || (!dim.width? || !dim.height?)
 		content = h 'div',
 			cn: 'ed-anchor-content'
 			ref: content_ref
@@ -202,15 +202,21 @@ MenuAnchor = (props)->
 				left: bar_left
 				height: bar_height
 				width: bar_width
+				flexDirection: (handle_pos == 'left' || handle_pos == 'right') && 'column' || 'row'
+				background: props.barColor || 'black'
 			
 			onMouseDown: (e)->
 				setDragStartPos([e.clientX,e.clientY,props.position[0],props.position[1]])
-				
-			h 'div',
-				cn: 'ed-anchor-dot'
-				style:
-					width: dot_width
-					height: dot_height
+			
+			for i in [0...props.dotCount || 1]
+				h 'div',
+					cn: 'ed-anchor-dot'
+					key: i
+					style:
+						
+						background: props.dotColor || 'white'
+						width: dot_width
+						height: dot_height
 			
 			
 		content

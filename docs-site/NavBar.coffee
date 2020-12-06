@@ -13,17 +13,19 @@ renderNavTree = (set_key,props,offset,select,level,click)->
 	# log props
 	tree_items = props.children
 	scroll_top = props.top || 0
-	for key,props of tree_items
-		tree.push renderNavTree(key,props,offset,select,level+1)
+	for key,child_props of tree_items
+		tree.push renderNavTree(key,child_props,offset,select,level+1)
 	
 	my_select = select.indexOf(set_key) >= 0
 
 	# log my_select
+	# log props
 
 	if set_key
 		return h 'div',
 			key: set_key
-			cn: 'navtree-section l'+level+' '+(my_select && 'select' || '')
+			cn: 'navtree-section l'+level+' '+(my_select && 'select' || '')+' '+(props.className || '')
+			
 			h 'div',
 				cn:'navtree-label l'+level+' '+(my_select && 'select' || '')
 				onClick: ()->
@@ -102,7 +104,7 @@ NavBar = (props)->
 	h NavBarContext.Provider,
 		value: 
 			setNav: (link_name,top,bot,link_children,hash)->
-				state_ref.current.nav_tree[link_name] = {top:top,bot:bot,children:link_children}
+				state_ref.current.nav_tree[link_name] = {top:top,bot:bot,children:link_children,bg_color:props.bg_color}
 				state_ref.current.hash *= hash
 		h 'div',
 			cn: 'nav-context'
@@ -118,9 +120,9 @@ NavBarSection = (props)->
 	context = useContext(NavBarContext)
 	ref = useRef()
 	self_context = 
-		setNav: (link_name,top,bot,nav_children,hash)->
+		setNav: (link_name,top,bot,nav_children,hash,className)->
 			self_context.hash *= hash
-			self_context.nav_children[link_name] = {top:top,bot:bot,children:nav_children}
+			self_context.nav_children[link_name] = {top:top,bot:bot,children:nav_children,className:className}
 			return
 		nav_children: {}
 		hash: 23
@@ -128,9 +130,9 @@ NavBarSection = (props)->
 	useEffect ()->
 		# log 'set nav bar hash'
 		self_context.hash *= (ref.current.offsetTop+ref.current.clientHeight)*31
-		context.setNav(props.nav_key,ref.current.offsetTop,ref.current.offsetTop+ref.current.clientHeight,self_context.nav_children,self_context.hash)
+		context.setNav(props.nav_key,ref.current.offsetTop,ref.current.offsetTop+ref.current.clientHeight,self_context.nav_children,self_context.hash,props.className)
 		return 
-
+	
 	h NavBarContext.Provider,
 		value: self_context
 		h 'div',
