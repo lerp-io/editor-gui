@@ -17,6 +17,8 @@ export default ExampleDemoBox = ()->
 			
 	,[]
 
+	[toggle_title,toggleTitle] = useState(true)
+
 	[show_menu_item_a,setMenuItemA] = useState('🐠 another menu 🐠')
 	[show_menu_item_b,setMenuItemB] = useState("0")
 	[show_menu_item_c,setMenuItemC] = useState(undefined)
@@ -29,6 +31,7 @@ export default ExampleDemoBox = ()->
 	[val_number_a,setValNumberA] = useState(1.4)
 	[val_number_b,setValNumberB] = useState(1.4)
 	
+	[stick_title,toggleStickyTitle] = useState(false)
 	[val_text_a,setValTextA] = useState('short txt')
 	[val_text_b,setValTextB] = useState('this some sort of oneline text, like a name or something')
 	
@@ -47,6 +50,7 @@ export default ExampleDemoBox = ()->
 
 	[box_visible_a,setBoxVisibleA] = useState(true)
 
+	[input_bg_color,inputBackgroundColor] = useState('red')
 	pos_a = useRef([0,0])
 
 	[upd,setUpdate] = useState(null)
@@ -103,8 +107,8 @@ export default ExampleDemoBox = ()->
 		h Box,
 			# top: no
 			# top: yes
-			title: 'box title'
-			stickyTitle: yes
+			title: toggle_title && 'box title'
+			stickyTitle: stick_title
 			# description: 'this is some sort of test description with a semi long line of text!'
 			# h In,
 			# 	type: 'text'
@@ -115,16 +119,40 @@ export default ExampleDemoBox = ()->
 			# 	value: val_text_a
 			# 	set: setValTextA
 			h In,
+				type: 'toggle'
+				label: 'toggle sticky title'
+				value: stick_title
+				set: toggleStickyTitle
+			h In,
+				type: 'toggle'
+				label: 'toggle title'
+				value: toggle_title
+				set: toggleTitle
+			h In,
+				type: 'static'
+				'static input with text passed as a child. this is some sort of test description with a semi long line of text!'
+			
+			h In,
 				type: 'plain'
 				label: 'plain value'
 				value: 'some value string'
 			h In,
 				type: 'plain'
 				label: 'plain value 2'
-				backgroundColor: 'red'
+				backgroundColor: input_bg_color
 				valueColor: 'black'
 				labelColor: 'yellow'
 				value: '10293.1020310.123'
+			h In,
+				type: 'static'
+				'the above input colors are set via backgroundColor, valueColor and labelColor'
+			
+			h In,
+				type: 'color'
+				label: 'backgroundColor'
+				value: input_bg_color
+				set: inputBackgroundColor
+			
 			h In,
 				type: 'text'
 				label: 'val'
@@ -187,6 +215,9 @@ export default ExampleDemoBox = ()->
 				min: 1
 				max: 10
 			h In,
+				type: 'static'
+				'custom colors can also be set on range inputs'
+			h In,
 				type: 'range'
 				label: 'copy of range A'
 				value: val_range_a
@@ -206,6 +237,8 @@ export default ExampleDemoBox = ()->
 				step: 1
 				snapValueToEdge: yes
 				valueColor: 'yellow'
+			
+			
 			h In,
 				type: 'range'
 				label: 'stepped by 1'
@@ -228,6 +261,10 @@ export default ExampleDemoBox = ()->
 				step: 10
 				snapValueToEdge: yes
 				color: 'lime'
+			h In,
+				type: 'static'
+				'Labels which are super long will word break and span multiple lines.'
+			h Separator
 			h In,
 				type: 'button'
 				label: 'pls click meh'

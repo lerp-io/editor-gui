@@ -98,6 +98,9 @@
 	&.ed-tight{
 		min-height: 16px;
 	}
+	&:last-child{
+		margin-bottom: 0px;
+	}
 }
 
 .ed-in-wrap-toggle-input{
@@ -182,6 +185,7 @@ input:disabled{
 .ed-box-title{
 	
 	padding: @padding;
+	padding-bottom: @padding/2;
 	// margin-bottom: @padding;
 	font-weight: 800;
 	text-align: center;
@@ -205,7 +209,7 @@ input:disabled{
 
 .ed-box-title-sticky{
 	position: sticky;
-	top:0;
+	top:0px;
 }
 
 .ed-box-content{
@@ -441,11 +445,12 @@ input:disabled{
 
 
 .ed-section{
-	margin: 0px;
-	// margin: 0px -@padding;
+	// margin: 0px;
+	margin: @padding 0px;
+	padding: @padding 0px;
 	position: relative;
 	// text-transform: uppercase;
-	margin-bottom: 2px;
+	// margin-bottom: 2px;
 	border-top: 1px solid @color4;
 	border-bottom: 1px solid @color4;
 	// padding: @padding;
@@ -457,7 +462,7 @@ input:disabled{
 	
 	font-weight: 800;
 	width: 100%;
-	padding: @padding;
+	padding: 0px @padding;
 	text-transform: uppercase;
 }
 .ed-section-label-toggle-off{
@@ -506,8 +511,11 @@ input:disabled{
 }
 
 .ed-separator{
-	height: 24px;
-	padding: 0px @padding;
+	margin-top: 8px;
+	border-bottom: 1px solid @color4;
+	height: 0px;
+	width: 100%;
+	margin-bottom: 12px;
 }
 
 .ed-line-chart{
@@ -571,6 +579,13 @@ input:disabled{
 	&.ed-anchor-drag{
 		pointer-events: all;
 		cursor: move;
+		*{
+			pointer-events: none !important;
+		}
+	}
+	&.ed-anchor-resize{
+		pointer-events: all;
+		cursor: ns-resize;
 		*{
 			pointer-events: none !important;
 		}

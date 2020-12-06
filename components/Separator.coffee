@@ -7,6 +7,6 @@ h = createElement
 Separator = (props)->
 	h 'div',
 		className: 'ed-separator'
-		'----'
+		
 
 export default Separator

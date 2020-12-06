@@ -104,6 +104,8 @@ Box = (props,state)->
 			cn:'ed-box-inner'
 			style:
 				minHeight: MIN_HEIGHT
+
+				paddingTop: !props.title && '0.425em'
 			ref: content_ref
 			(props.title || props.label) && (h 'div',
 				className: cn 'ed-box-title',props.stickyTitle && 'ed-box-title-sticky'

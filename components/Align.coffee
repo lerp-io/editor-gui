@@ -1,4 +1,5 @@
 BAR_DIM = 12
+REBAR_DIM = 4
 #neveragain
 
 guessAlign = (width,height,ctx)->
@@ -141,9 +142,9 @@ fixAlign = (align_key,ctx,width,height)->
 
 clampHeight = (ctx,height)->
 	if ctx.root && ctx.clamp_height
-		return Math.min(ctx.view_rect.height-BAR_DIM,Math.min(ctx.clamp_height,height))
+		return Math.min(ctx.view_rect.height - BAR_DIM - REBAR_DIM,Math.min(ctx.clamp_height,height))
 	else
-		return Math.min(height,ctx.view_rect.height - BAR_DIM)
+		return Math.min(height,ctx.view_rect.height)
 
 
 

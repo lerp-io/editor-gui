@@ -219,7 +219,7 @@ MenuAnchor = (props)->
 			zIndex: z_index
 			width: (resize_start_pos|| drag_start_pos) && '100vw' || undefined
 			height: (resize_start_pos || drag_start_pos) && '100vh' || undefined
-		cn: cn('ed-anchor',(resize_start_pos || drag_start_pos) && 'ed-anchor-drag')
+		cn: cn('ed-anchor',drag_start_pos && 'ed-anchor-drag',resize_start_pos && 'ed-anchor-resize')
 		ref: anchor_ref
 		onMouseMove: (e)->
 			
@@ -230,15 +230,15 @@ MenuAnchor = (props)->
 				# self_width = resize_start_pos[2]+e.clientX-resize_start_pos[0]
 				
 				if snap_bot
-					self_height = resize_start_pos[3]-e.clientY+resize_start_pos[1]
+					self_height = Math.max(0,resize_start_pos[3]-e.clientY+resize_start_pos[1])
 					
 				else
-					self_height = resize_start_pos[3]+e.clientY-resize_start_pos[1]
+					self_height = Math.max(0,resize_start_pos[3]+e.clientY-resize_start_pos[1])
 					
 				
 				set_height = clampHeight(context,self_height)
 				
-				# log self_height,set_height
+				
 
 				# if self_height != set_height
 				props.setSize(0,set_height)

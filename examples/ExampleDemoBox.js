@@ -30,7 +30,7 @@ for (m = i = 0; i < 100; m = ++i) {
 }
 
 export default ExampleDemoBox = function() {
-  var box_visible_a, is_mounted, pos_a, renderBox, renderSettingsBoxB, section_visible_a, section_visible_b, setBoxVisibleA, setMenuItemA, setMenuItemB, setMenuItemC, setMenuItemD, setMounted, setSectionVisibleA, setSectionVisibleB, setSize, setUpdate, setValColorA, setValColorB, setValColorC, setValNumberA, setValNumberB, setValRangeA, setValRangeB, setValRangeC, setValRangeD, setValSelectA, setValTextA, setValTextB, setValToggleA, setValToggleB, setValToggleC, show_menu_item_a, show_menu_item_b, show_menu_item_c, show_menu_item_d, size, upd, val_color_a, val_color_b, val_color_c, val_number_a, val_number_b, val_range_a, val_range_b, val_range_c, val_range_d, val_select_a, val_text_a, val_text_b, val_toggle_a, val_toggle_b, val_toggle_c;
+  var box_visible_a, inputBackgroundColor, input_bg_color, is_mounted, pos_a, renderBox, renderSettingsBoxB, section_visible_a, section_visible_b, setBoxVisibleA, setMenuItemA, setMenuItemB, setMenuItemC, setMenuItemD, setMounted, setSectionVisibleA, setSectionVisibleB, setSize, setUpdate, setValColorA, setValColorB, setValColorC, setValNumberA, setValNumberB, setValRangeA, setValRangeB, setValRangeC, setValRangeD, setValSelectA, setValTextA, setValTextB, setValToggleA, setValToggleB, setValToggleC, show_menu_item_a, show_menu_item_b, show_menu_item_c, show_menu_item_d, size, stick_title, toggleStickyTitle, toggleTitle, toggle_title, upd, val_color_a, val_color_b, val_color_c, val_number_a, val_number_b, val_range_a, val_range_b, val_range_c, val_range_d, val_select_a, val_text_a, val_text_b, val_toggle_a, val_toggle_b, val_toggle_c;
   [is_mounted, setMounted] = useState(false);
   [size, setSize] = useState(null);
   useEffect(function() {
@@ -38,6 +38,7 @@ export default ExampleDemoBox = function() {
       return setMounted(true);
     }
   }, []);
+  [toggle_title, toggleTitle] = useState(true);
   [show_menu_item_a, setMenuItemA] = useState('🐠 another menu 🐠');
   [show_menu_item_b, setMenuItemB] = useState("0");
   [show_menu_item_c, setMenuItemC] = useState(void 0);
@@ -48,6 +49,7 @@ export default ExampleDemoBox = function() {
   [val_range_d, setValRangeD] = useState(0);
   [val_number_a, setValNumberA] = useState(1.4);
   [val_number_b, setValNumberB] = useState(1.4);
+  [stick_title, toggleStickyTitle] = useState(false);
   [val_text_a, setValTextA] = useState('short txt');
   [val_text_b, setValTextB] = useState('this some sort of oneline text, like a name or something');
   [val_color_a, setValColorA] = useState("#fff");
@@ -60,6 +62,7 @@ export default ExampleDemoBox = function() {
   [section_visible_b, setSectionVisibleB] = useState(true);
   [val_select_a, setValSelectA] = useState(null);
   [box_visible_a, setBoxVisibleA] = useState(true);
+  [input_bg_color, inputBackgroundColor] = useState('red');
   pos_a = useRef([0, 0]);
   [upd, setUpdate] = useState(null);
   global.setUpdate = setUpdate;
@@ -111,8 +114,8 @@ export default ExampleDemoBox = function() {
     return h(Box, {
       // top: no
       // top: yes
-      title: 'box title',
-      stickyTitle: true
+      title: toggle_title && 'box title',
+      stickyTitle: stick_title
     // description: 'this is some sort of test description with a semi long line of text!'
     // h In,
     // 	type: 'text'
@@ -123,16 +126,35 @@ export default ExampleDemoBox = function() {
     // 	value: val_text_a
     // 	set: setValTextA
     }, h(In, {
+      type: 'toggle',
+      label: 'toggle sticky title',
+      value: stick_title,
+      set: toggleStickyTitle
+    }), h(In, {
+      type: 'toggle',
+      label: 'toggle title',
+      value: toggle_title,
+      set: toggleTitle
+    }), h(In, {
+      type: 'static'
+    }, 'static input with text passed as a child. this is some sort of test description with a semi long line of text!'), h(In, {
       type: 'plain',
       label: 'plain value',
       value: 'some value string'
     }), h(In, {
       type: 'plain',
       label: 'plain value 2',
-      backgroundColor: 'red',
+      backgroundColor: input_bg_color,
       valueColor: 'black',
       labelColor: 'yellow',
       value: '10293.1020310.123'
+    }), h(In, {
+      type: 'static'
+    }, 'the above input colors are set via backgroundColor, valueColor and labelColor'), h(In, {
+      type: 'color',
+      label: 'backgroundColor',
+      value: input_bg_color,
+      set: inputBackgroundColor
     }), h(In, {
       type: 'text',
       label: 'val',
@@ -195,6 +217,8 @@ export default ExampleDemoBox = function() {
       min: 1,
       max: 10
     }), h(In, {
+      type: 'static'
+    }, 'custom colors can also be set on range inputs'), h(In, {
       type: 'range',
       label: 'copy of range A',
       value: val_range_a,
@@ -237,6 +261,8 @@ export default ExampleDemoBox = function() {
       snapValueToEdge: true,
       color: 'lime'
     }), h(In, {
+      type: 'static'
+    }, 'Labels which are super long will word break and span multiple lines.'), h(Separator), h(In, {
       type: 'button',
       label: 'pls click meh',
       onSelect: function() {

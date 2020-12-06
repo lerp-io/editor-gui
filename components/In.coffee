@@ -248,6 +248,8 @@ In = (props)->
 
 
 	switch props.type
+		when 'static'
+			input = undefined
 		when 'plain','label'
 			input = h 'div',
 				className: 'ed-input full-w ed-input-plain'
@@ -506,14 +508,16 @@ In = (props)->
 			# 	className: 'ed-in-wrap-toggle-label'
 			label
 			
-
+	if input?
+		input_wrapper = h 'div',
+			className: cn 'ed-input-wrap',props.half && 'ed-in-half'
+			input
 
 	h 'div',
 		className: cn 'ed-in-wrap',props.half && 'ed-in-half',props.type == 'plain' && 'ed-tight'
-		h 'div',
-			className: cn 'ed-input-wrap',props.half && 'ed-in-half'
-			input
+		input_wrapper
 		label
+		props.children
 
 
 	

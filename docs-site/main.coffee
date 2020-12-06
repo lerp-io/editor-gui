@@ -38,7 +38,7 @@ renderSourceCodeView = (props)->
 	useEffect ()->
 		if pre_ref.current && code_type
 			hljs.highlightBlock(pre_ref.current)
-			render(h(main),window.main)
+		render(h(main),window.main)
 		return
 	,[pre_ref.current,code_type]
 	
@@ -174,7 +174,7 @@ import TestExampleCoffee from '!raw-loader!../examples/test.coffee'
 import TestExampleJS from '!raw-loader!../examples/test.js'
 
 EXAMPLES =
-	"Testing":
+	"Demo":
 		component: TestExample
 		coffee_source: TestExampleCoffee
 		js_source: TestExampleJS
