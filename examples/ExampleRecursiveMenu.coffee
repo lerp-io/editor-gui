@@ -1,5 +1,5 @@
 import {createElement,useState,useEffect,useRef,useReducer} from 'react'
-import {Layout,In,Box,Row,Menu,Section,SectionLabel,Style,Separator} from '../components'
+import {Layout,In,Box,Menu,Section,SectionLabel,Style,Separator} from '../components'
 h = createElement
 
 
@@ -22,7 +22,7 @@ ExampleRecursiveMenu = (props)->
 	renderBox = ()->
 		h ExampleDemoBox
 
-	renderRecursiveMenu = (menu_name,level=0,vert)->
+	renderRecursiveMenu = (menu_name,level=0,vert,position)->
 		items = {}
 		
 		if level % 2 == 0
@@ -39,11 +39,13 @@ ExampleRecursiveMenu = (props)->
 		h Menu,
 			vert: if props.vert? then props.vert else level % 2 == 1
 			select: menu_state[menu_name]
+			align: props.align
+			position: position
 			onSelect: (item_name)->
 				onSelectRecursiveMenuItem(menu_name,item_name)
 			items: items
 		
 	
-	renderRecursiveMenu(props.name,0,props.vert)
+	renderRecursiveMenu(props.name,0,props.vert,props.position)
 
 export default ExampleRecursiveMenu

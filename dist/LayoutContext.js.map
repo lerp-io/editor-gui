@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "LayoutContext.js",
+  "sourceRoot": "..",
+  "sources": [
+    "components/LayoutContext.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA,IAAA,OAAA,EAAA;;AAAA,CAAA,CAAC,aAAD,CAAA,GAAkB,OAAA,CAAQ,OAAR,CAAlB;;AAEA,OAAA,GAAU,aAAA,CACT;EAAA,IAAA,EAAM;AAAN,CADS;;AAGV,OAAA,QAAe",
+  "sourcesContent": [
+    "{createContext} = require 'react'\n\ncontext = createContext\n\troot: yes\n\nexport default context"
+  ]
+}

@@ -4,10 +4,11 @@ import cn from 'classnames'
 import LayoutContext from './LayoutContext'
 
 
-_measure_text = new Map
+
 Layout = (props,state)->
 	layout_ref = useRef()
 	[context,setContext] = useState(null)
+	[win_size,setWinSize] = useState(null)
 	measure_text = useRef(new Map)
 	canvas_ref = useRef()
 	[is_dragging,isDragging] = useState(false)
@@ -17,6 +18,23 @@ Layout = (props,state)->
 		measure_text.current = new Map
 		return
 	,[props.fontFamily,props.fontSize]
+
+	useEffect ()->
+		view_rect = layout_ref.current.getBoundingClientRect()
+		setContext
+			depth: 0
+			dim: props.fontSize * 1.6
+			wpad: props.fontSize * .6
+			paddingLeft: props.fontSize * .6
+			root: yes
+			selected_label: 'root'
+			view_rect: view_rect
+			getLabelWidth: getLabelWidth
+			stopDrag: stopDrag
+			forceUpdate: _forceUpdate
+			startDrag: startDrag
+
+	,[props.fontFamily,props.fontSize,win_size]
 
 	_forceUpdate = ()->
 		log 'force update'
@@ -54,25 +72,9 @@ Layout = (props,state)->
 
 
 	useEffect ()->
-
-		canvas = document.createElement("canvas");
-		
 		if !context
 			onWindowResize = ()->
-				view_rect = layout_ref.current.getBoundingClientRect()
-				# log view_rect
-				setContext
-					depth: 0
-					dim: props.dim || 24
-					wpad: props.wpad || 12
-					paddingLeft: props.paddingLeft || 4
-					root: yes
-					selected_label: 'root'
-					view_rect: view_rect
-					getLabelWidth: getLabelWidth
-					stopDrag: stopDrag
-					forceUpdate: _forceUpdate
-					startDrag: startDrag
+				setWinSize(window.innerWidth+'-'+window.innerHeight)
 			onWindowResize()
 			window.addEventListener 'resize',onWindowResize
 			return

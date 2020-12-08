@@ -92,8 +92,32 @@ MenuAnchor = (props)->
 
 	dot_width = DOT_DIM
 	dot_height = DOT_DIM
+	
+	# self_x = props.position[0]
+	# self_y = props.position[1]
 
 	if dim.width && dim.height
+
+		switch handle_pos
+			when 'left'
+				self_width = dim.width+BAR_DIM
+				self_height = dim.height
+			when 'right'
+				self_width = dim.width+BAR_DIM
+				self_height = dim.height
+			when 'top'
+				self_height = dim.height+BAR_DIM
+				self_width = dim.width
+			when 'bottom'
+				self_width = dim.width
+				self_height = dim.height+BAR_DIM
+
+		[offset_x,offset_y] = clampPosition(context,props.position[0],props.position[1],self_width,self_height,undefined)
+		props.position[0] += offset_x
+		props.position[1] += offset_y
+
+
+
 		switch handle_pos
 			when 'left'
 				bar_width = BAR_DIM
@@ -105,8 +129,7 @@ MenuAnchor = (props)->
 				rebar_top = props.position[1]
 				
 				
-				self_width = dim.width+BAR_DIM
-				self_height = dim.height
+				
 				content_x = props.position[0]+BAR_DIM
 				content_y = props.position[1]
 				if !props.visible
@@ -121,8 +144,7 @@ MenuAnchor = (props)->
 				rebar_left = props.position[0]-REBAR_DIM
 				rebar_top = props.position[1]
 				
-				self_width = dim.width+BAR_DIM
-				self_height = dim.height
+				
 				content_x = props.position[0]
 				content_y = props.position[1]
 				if !props.visible
@@ -138,8 +160,7 @@ MenuAnchor = (props)->
 				rebar_left = props.position[0]
 				rebar_top = props.position[1]+dim.height+BAR_DIM
 				
-				self_height = dim.height+BAR_DIM
-				self_width = dim.width
+				
 				content_x = props.position[0]
 				content_y = props.position[1]+BAR_DIM
 				if !props.visible
@@ -155,23 +176,25 @@ MenuAnchor = (props)->
 				rebar_left = props.position[0]
 				rebar_top = props.position[1]-REBAR_DIM
 
-				self_width = dim.width
-				self_height = dim.height+BAR_DIM
+				
 				content_x = props.position[0]
 				content_y = props.position[1]
 
 				if !props.visible
 					dot_width = DOT_DIM * 3
 
-	
+		
+		
+		
 		# if props.handlePosition == 'right'
 			
-	
+
+
 	# log props.position
 	# log props.size
 
 	self_context = Object.assign {},context,
-		align: props.align
+		align: props.align || 'right-down'
 		clamp_width: props.size?[0] || 0
 		clamp_height: props.size?[1] || 0
 		
@@ -180,6 +203,8 @@ MenuAnchor = (props)->
 		root: yes
 		checkAnchorDim: checkAnchorDim
 
+
+	
 
 	# log self_context.view_rect
 
@@ -235,10 +260,10 @@ MenuAnchor = (props)->
 				else
 					self_height = Math.max(0,resize_start_pos[3]+e.clientY-resize_start_pos[1])
 					
-				
+				# max_height = maxHeight(context,self_height)
 				set_height = clampHeight(context,self_height)
 				
-				
+				# if set_height - max_height
 
 				# if self_height != set_height
 				props.setSize(0,set_height)
@@ -252,10 +277,7 @@ MenuAnchor = (props)->
 					setDragging(true)
 				self_x = drag_start_pos[2]+e.clientX-drag_start_pos[0]
 				self_y = drag_start_pos[3]+e.clientY-drag_start_pos[1]
-				[offset_x,offset_y] = clampPosition(self_context,self_x,self_y,self_width,self_height,undefined)
-
-				self_x += offset_x
-				self_y += offset_y
+				
 
 				props.setPosition(self_x,self_y)
 				if !props.visible
@@ -291,7 +313,7 @@ MenuAnchor = (props)->
 
 		onMouseEnter: ()->
 			# log 'mouse enter'
-			setZIndex(1)
+			setZIndex(999)
 		
 		onMouseLeave: ()->
 			setZIndex(0)

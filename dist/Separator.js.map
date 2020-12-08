@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "Separator.js",
+  "sourceRoot": "..",
+  "sources": [
+    "components/Separator.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA,IAAA,SAAA,EAAA;;AAAA,OAAA;EAAQ,aAAR;EAAsB,QAAtB;EAA+B,SAA/B;EAAyC,UAAzC;EAAoD,MAApD;EAA2D,UAA3D;CAAA,MAAA;;AACA,OAAO,EAAP,MAAA;;AACA,OAAO,UAAP,MAAA;;AACA,OAAO,UAAP,MAAA;;AACA,CAAA,GAAI;;AAEJ,SAAA,GAAY,QAAA,CAAC,KAAD,CAAA;SACX,CAAA,CAAE,KAAF,EACC;IAAA,SAAA,EAAW;EAAX,CADD;AADW;;AAKZ,OAAA,QAAe",
+  "sourcesContent": [
+    "import {createElement,useState,useEffect,useContext,useRef,useReducer} from 'react'\nimport cn from 'classnames'\nimport BoxContext from './BoxContext'\nimport parseColor from 'parse-color'\nh = createElement\n\nSeparator = (props)->\n\th 'div',\n\t\tclassName: 'ed-separator'\n\t\t\n\nexport default Separator"
+  ]
+}

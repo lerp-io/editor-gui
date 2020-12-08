@@ -13,7 +13,6 @@ import {
   Layout,
   In,
   Box,
-  Row,
   Menu,
   Section,
   SectionLabel,
@@ -46,7 +45,7 @@ ExampleRecursiveMenu = function(props) {
   renderBox = function() {
     return h(ExampleDemoBox);
   };
-  renderRecursiveMenu = function(menu_name, level = 0, vert) {
+  renderRecursiveMenu = function(menu_name, level = 0, vert, position) {
     var i, item_count, items, j, ref;
     items = {};
     if (level % 2 === 0) {
@@ -61,13 +60,15 @@ ExampleRecursiveMenu = function(props) {
     return h(Menu, {
       vert: props.vert != null ? props.vert : level % 2 === 1,
       select: menu_state[menu_name],
+      align: props.align,
+      position: position,
       onSelect: function(item_name) {
         return onSelectRecursiveMenuItem(menu_name, item_name);
       },
       items: items
     });
   };
-  return renderRecursiveMenu(props.name, 0, props.vert);
+  return renderRecursiveMenu(props.name, 0, props.vert, props.position);
 };
 
 export default ExampleRecursiveMenu;

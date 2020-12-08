@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "Section.js",
+  "sourceRoot": "..",
+  "sources": [
+    "components/Section.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA,IAAA,OAAA,EAAA;;AAAA,OAAA;EAAQ,aAAR;EAAsB,QAAtB;EAA+B,SAA/B;EAAyC,UAAzC;EAAoD,MAApD;CAAA,MAAA;;AACA,CAAA,GAAI;;AACJ,OAAO,EAAP,MAAA;;AACA,OAAO,aAAP,MAAA;;AAEA,OAAA,GAAU,QAAA,CAAC,KAAD,EAAO,KAAP,CAAA;AACV,MAAA;EAAC,IAAG,KAAK,CAAC,OAAT;IACC,WAAA,GAAc,CAAA,CAAE,KAAF,EACb;MAAA,SAAA,EAAW;IAAX,CADa,EADf;;SAIA,CAAA,CAAE,KAAF,EACC;IAAA,SAAA,EAAW;EAAX,CADD,EAEC,WAFD,EAGC,CAAA,CAAE,KAAF,EACC;IAAA,SAAA,EAAW,EAAA,CAAG,yCAAH,EAA8C,uBAAD,IAAmB,6BAAhE,CAAX;IACA,OAAA,EAAS,QAAA,CAAC,CAAD,CAAA;+CACR,KAAK,CAAC,IAAK,CAAC,KAAK,CAAC;IADV;EADT,CADD,EAIC,CAAA,CAAE,KAAF,EACC;IAAA,SAAA,EAAW;EAAX,CADD,EAEC,CAAA,CAAE,KAAF,EACC;IAAA,SAAA,EAAW;EAAX,CADD,EAEC,IAFD,CAFD,EAKC,KAAK,CAAC,KALP,EAMC,uBAAA,IAAkB,CAAC,CAAA,CAAE,KAAF,EAClB;IAAA,SAAA,EAAW,EAAA,CAAG,yBAAH,EAA6B,KAAK,CAAC,OAAN,KAAiB,IAAjB,IAA0B,uBAAD,IAAmB,gCAAzE;EAAX,CADkB,EAEjB,KAAK,CAAC,OAAN,KAAiB,IAAjB,IAAyB,IAAzB,IAAiC,IAFhB,CAAD,CAAlB,IAGK,IATN,CAJD,CAHD,EAiBC,CAAC,KAAK,CAAC,OAAN,KAAiB,IAAjB,IAA0B,uBAA3B,CAAA,IAA8C,CAAC,CAAA,CAAE,KAAF,EAC9C;IAAA,SAAA,EAAW;EAAX,CAD8C,EAE9C,KAAK,CAAC,QAFwC,CAAD,CAA9C,IAGK,IApBN;AALS,EALV;;;;;;AAoCA,OAAA,QAAe",
+  "sourcesContent": [
+    "import {createElement,useState,useEffect,useContext,useRef} from 'react'\nh = createElement\nimport cn from 'classnames'\nimport LayoutContext from './LayoutContext'\n\nSection = (props,state)->\n\tif props.visible\n\t\tsection_bar = h 'div',\n\t\t\tclassName: 'ed-section-bar'\n\n\th 'div',\n\t\tclassName: 'ed-section ed-flex-down ed-full-w'\n\t\tsection_bar\n\t\th 'div',\n\t\t\tclassName: cn 'ed-section-title ed-flex-right noselect',!props.visible? && 'ed-section-label-toggle-off'\n\t\t\tonClick: (e)->\n\t\t\t\tprops.set?(!props.visible)\n\t\t\th 'div',\n\t\t\t\tclassName: 'ed-section-label ed-flex-right ed-full-w'\n\t\t\t\th 'div',\n\t\t\t\t\tclassName: 'ed-in-label-colon ed-pre'\n\t\t\t\t\t'# '\n\t\t\t\tprops.label\n\t\t\t\tprops.visible? && (h 'div',\n\t\t\t\t\tclassName: cn 'ed-section-label-toggle',props.visible == true || !props.visible? && 'ed-section-label-toggle-active'\n\t\t\t\t\t(props.visible == true && ' ▲' || ' ▼')\n\t\t\t\t) || null\n\t\t(props.visible == true || !props.visible?) && (h 'div',\n\t\t\tclassName: 'ed-section-content ed-flex-down ed-full-w'\n\t\t\tprops.children\n\t\t) || null\n\t\t# props.visible && (h 'div',\n\t\t# \tclassName: 'ed-section-end-label'\n\t\t# \t'-*-'\n\t\t# ) || null\n\nexport default Section"
+  ]
+}

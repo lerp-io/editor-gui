@@ -12,8 +12,7 @@
 @padding: @fontsize*.5;
 @padding2: @fontsize;
 @margin: @padding*.6;
-@blur: blur(10px);
-@dim: 24px;
+@dim: 1.60em;
 
 .noselect {
   -webkit-touch-callout: none; /* iOS Safari */
@@ -96,7 +95,7 @@
 		width: 50%;
 	}
 	&.ed-tight{
-		min-height: 16px;
+		min-height: 1em;
 	}
 	&:last-child{
 		margin-bottom: 0px;
@@ -323,6 +322,8 @@ input:disabled{
 		background: none;
 		border: none;
 		outline: none;
+		font: inherit;
+		padding: none;
 		
 		&.ed-selected{
 			background-color: @bg2;
@@ -511,11 +512,11 @@ input:disabled{
 }
 
 .ed-separator{
-	margin-top: 8px;
+	margin-top: @dim/3;
 	border-bottom: 1px solid @color4;
 	height: 0px;
 	width: 100%;
-	margin-bottom: 12px;
+	margin-bottom: @dim/2;
 }
 
 .ed-line-chart{
@@ -553,11 +554,11 @@ input:disabled{
 		align-content: center;
 		align-items: center;
 		.ed-anchor-dot{
-			margin: 4px;
+			margin: @dim/6;
 			pointer-events: none;
 			background: white;
-			width: 4px;
-			height: 4px;
+			width: @dim/6;
+			height: @dim/6;
 		}
 	}
 
@@ -566,8 +567,8 @@ input:disabled{
 	}
 
 	.ed-anchor-handle-resize{
-		width: 12px;
-		height: 12px;
+		width: @dim/2;
+		height: @dim/2;
 		background: black;
 		position: absolute;
 		cursor: ns-resize;

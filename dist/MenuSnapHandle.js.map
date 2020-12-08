@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "MenuSnapHandle.js",
+  "sourceRoot": "..",
+  "sources": [
+    "components/MenuSnapHandle.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA;;AAAA",
+  "sourcesContent": [
+    ""
+  ]
+}

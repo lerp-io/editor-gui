@@ -4,7 +4,7 @@ import './main.less'
 
 import {createElement,useState,useEffect,useRef,useReducer} from 'react'
 import {render} from 'react-dom'
-import {Layout,In,Box,Row,Menu,Section,SectionLabel,Style,Separator} from '../components'
+import {Layout,In,Box,Menu,Section,SectionLabel,Style,Separator} from '../components'
 
 import gfm from 'remark-gfm'
 
@@ -142,7 +142,6 @@ import BoxMD from '../components/Box.md'
 import InMD from '../components/In.md'
 import LayoutMD from '../components/Layout.md'
 import MenuMD from '../components/Menu.md'
-import RowMD from '../components/Row.md'
 import SectionMD from '../components/Section.md'
 import SeparatorMD from '../components/Separator.md'
 
@@ -157,8 +156,6 @@ COMPONENTS =
 		md: LayoutMD
 	Menu: 
 		md: MenuMD
-	Row: 
-		md: RowMD
 	Section: 
 		md: SectionMD
 	Separator: 

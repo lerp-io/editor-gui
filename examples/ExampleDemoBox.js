@@ -13,7 +13,6 @@ import {
   Layout,
   In,
   Box,
-  Row,
   Menu,
   Section,
   SectionLabel,
@@ -30,7 +29,7 @@ for (m = i = 0; i < 100; m = ++i) {
 }
 
 export default ExampleDemoBox = function() {
-  var box_visible_a, inputBackgroundColor, input_bg_color, is_mounted, pos_a, renderBox, renderSettingsBoxB, section_visible_a, section_visible_b, setBoxVisibleA, setMenuItemA, setMenuItemB, setMenuItemC, setMenuItemD, setMounted, setSectionVisibleA, setSectionVisibleB, setSize, setUpdate, setValColorA, setValColorB, setValColorC, setValNumberA, setValNumberB, setValRangeA, setValRangeB, setValRangeC, setValRangeD, setValSelectA, setValTextA, setValTextB, setValToggleA, setValToggleB, setValToggleC, show_menu_item_a, show_menu_item_b, show_menu_item_c, show_menu_item_d, size, stick_title, toggleStickyTitle, toggleTitle, toggle_title, upd, val_color_a, val_color_b, val_color_c, val_number_a, val_number_b, val_range_a, val_range_b, val_range_c, val_range_d, val_select_a, val_text_a, val_text_b, val_toggle_a, val_toggle_b, val_toggle_c;
+  var box_visible_a, inputBackgroundColor, input_bg_color, is_mounted, pos_a, renderBox, section_visible_a, section_visible_b, setBoxVisibleA, setMenuItemA, setMenuItemB, setMenuItemC, setMenuItemD, setMounted, setSectionVisibleA, setSectionVisibleB, setSize, setUpdate, setValColorA, setValColorB, setValColorC, setValNumberA, setValNumberB, setValRangeA, setValRangeB, setValRangeC, setValRangeD, setValSelectA, setValTextA, setValTextB, setValToggleA, setValToggleB, setValToggleC, show_menu_item_a, show_menu_item_b, show_menu_item_c, show_menu_item_d, size, stick_title, toggleStickyTitle, toggleTitle, toggle_title, upd, val_color_a, val_color_b, val_color_c, val_number_a, val_number_b, val_range_a, val_range_b, val_range_c, val_range_d, val_select_a, val_text_a, val_text_b, val_toggle_a, val_toggle_b, val_toggle_c;
   [is_mounted, setMounted] = useState(false);
   [size, setSize] = useState(null);
   useEffect(function() {
@@ -68,43 +67,6 @@ export default ExampleDemoBox = function() {
   global.setUpdate = setUpdate;
   // [menu_state,dispatchMenuState] = useReducer(menuToggleReducer,menuToggleReducerState) 
   // log menu_state
-  renderSettingsBoxB = function(props, state) {
-    return h(Box, {
-      title: void 0,
-      description: void 0
-    }, h(Row, {}, h(In, {
-      type: 'toggle',
-      label: 'toggle A',
-      value: val_toggle_a,
-      set: setValToggleA,
-      color: 'red'
-    }), h(In, {
-      type: 'color',
-      label: 'another color',
-      value: val_color_b,
-      commit: setValColorB
-    })), h(Row, {}, h(In, {
-      type: 'toggle',
-      label: 'toggle B',
-      value: val_toggle_b,
-      set: setValToggleB,
-      color: 'red'
-    }), h(In, {
-      type: 'color',
-      label: 'val color c',
-      value: val_color_c,
-      commit: setValColorC
-    })), h(In, {
-      type: 'select',
-      label: 'select',
-      value: val_select_a,
-      items: ['option A', 'option B', 'option C'],
-      set: setValSelectA
-    }));
-  };
-  ({
-    renderMenu: function() {}
-  });
   renderBox = function() {
     // return h Box,
     // 	# top: no

@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "BoxContext.js",
+  "sourceRoot": "..",
+  "sources": [
+    "components/BoxContext.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA,IAAA,OAAA,EAAA;;AAAA,CAAA,CAAC,aAAD,CAAA,GAAkB,OAAA,CAAQ,OAAR,CAAlB;;AAEA,OAAA,GAAU,aAAA,CACT;EAAA,QAAA,EAAU;AAAV,CADS;;AAGV,OAAA,QAAe",
+  "sourcesContent": [
+    "{createContext} = require 'react'\n\ncontext = createContext\n\tdispatch: null\n\nexport default context"
+  ]
+}

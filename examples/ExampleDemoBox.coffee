@@ -1,5 +1,5 @@
 import {createElement,useState,useEffect,useRef,useReducer} from 'react'
-import {Layout,In,Box,Row,Menu,Section,SectionLabel,Style,Separator} from '../components'
+import {Layout,In,Box,Menu,Section,SectionLabel,Style,Separator} from '../components'
 h = createElement
 
 
@@ -59,42 +59,6 @@ export default ExampleDemoBox = ()->
 	# [menu_state,dispatchMenuState] = useReducer(menuToggleReducer,menuToggleReducerState) 
 	# log menu_state
 
-	renderSettingsBoxB = (props,state)->
-		h Box,
-			title: undefined
-			description: undefined
-			h Row,{},
-				h In,
-					type: 'toggle'
-					label: 'toggle A'
-					value: val_toggle_a
-					set: setValToggleA
-					color: 'red'
-				h In,
-					type: 'color'
-					label: 'another color'
-					value: val_color_b
-					commit: setValColorB
-			h Row,{},
-				h In,
-					type: 'toggle'
-					label: 'toggle B'
-					value: val_toggle_b
-					set: setValToggleB
-					color: 'red'
-				h In,
-					type: 'color'
-					label: 'val color c'
-					value: val_color_c
-					commit: setValColorC
-			h In,
-				type: 'select'
-				label: 'select'
-				value: val_select_a
-				items: ['option A','option B','option C']
-				set: setValSelectA
-
-	renderMenu: ()->
 
 	renderBox = ()->
 

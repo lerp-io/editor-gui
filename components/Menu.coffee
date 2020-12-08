@@ -95,12 +95,14 @@ Menu = (props)->
 	if props.position
 		self_x = props.position[0]
 		self_y = props.position[1]
+	
 	else if context.root
 		self_x = context.x
 		self_y = context.y
+	
 	else
 		[self_x,self_y] = getPosition(self_width,self_height,context,align_key)
-		# log 'GOT POSITION FOR',context.selected_label,'[',self_x,',',self_y,']'
+		
 		[offset_x,offset_y] = clampPosition(context,self_x,self_y,self_width,self_height,align_key)
 		self_x += offset_x
 		self_y += offset_y
