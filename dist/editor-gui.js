@@ -102,15 +102,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "guessAlign", function() { return guessAlign; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clampHeight", function() { return clampHeight; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clampWidth", function() { return clampWidth; });
-var BAR_DIM, MIN_HEIGHT, MIN_WIDTH, REBAR_DIM, checkFitAlignDown, checkFitAlignLeft, checkFitAlignRight, checkFitAlignUp, checkFitPositionBottom, checkFitPositionTop, checkfitPositionLeft, checkfitPositionRight, clampHeight, clampPosition, clampWidth, fixAlign, getAlignDirections, getPosition, guessAlign;
+var BAR_DIM, MIN_HEIGHT, MIN_WIDTH, REBAR_DIM, checkFitAlignDown, checkFitAlignLeft, checkFitAlignRight, checkFitAlignUp, checkFitPositionBottom, checkFitPositionTop, checkfitPositionLeft, checkfitPositionRight, clampHeight, clampPosition, clampWidth, fixAlign, getAlignDirections, getPosition, guessAlign, initAlign;
+
+MIN_HEIGHT = 10;
+
+MIN_WIDTH = 320;
 
 BAR_DIM = 12;
 
 REBAR_DIM = 4;
 
 //neveragain
-guessAlign = function(width, height, ctx) {
-  switch (ctx.align) {
+guessAlign = function(width, height, ctx, x, y) {
+  var pre_align;
+  if (!ctx.align) {
+    pre_align = initAlign(ctx, x, y, width, height);
+  } else {
+    pre_align = ctx.align;
+  }
+  switch (pre_align) {
     case 'right-down':
       return ctx.vert && 'right-down' || 'bottom-right';
     case 'right-up':
@@ -129,6 +139,23 @@ guessAlign = function(width, height, ctx) {
       return ctx.vert && 'left-up' || 'top-left';
     default:
       throw new Error('invalid align key');
+  }
+};
+
+initAlign = function(ctx, x, y, width, height) {
+  // log 'init align',x,width/2,ctx.view_rect.width/2
+  if (x + width / 2 < ctx.view_rect.width / 2) {
+    if (y + height / 2 < ctx.view_rect.height / 2) {
+      return ctx.vert && 'right-down' || 'bottom-right';
+    } else {
+      return ctx.vert && 'right-up' || 'top-right';
+    }
+  } else {
+    if (y + height / 2 < ctx.view_rect.height / 2) {
+      return ctx.vert && 'left-down' || 'bottom-left';
+    } else {
+      return ctx.vert && 'left-up' || 'top-left';
+    }
   }
 };
 
@@ -305,13 +332,11 @@ fixAlign = function(align_key, ctx, width, height) {
   }
 };
 
-MIN_HEIGHT = 50;
-
-MIN_WIDTH = 320;
-
 clampHeight = function(ctx, height) {
   if (ctx.root && ctx.clamp_height) {
     return Math.max(Math.min(ctx.view_rect.height - BAR_DIM - REBAR_DIM, Math.min(ctx.clamp_height, height)), MIN_HEIGHT);
+  } else if (ctx.root) {
+    return Math.max(Math.min(ctx.view_rect.height - BAR_DIM - REBAR_DIM, height), MIN_HEIGHT);
   } else {
     return Math.max(Math.min(height, ctx.view_rect.height), MIN_HEIGHT);
   }
@@ -320,6 +345,8 @@ clampHeight = function(ctx, height) {
 clampWidth = function(ctx, width) {
   if (ctx.root && ctx.clamp_width) {
     return Math.max(Math.min(ctx.view_rect.width - BAR_DIM - REBAR_DIM, ctx.clamp_width), MIN_WIDTH);
+  } else if (ctx.root) {
+    return Math.min(ctx.view_rect.width - BAR_DIM - REBAR_DIM, MIN_WIDTH);
   } else {
     return Math.max(Math.min(width, ctx.view_rect.width), MIN_WIDTH);
   }
@@ -461,7 +488,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _LayoutContext__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./LayoutContext */ "./components/LayoutContext.coffee");
 /* harmony import */ var _Align__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Align */ "./components/Align.coffee");
-var AUTO_HANDLE_SET_THRESHOLD, AUTO_HANDLE_SNAP_THRESHOLD, Anchor, BAR_DIM, DOT_DIM, REBAR_DIM, h;
+var Anchor, BAR_DIM, DOT_DIM, REBAR_DIM, h;
 
 
 
@@ -476,10 +503,6 @@ h = react__WEBPACK_IMPORTED_MODULE_0__["createElement"];
 BAR_DIM = 12;
 
 REBAR_DIM = 4;
-
-AUTO_HANDLE_SET_THRESHOLD = 20;
-
-AUTO_HANDLE_SNAP_THRESHOLD = 12;
 
 DOT_DIM = 4;
 
@@ -523,22 +546,22 @@ Anchor = function(props) {
     d_right = Math.max(0, context.view_rect.width - (props.position[0] + dim.width + BAR_DIM));
   }
   snap_bot = false;
-  if (d_left <= Math.min(d_right, Math.min(d_top, d_bottom)) && d_left < AUTO_HANDLE_SET_THRESHOLD) {
+  if (d_left <= Math.min(d_right, Math.min(d_top, d_bottom)) && d_left < props.autoHandleThreshold) { //AUTO_HANDLE_SET_THRESHOLD
     handle_pos = 'left';
     if (props.autoSnapHandlePosition) {
       props.position[0] = 0;
     }
-  } else if (d_top <= Math.min(d_bottom, Math.min(d_left, d_right)) && d_top < AUTO_HANDLE_SET_THRESHOLD) {
+  } else if (d_top <= Math.min(d_bottom, Math.min(d_left, d_right)) && d_top < props.autoHandleThreshold) {
     handle_pos = 'top';
     if (props.autoSnapHandlePosition) {
       props.position[1] = 0;
     }
-  } else if (d_right <= Math.min(d_left, Math.min(d_top, d_bottom)) && d_right < AUTO_HANDLE_SET_THRESHOLD) {
+  } else if (d_right <= Math.min(d_left, Math.min(d_top, d_bottom)) && d_right < props.autoHandleThreshold) {
     handle_pos = 'right';
     if (props.autoSnapHandlePosition) {
       props.position[0] = Math.max(0, context.view_rect.width - dim.width - BAR_DIM);
     }
-  } else if (d_bottom <= Math.min(d_top, Math.min(d_left, d_right)) && d_bottom < AUTO_HANDLE_SET_THRESHOLD) {
+  } else if (d_bottom <= Math.min(d_top, Math.min(d_left, d_right)) && d_bottom < props.autoHandleThreshold) {
     handle_pos = 'bottom';
     if (props.autoSnapHandlePosition) {
       snap_bot = true;
@@ -631,7 +654,7 @@ Anchor = function(props) {
     }
   }
   self_context = Object.assign({}, context, {
-    align: props.align || 'right-down',
+    align: props.align,
     clamp_width: ((ref = props.size) != null ? ref[0] : void 0) || 0,
     clamp_height: ((ref1 = props.size) != null ? ref1[1] : void 0) || 0,
     x: content_x,
@@ -706,7 +729,6 @@ Anchor = function(props) {
         }
       }
       if (resize_dir !== dir && dir) {
-        // log props.resizeHeight
         if ((dir === 'top' || dir === 'bottom') && props.resizeHeight === false) {
           return false;
         }
@@ -722,6 +744,7 @@ Anchor = function(props) {
       }
     };
     resize_bar = h('div', {
+      key: 'resize-bar',
       style: resize_bar_style,
       cn: 'ed-anchor-handle-resize',
       onMouseLeave: on_resize_bar_mouse_leave,
@@ -751,7 +774,6 @@ Anchor = function(props) {
         height = props.size[1];
         left = props.position[0];
         top = props.position[1];
-        // log resize_dir
         switch (resize_dir) {
           case 'bottom':
             height = Math.max(0, resize_start_pos[3] + e.clientY - resize_start_pos[1]);
@@ -779,8 +801,6 @@ Anchor = function(props) {
               width = Math.max(0, resize_start_pos[2] - e.clientX + resize_start_pos[0]);
             }
         }
-        
-        // log width,props.size[0]
         props.setPosition(left, top);
         props.setSize(width, height);
         e.stopPropagation();
@@ -817,8 +837,6 @@ Anchor = function(props) {
       } else if (resize_start_pos !== void 0) {
         setResizeStartPos(void 0);
         setDragging(false);
-        // if !is_dragging
-        // 	props.onBarClick()
         e.stopPropagation();
         e.preventDefault();
         return false;
@@ -830,12 +848,10 @@ Anchor = function(props) {
       }
     },
     onMouseEnter: function() {
-      // log 'mouse enter'
       return setZIndex(999);
     },
     onMouseLeave: function() {
       setZIndex(0);
-      // log 'mouse leave'
       if (drag_start_pos !== void 0) {
         setDragStartPos(void 0);
         setDragging(false);
@@ -879,6 +895,10 @@ Anchor = function(props) {
   })()), resize_bar, content);
 };
 
+Anchor.defaultProps = {
+  autoHandleThreshold: 20
+};
+
 /* harmony default export */ __webpack_exports__["default"] = (Anchor);
 
 
@@ -900,7 +920,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! classnames */ "classnames");
 /* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _Align__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Align */ "./components/Align.coffee");
-var Box, MIN_HEIGHT, MIN_WIDTH, h;
+var BAR_DIM, Box, MIN_HEIGHT, MIN_WIDTH, REBAR_DIM, h;
 
 
 
@@ -917,6 +937,10 @@ h = react__WEBPACK_IMPORTED_MODULE_0__["createElement"];
 MIN_HEIGHT = 50;
 
 MIN_WIDTH = 320;
+
+BAR_DIM = 12;
+
+REBAR_DIM = 4;
 
 Box = function(props, state) {
   var align_key, content_ref, context, dim_overflow, height, offset_x, offset_y, self_context, self_ref, self_x, self_y, setDim, setVisible, style, visible, width, x, y;
@@ -943,18 +967,19 @@ Box = function(props, state) {
       content_height = Math.max(((ref1 = content_ref.current) != null ? ref1.scrollHeight : void 0) || 0, MIN_HEIGHT);
       set_height = Object(_Align__WEBPACK_IMPORTED_MODULE_4__["clampHeight"])(context, content_height);
       set_width = Object(_Align__WEBPACK_IMPORTED_MODULE_4__["clampWidth"])(context, content_width);
-      // log 'set width',set_width
-      // log content_width,set_width
-      // log content_height,set_height
-      if (set_width !== dim_overflow[2] || set_height !== dim_overflow[0]) {
+      if (set_width < content_width) {
+        overflow_x = 'scroll';
+      } else {
+        overflow_x = void 0;
+      }
+      if (set_height < content_height) {
+        overflow_y = 'scroll';
+      } else {
+        overflow_y = void 0;
+      }
+      if (set_width !== dim_overflow[2] || set_height !== dim_overflow[0] || overflow_y !== dim_overflow[1] || overflow_x !== dim_overflow[3]) {
         self_ref.current.style.width = set_width;
         self_ref.current.style.height = set_height;
-        if (set_width < content_width) {
-          overflow_x = 'scroll';
-        }
-        if (set_height < content_height) {
-          overflow_y = 'scroll';
-        }
         setDim([set_height, overflow_y, set_width, overflow_x]);
       }
       if (!visible) {
@@ -993,7 +1018,7 @@ Box = function(props, state) {
   return h('div', {
     ref: self_ref,
     style: style,
-    className: classnames__WEBPACK_IMPORTED_MODULE_3___default()('ed-box', !visible && 'ed-hidden', style.overflowY === 'scroll' && 'ed-scroll', 'noselect')
+    className: classnames__WEBPACK_IMPORTED_MODULE_3___default()('ed-box', !visible && 'ed-hidden', 'noselect')
   }, h('div', {
     cn: 'ed-box-inner',
     style: {
@@ -1624,7 +1649,12 @@ Layout = function(props, state) {
   [is_dragging, isDragging] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
   [force_update_t, forceUpdate] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function() {
+    var can_el;
+    // log 'new mea'
     measure_text.current = new Map();
+    can_el = document.createElement("canvas");
+    canvas_ref.current = can_el.getContext("2d");
+    canvas_ref.current.font = props.fontSize + 'px ' + props.fontFamily;
   }, [props.fontFamily, props.fontSize]);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function() {
     var view_rect;
@@ -1632,8 +1662,8 @@ Layout = function(props, state) {
     return setContext({
       depth: 0,
       dim: props.fontSize * 1.6,
-      wpad: props.fontSize * .6,
-      paddingLeft: props.fontSize * .6,
+      wpad: props.fontSize * .4,
+      // paddingLeft: props.fontSize * .6
       root: true,
       selected_label: 'root',
       view_rect: view_rect,
@@ -1660,18 +1690,14 @@ Layout = function(props, state) {
     return layout_ref.current.removeEventListener('mouseout', onMouseOut);
   };
   getLabelWidth = function(label) {
-    var can_el, ctx, text_width;
-    if (!canvas_ref.current) {
-      log('create label width calculator');
-      can_el = document.createElement("canvas");
-      canvas_ref.current = can_el.getContext("2d");
-      canvas_ref.current.font = props.fontSize + 'px ' + props.fontFamily; //"16px times new roman"
-    }
+    var ctx, text_width;
     ctx = canvas_ref.current;
     text_width = measure_text.current.get(label);
     if (text_width != null) {
       return text_width;
     } else {
+      // log 'measure text'
+      // log props.fontSize
       text_width = ctx.measureText(label).width;
       measure_text.current.set(label, text_width);
       return text_width;
@@ -1758,7 +1784,7 @@ h = react__WEBPACK_IMPORTED_MODULE_0__["createElement"];
 
 
 Menu = function(props) {
-  var align_key, autoDeselect, context, label_keys, label_widths, labels, max_label_width, menu_ref, new_height, offset_x, offset_y, overflow_y, ref, scroll_top, selected_child, selected_label_index, selected_label_x, selected_label_y, self_context, self_height, self_width, self_x, self_y, style, total_label_height, total_label_width, vert, x, y;
+  var align_key, autoDeselect, context, label_keys, label_widths, labels, max_label_width, menu_ref, new_height, offset_x, offset_y, overflow_y, ref, ref1, ref2, scroll_top, selected_child, selected_label_index, selected_label_x, selected_label_y, self_context, self_height, self_width, self_x, self_y, style, total_label_height, total_label_width, vert;
   context = Object(react__WEBPACK_IMPORTED_MODULE_0__["useContext"])(_LayoutContext__WEBPACK_IMPORTED_MODULE_2__["default"]);
   if (props.autoDeselect != null) {
     autoDeselect = props.autoDeselect;
@@ -1808,6 +1834,7 @@ Menu = function(props) {
       selected_label_x = total_label_width;
     }
     width = context.getLabelWidth(key);
+    // log 'get label width',key,width,context.wpad*2,context.dim
     if (width > max_label_width) {
       max_label_width = width;
     }
@@ -1833,9 +1860,11 @@ Menu = function(props) {
     align_key = props.align;
   } else {
     // log 'FORCE ALIGN FOR ',context.selected_label,' : ',align_key
-    align_key = Object(_Align__WEBPACK_IMPORTED_MODULE_3__["guessAlign"])(self_width, self_height, context);
+    self_x = ((ref1 = props.position) != null ? ref1[0] : void 0) || context.x || 0;
+    self_y = ((ref2 = props.position) != null ? ref2[1] : void 0) || context.y || 0;
+    align_key = Object(_Align__WEBPACK_IMPORTED_MODULE_3__["guessAlign"])(self_width, self_height, context, self_x, self_y);
     // log 'GUESSED ALIGN FOR ',context.selected_label,' : ',align_key
-    [x, y] = Object(_Align__WEBPACK_IMPORTED_MODULE_3__["getPosition"])(self_width, self_height, context, align_key);
+    // [x,y] = getPosition(self_width,self_height,context,align_key)
     align_key = Object(_Align__WEBPACK_IMPORTED_MODULE_3__["fixAlign"])(align_key, context, self_width, self_height);
   }
   // log 'FIX ALIGN FOR ',context.selected_label,' : ',align_key
@@ -1843,8 +1872,8 @@ Menu = function(props) {
     self_x = props.position[0];
     self_y = props.position[1];
   } else if (context.root) {
-    self_x = context.x;
-    self_y = context.y;
+    self_x = context.x || 0;
+    self_y = context.y || 0;
   } else {
     [self_x, self_y] = Object(_Align__WEBPACK_IMPORTED_MODULE_3__["getPosition"])(self_width, self_height, context, align_key);
     [offset_x, offset_y] = Object(_Align__WEBPACK_IMPORTED_MODULE_3__["clampPosition"])(context, self_x, self_y, self_width, self_height, align_key);
@@ -1888,13 +1917,14 @@ Menu = function(props) {
         return null;
       }
       label = child.label || key;
+      // log context.wpad
       if (child.onClick || child.onSelect) {
         return h('div', {
           key: key,
           className: classnames__WEBPACK_IMPORTED_MODULE_1___default()('ed-menu-item-label', props.select === key && 'ed-selected', 'noselect'),
           style: {
-            paddingLeft: context.paddingLeft,
-            minWidth: label_widths[i]
+            paddingLeft: context.wpad,
+            width: label_widths[i]
           },
           onClick: child.onClick || child.onSelect
         }, label);
@@ -1917,7 +1947,7 @@ Menu = function(props) {
         title: title,
         style: {
           minWidth: label_widths[i],
-          paddingLeft: context.paddingLeft
+          paddingLeft: context.wpad
         },
         onClick: props.onSelect && (function(e) {
           if (e.target.title !== title) {
@@ -2142,7 +2172,7 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, ".noselect {\n  -webkit-touch-callout: none;\n  /* iOS Safari */\n  -webkit-user-select: none;\n  /* Safari */\n  -khtml-user-select: none;\n  /* Konqueror HTML */\n  -moz-user-select: none;\n  /* Old versions of Firefox */\n  -ms-user-select: none;\n  /* Internet Explorer/Edge */\n  user-select: none;\n  /* Non-prefixed version, currently\n                                  supported by Chrome, Edge, Opera and Firefox */\n}\n.ed-layout {\n  z-index: 100;\n  text-rendering: optimizeSpeed;\n  line-height: 95%;\n  font-family: 'DM Mono', monospace;\n  font-size: 0.85em;\n  color: #ffffff;\n  position: fixed;\n  top: 0px;\n  left: 0px;\n  width: 100%;\n  height: 100%;\n  overflow: hidden;\n  pointer-events: none;\n}\n.ed-layout * {\n  pointer-events: all;\n  box-sizing: border-box;\n}\n.ed-layout-dragging {\n  pointer-events: all;\n  cursor: ew-resize;\n}\n.ed-layout-dragging * {\n  pointer-events: none !important;\n}\n.ed-full-w {\n  width: 100%;\n}\n.ed-flex-left,\n.ed-input-wrap {\n  display: flex;\n  flex-wrap: wrap;\n  position: relative;\n  flex-direction: row-reverse;\n  align-items: center;\n  justify-content: flex-end;\n}\n.ed-flex-right,\n.ed-in-wrap {\n  display: flex;\n  position: relative;\n  flex-direction: row;\n  align-items: center;\n  justify-content: flex-start;\n}\n.ed-flex-down {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  justify-content: flex-start;\n}\n.ed-in-wrap {\n  font-size: 0.9em;\n  width: 100%;\n  padding: 0px 0.425em;\n  min-height: 1.6em;\n  flex-wrap: nowrap;\n  margin-bottom: 0.255em;\n}\n.ed-in-wrap.ed-in-half {\n  width: 50%;\n}\n.ed-in-wrap.ed-tight {\n  min-height: 1em;\n}\n.ed-in-wrap:last-child {\n  margin-bottom: 0px;\n}\n.ed-in-wrap-toggle-input {\n  width: auto;\n  flex-shrink: 0;\n}\n.ed-in-wrap-toggle-label {\n  width: auto;\n}\n.ed-input-wrap {\n  width: 150%;\n}\n.ed-input-wrap.ed-in-half {\n  width: fit-content;\n}\n.ed-in-label {\n  width: 100%;\n  margin-left: 0.4em;\n  color: #c8c8c8;\n  white-space: normal;\n  text-align: -webkit-left;\n  align-items: flex-start;\n  justify-content: flex-start;\n  word-break: break-all;\n}\n.ed-in-label-colon {\n  color: #c8c8c8;\n}\ninput:disabled {\n  color: #c8c8c8 !important;\n  -webkit-user-select: none !important;\n  user-select: none !important;\n  cursor: default !important;\n}\n.ed-input {\n  width: inherit;\n  line-height: 1.6em;\n  height: 1.6em;\n  font-family: 'DM Mono', monospace;\n  -webkit-appearance: none;\n  outline: none;\n  color: #ffffff;\n  background-color: #141414;\n  border: none;\n  border-radius: none;\n  padding: 0px 0.425em;\n}\n.ed-input-plain {\n  background-color: #1e1e1e;\n}\n.ed-toggle-outer {\n  width: 1.6em;\n  cursor: pointer;\n  height: 1.6em;\n  background-color: #141414;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.ed-toggle-outer .ed-toggle-inner {\n  width: 12px;\n  height: 12px;\n  border-radius: 6px;\n  background-color: #2a2a2a;\n}\n.ed-toggle-outer .ed-toggle-inner.ed-toggle-active {\n  background: #ffffff;\n}\n.ed-box-title {\n  padding: 0.425em;\n  padding-bottom: 0.2125em;\n  font-weight: 800;\n  text-align: center;\n  display: flex;\n  color: white;\n  align-items: flex-start;\n  justify-content: flex-start;\n  flex-direction: row;\n  width: 100%;\n  z-index: 1;\n  background: #2a2a2a;\n  text-transform: uppercase !important;\n}\n.ed-box-title * {\n  white-space: pre;\n}\n.ed-box-title .ed-in-label-colon {\n  color: #c8c8c8;\n}\n.ed-box-title-sticky {\n  position: sticky;\n  top: 0px;\n}\n.ed-box-content {\n  display: flex;\n  align-self: start;\n  justify-content: start;\n  flex-direction: row;\n  flex-wrap: wrap;\n  padding-bottom: 0.85em;\n}\n.ed-scroll::-webkit-scrollbar {\n  -webkit-appearance: none;\n  background-color: #141414;\n  width: 4px;\n  height: 4px;\n  border-radius: 0px;\n}\n.ed-scroll::-webkit-scrollbar-corner {\n  background-color: #141414;\n}\n.ed-scroll::-webkit-scrollbar-thumb {\n  border-radius: 0px;\n  background-color: #7F7F7F;\n}\n.ed-scroll::-webkit-scrollbar-thumb:hover {\n  background-color: #8F8F8F;\n}\n.ed-box {\n  background-color: #2a2a2a;\n  color: #ffffff;\n  position: fixed;\n  width: 320px;\n  flex-wrap: nowrap;\n}\n.ed-box.ed-scroll {\n  overflow-y: scroll;\n  overflow-x: hidden;\n  width: 324px;\n}\n.ed-box .ed-description {\n  padding: 0px 0.425em;\n  font-size: 0.8em;\n  color: #ebebeb;\n  margin: 0.425em 0px;\n  margin-top: 0px;\n  white-space: normal;\n}\n.ed-menu-child-wrapper {\n  position: relative;\n  left: -100%;\n  top: 12px;\n}\n.ed-menu {\n  color: #ffffff;\n  flex-wrap: nowrap;\n  width: fit-content;\n  height: fit-content;\n  position: fixed;\n}\n.ed-menu.ed-scroll {\n  overflow-y: scroll;\n  overflow-x: hidden;\n}\n.ed-menu.ed-flex-down > .ed-menu-item {\n  width: -webkit-fill-available;\n  height: auto;\n}\n.ed-menu.ed-flex-right > .ed-menu-item {\n  height: -webkit-fill-available;\n  width: auto;\n}\n.ed-menu .ed-menu-labels {\n  background-color: #2a2a2a;\n}\n.ed-menu .ed-menu-item-label {\n  white-space: pre;\n  width: -webkit-fill-available;\n  height: 1.6em;\n  text-transform: uppercase;\n  display: flex;\n  align-items: center;\n  color: #ebebeb;\n  background: none;\n  border: none;\n  outline: none;\n  font: inherit;\n  padding: none;\n  cursor: pointer;\n}\n.ed-menu .ed-menu-item-label.ed-selected {\n  background-color: #141414;\n  color: #ffffff;\n}\n.ed-menu .ed-menu-item-label:hover {\n  color: #ffffff;\n}\n.ed-menu .ed-menu-item {\n  position: relative;\n}\n.ed-menu.ed-menu-alt > .ed-menu-labels > .ed-menu-item-label {\n  background-color: #141414;\n}\n.ed-menu.ed-menu-alt > .ed-menu-labels > .ed-menu-item-label.ed-selected {\n  background-color: #2a2a2a;\n}\n.ed-hidden {\n  visibility: hidden;\n}\n.ed-range-outer {\n  height: 1.6em;\n  width: 100%;\n  background: #141414;\n  position: relative;\n  cursor: ew-resize;\n}\n.ed-range-outer .ed-range-slider {\n  width: 6.5px;\n  height: 1.6em;\n  background: #ffffff;\n}\n.ed-range-outer .ed-range-slider.ed-active {\n  background: #ffffff;\n}\n.ed-range-outer .ed-range-value {\n  position: absolute;\n  left: 14px;\n  top: 50%;\n  transform: translate(0%, -50%);\n}\n.ed-range-outer .ed-range-value.ed-range-value-snap {\n  right: 8px;\n  left: initial;\n}\n.ed-range-outer .ed-range-value.ed-range-value-left {\n  right: 14px;\n  left: initial;\n}\n.ed-range-outer .ed-range-value.ed-range-value-left.ed-range-value-snap {\n  left: 8px;\n  right: initial;\n}\n.ed-button {\n  outline: none;\n  -webkit-appearance: none;\n  border: none;\n  cursor: pointer;\n  width: 100%;\n  height: 1.6em;\n  background: #141414;\n  color: #ebebeb;\n}\n.ed-button:hover {\n  color: #ffffff;\n}\n.ed-color-box {\n  position: relative;\n  -webkit-appearance: none;\n  width: 3.2em;\n  height: 1.6em;\n  flex-shrink: 0;\n  cursor: pointer;\n  margin-right: 0.255em;\n  border: 3px solid black;\n}\n.ed-color-box .ed-color-box-input {\n  visibility: visible;\n  opacity: 0;\n  cursor: pointer;\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  padding: 0px;\n  left: 0px;\n  top: 0px;\n}\n.ed-value-box {\n  width: 100%;\n  height: 1.6em;\n  background-color: #2a2a2a;\n  margin-left: 0.153em;\n  line-height: 1.6em;\n  padding: 0px 0.425em;\n}\n.ed-section {\n  margin: 0.425em 0px;\n  padding: 0.425em 0px;\n  position: relative;\n  border-top: 1px solid rgba(150, 150, 150, 0.3);\n  border-bottom: 1px solid rgba(150, 150, 150, 0.3);\n}\n.ed-section-title {\n  min-height: 1.6em;\n  cursor: pointer;\n  white-space: pre;\n  font-weight: 800;\n  width: 100%;\n  padding: 0px 0.425em;\n  text-transform: uppercase;\n}\n.ed-section-label-toggle-off {\n  cursor: default;\n}\n.ed-section-label-toggle {\n  font-size: 0.85em;\n  width: 100%;\n  padding-right: 0.425em;\n  display: flex;\n  color: #c8c8c8;\n  flex-direction: column;\n  align-items: flex-end;\n  justify-content: flex-end;\n}\n.ed-section-label-toggle.ed-section-label-toggle-active {\n  color: #ebebeb;\n}\n.ed-section-end-label {\n  padding: 0.425em;\n  display: flex;\n  width: 100%;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n}\n.ed-input-select {\n  width: 100%;\n  outline: none;\n  -webkit-appearance: none;\n  height: 24px;\n  cursor: pointer;\n  padding: 0px 0.425em;\n  border: none;\n  color: #ffffff;\n  background: #141414;\n}\n.ed-input-select-arrow {\n  position: absolute;\n  right: 14px;\n  color: #c8c8c8;\n  font-family: monospace;\n}\n.ed-separator {\n  margin-top: 0.53333333em;\n  border-bottom: 1px solid rgba(150, 150, 150, 0.3);\n  height: 0px;\n  width: 100%;\n  margin-bottom: 0.8em;\n}\n.ed-line-chart {\n  width: 100%;\n  height: 80px;\n  background: #141414;\n}\n.ed-line-chart-wrap {\n  flex-direction: column;\n  align-content: flex-start;\n  justify-content: flex-start;\n  align-items: flex-start;\n}\n.ed-line-chart-wrap canvas {\n  cursor: ew-resize;\n  width: 100%;\n  height: 100%;\n}\n.ed-line-chart-label {\n  padding: 0.425em 0px;\n}\n.ed-anchor {\n  display: flex;\n  flex-direction: row;\n  position: fixed;\n}\n.ed-anchor .ed-anchor-handle {\n  position: fixed;\n  background: black;\n  cursor: move;\n  display: flex;\n  justify-content: center;\n  align-content: center;\n  align-items: center;\n}\n.ed-anchor .ed-anchor-handle .ed-anchor-dot {\n  margin: 0.26666667em;\n  pointer-events: none;\n  background: white;\n  width: 0.26666667em;\n  height: 0.26666667em;\n}\n.ed-anchor .ed-anchor-handle-resize {\n  width: 0.8em;\n  height: 0.8em;\n  background: black;\n  position: absolute;\n  top: 0;\n  left: 0;\n  z-index: 1;\n}\n.ed-anchor.ed-anchor-drag {\n  pointer-events: all;\n  cursor: move;\n}\n.ed-anchor.ed-anchor-drag * {\n  pointer-events: none !important;\n}\n.ed-anchor.ed-anchor-resize {\n  pointer-events: all;\n}\n.ed-anchor.ed-anchor-resize * {\n  pointer-events: none !important;\n}\n", ""]);
+exports.push([module.i, ".noselect {\n  -webkit-touch-callout: none;\n  /* iOS Safari */\n  -webkit-user-select: none;\n  /* Safari */\n  -khtml-user-select: none;\n  /* Konqueror HTML */\n  -moz-user-select: none;\n  /* Old versions of Firefox */\n  -ms-user-select: none;\n  /* Internet Explorer/Edge */\n  user-select: none;\n  /* Non-prefixed version, currently\n                                  supported by Chrome, Edge, Opera and Firefox */\n}\n.ed-layout {\n  z-index: 100;\n  text-rendering: optimizeSpeed;\n  line-height: 95%;\n  font-family: 'DM Mono', monospace;\n  font-size: 0.85em;\n  color: #ffffff;\n  position: fixed;\n  top: 0px;\n  left: 0px;\n  width: 100%;\n  height: 100%;\n  overflow: hidden;\n  pointer-events: none;\n}\n.ed-layout * {\n  pointer-events: all;\n  box-sizing: border-box;\n}\n.ed-layout-dragging {\n  pointer-events: all;\n  cursor: ew-resize;\n}\n.ed-layout-dragging * {\n  pointer-events: none !important;\n}\n.ed-full-w {\n  width: 100%;\n}\n.ed-flex-left,\n.ed-input-wrap {\n  display: flex;\n  flex-wrap: wrap;\n  position: relative;\n  flex-direction: row-reverse;\n  align-items: center;\n  justify-content: flex-end;\n}\n.ed-flex-right,\n.ed-in-wrap {\n  display: flex;\n  position: relative;\n  flex-direction: row;\n  align-items: center;\n  justify-content: flex-start;\n}\n.ed-flex-down {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  justify-content: flex-start;\n}\n.ed-in-wrap {\n  font-size: 0.9em;\n  width: 100%;\n  padding: 0px 0.425em;\n  min-height: 1.6em;\n  flex-wrap: nowrap;\n  margin-bottom: 0.255em;\n}\n.ed-in-wrap.ed-in-half {\n  width: 50%;\n}\n.ed-in-wrap.ed-tight {\n  min-height: 1em;\n}\n.ed-in-wrap:last-child {\n  margin-bottom: 0px;\n}\n.ed-in-wrap-toggle-input {\n  width: auto;\n  flex-shrink: 0;\n}\n.ed-in-wrap-toggle-label {\n  width: auto;\n}\n.ed-input-wrap {\n  width: 150%;\n}\n.ed-input-wrap.ed-in-half {\n  width: fit-content;\n}\n.ed-in-label {\n  width: 100%;\n  margin-left: 0.4em;\n  color: #c8c8c8;\n  white-space: normal;\n  text-align: -webkit-left;\n  align-items: flex-start;\n  justify-content: flex-start;\n  word-break: break-all;\n}\n.ed-in-label-colon {\n  color: #c8c8c8;\n}\ninput:disabled {\n  color: #c8c8c8 !important;\n  -webkit-user-select: none !important;\n  user-select: none !important;\n  cursor: default !important;\n}\n.ed-input {\n  width: inherit;\n  line-height: 1.6em;\n  height: 1.6em;\n  font-family: 'DM Mono', monospace;\n  -webkit-appearance: none;\n  outline: none;\n  color: #ffffff;\n  background-color: #141414;\n  border: none;\n  border-radius: none;\n  padding: 0px 0.425em;\n}\n.ed-input-plain {\n  background-color: #1e1e1e;\n}\n.ed-toggle-outer {\n  width: 1.6em;\n  cursor: pointer;\n  height: 1.6em;\n  background-color: #141414;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.ed-toggle-outer .ed-toggle-inner {\n  width: 12px;\n  height: 12px;\n  border-radius: 6px;\n  background-color: #2a2a2a;\n}\n.ed-toggle-outer .ed-toggle-inner.ed-toggle-active {\n  background: #ffffff;\n}\n.ed-box-title {\n  padding: 0.425em;\n  padding-bottom: 0.2125em;\n  font-weight: 800;\n  text-align: center;\n  display: flex;\n  color: white;\n  align-items: flex-start;\n  justify-content: flex-start;\n  flex-direction: row;\n  width: 100%;\n  z-index: 1;\n  background: #2a2a2a;\n  text-transform: uppercase !important;\n}\n.ed-box-title * {\n  white-space: pre;\n}\n.ed-box-title .ed-in-label-colon {\n  color: #c8c8c8;\n}\n.ed-box-title-sticky {\n  position: sticky;\n  top: 0px;\n  background: #ffffff;\n  color: #2a2a2a;\n  margin-bottom: 0.425em;\n}\n.ed-box-content {\n  display: flex;\n  align-self: start;\n  justify-content: start;\n  flex-direction: row;\n  flex-wrap: wrap;\n  padding-bottom: 0.85em;\n}\n.ed-box {\n  background-color: #2a2a2a;\n  color: #ffffff;\n  position: fixed;\n  width: 320px;\n  flex-wrap: nowrap;\n}\n.ed-box::-webkit-scrollbar {\n  -webkit-appearance: none;\n  background-color: #141414;\n  width: 4px;\n  height: 4px;\n  border-radius: 0px;\n}\n.ed-box::-webkit-scrollbar-corner {\n  background-color: #141414;\n}\n.ed-box::-webkit-scrollbar-thumb {\n  border-radius: 0px;\n  background-color: #7F7F7F;\n}\n.ed-box::-webkit-scrollbar-thumb:hover {\n  background-color: #8F8F8F;\n}\n.ed-box.ed-scroll {\n  overflow-y: scroll;\n  overflow-x: hidden;\n  width: 324px;\n}\n.ed-box .ed-description {\n  padding: 0px 0.425em;\n  font-size: 0.8em;\n  color: #ebebeb;\n  margin: 0.425em 0px;\n  margin-top: 0px;\n  white-space: normal;\n}\n.ed-menu-child-wrapper {\n  position: relative;\n  left: -100%;\n  top: 12px;\n}\n.ed-menu {\n  color: #ffffff;\n  flex-wrap: nowrap;\n  width: fit-content;\n  height: fit-content;\n  position: fixed;\n}\n.ed-menu.ed-scroll {\n  overflow-y: scroll;\n  overflow-x: hidden;\n}\n.ed-menu.ed-flex-down > .ed-menu-item {\n  width: -webkit-fill-available;\n  height: auto;\n}\n.ed-menu.ed-flex-right > .ed-menu-item {\n  height: -webkit-fill-available;\n  width: auto;\n}\n.ed-menu .ed-menu-labels {\n  background-color: #2a2a2a;\n}\n.ed-menu .ed-menu-item-label {\n  white-space: pre;\n  width: -webkit-fill-available;\n  height: 1.6em;\n  text-transform: uppercase;\n  display: flex;\n  align-items: center;\n  color: #ebebeb;\n  background: none;\n  border: none;\n  outline: none;\n  font: inherit;\n  padding: 0px;\n  cursor: pointer;\n}\n.ed-menu .ed-menu-item-label.ed-selected {\n  background-color: #141414;\n  color: #ffffff;\n}\n.ed-menu .ed-menu-item-label:hover {\n  color: #ffffff;\n}\n.ed-menu .ed-menu-item {\n  position: relative;\n}\n.ed-menu.ed-menu-alt > .ed-menu-labels > .ed-menu-item-label {\n  background-color: #141414;\n}\n.ed-menu.ed-menu-alt > .ed-menu-labels > .ed-menu-item-label.ed-selected {\n  background-color: #2a2a2a;\n}\n.ed-hidden {\n  visibility: hidden;\n}\n.ed-range-outer {\n  height: 1.6em;\n  width: 100%;\n  background: #141414;\n  position: relative;\n  cursor: ew-resize;\n}\n.ed-range-outer .ed-range-slider {\n  width: 6.5px;\n  height: 1.6em;\n  background: #ffffff;\n}\n.ed-range-outer .ed-range-slider.ed-active {\n  background: #ffffff;\n}\n.ed-range-outer .ed-range-value {\n  position: absolute;\n  left: 14px;\n  top: 50%;\n  transform: translate(0%, -50%);\n}\n.ed-range-outer .ed-range-value.ed-range-value-snap {\n  right: 8px;\n  left: initial;\n}\n.ed-range-outer .ed-range-value.ed-range-value-left {\n  right: 14px;\n  left: initial;\n}\n.ed-range-outer .ed-range-value.ed-range-value-left.ed-range-value-snap {\n  left: 8px;\n  right: initial;\n}\n.ed-button {\n  outline: none;\n  -webkit-appearance: none;\n  border: none;\n  cursor: pointer;\n  width: 100%;\n  height: 1.6em;\n  background: #141414;\n  color: #ebebeb;\n}\n.ed-button:hover {\n  color: #ffffff;\n}\n.ed-color-box {\n  position: relative;\n  -webkit-appearance: none;\n  width: 3.2em;\n  height: 1.6em;\n  flex-shrink: 0;\n  cursor: pointer;\n  margin-right: 0.255em;\n  border: 3px solid black;\n}\n.ed-color-box .ed-color-box-input {\n  visibility: visible;\n  opacity: 0;\n  cursor: pointer;\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  padding: 0px;\n  left: 0px;\n  top: 0px;\n}\n.ed-value-box {\n  width: 100%;\n  height: 1.6em;\n  background-color: #2a2a2a;\n  margin-left: 0.153em;\n  line-height: 1.6em;\n  padding: 0px 0.425em;\n}\n.ed-section {\n  margin: 0.425em 0px;\n  padding: 0.425em 0px;\n  position: relative;\n  border-top: 1px solid rgba(150, 150, 150, 0.3);\n  border-bottom: 1px solid rgba(150, 150, 150, 0.3);\n}\n.ed-section-title {\n  min-height: 1.6em;\n  cursor: pointer;\n  white-space: pre;\n  font-weight: 800;\n  width: 100%;\n  padding: 0px 0.425em;\n  text-transform: uppercase;\n}\n.ed-section-label-toggle-off {\n  cursor: default;\n}\n.ed-section-label-toggle {\n  font-size: 0.85em;\n  width: 100%;\n  padding-right: 0.425em;\n  display: flex;\n  color: #c8c8c8;\n  flex-direction: column;\n  align-items: flex-end;\n  justify-content: flex-end;\n}\n.ed-section-label-toggle.ed-section-label-toggle-active {\n  color: #ebebeb;\n}\n.ed-section-end-label {\n  padding: 0.425em;\n  display: flex;\n  width: 100%;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n}\n.ed-input-select {\n  width: 100%;\n  outline: none;\n  -webkit-appearance: none;\n  height: 24px;\n  cursor: pointer;\n  padding: 0px 0.425em;\n  border: none;\n  color: #ffffff;\n  background: #141414;\n}\n.ed-input-select-arrow {\n  position: absolute;\n  right: 14px;\n  color: #c8c8c8;\n  font-family: monospace;\n}\n.ed-separator {\n  margin-top: 0.53333333em;\n  border-bottom: 1px solid rgba(150, 150, 150, 0.3);\n  height: 0px;\n  width: 100%;\n  margin-bottom: 0.8em;\n}\n.ed-line-chart {\n  width: 100%;\n  height: 80px;\n  background: #141414;\n}\n.ed-line-chart-wrap {\n  flex-direction: column;\n  align-content: flex-start;\n  justify-content: flex-start;\n  align-items: flex-start;\n}\n.ed-line-chart-wrap canvas {\n  cursor: ew-resize;\n  width: 100%;\n  height: 100%;\n}\n.ed-line-chart-label {\n  padding: 0.425em 0px;\n}\n.ed-anchor {\n  display: flex;\n  flex-direction: row;\n  position: fixed;\n}\n.ed-anchor .ed-anchor-handle {\n  position: fixed;\n  background: black;\n  cursor: move;\n  display: flex;\n  justify-content: center;\n  align-content: center;\n  align-items: center;\n}\n.ed-anchor .ed-anchor-handle .ed-anchor-dot {\n  margin: 0.26666667em;\n  pointer-events: none;\n  background: white;\n  width: 0.26666667em;\n  height: 0.26666667em;\n}\n.ed-anchor .ed-anchor-handle-resize {\n  width: 0.8em;\n  height: 0.8em;\n  background: black;\n  position: absolute;\n  top: 0;\n  left: 0;\n  z-index: 1;\n}\n.ed-anchor.ed-anchor-drag {\n  pointer-events: all;\n  cursor: move;\n}\n.ed-anchor.ed-anchor-drag * {\n  pointer-events: none !important;\n}\n.ed-anchor.ed-anchor-resize {\n  pointer-events: all;\n}\n.ed-anchor.ed-anchor-resize * {\n  pointer-events: none !important;\n}\n", ""]);
 // Exports
 module.exports = exports;
 

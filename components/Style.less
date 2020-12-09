@@ -209,6 +209,9 @@ input:disabled{
 .ed-box-title-sticky{
 	position: sticky;
 	top:0px;
+	background: @color1;
+	color: @bg1;
+	margin-bottom: @padding;
 }
 
 .ed-box-content{
@@ -221,7 +224,8 @@ input:disabled{
 	padding-bottom: @padding2;
 }
 
-.ed-scroll{
+
+.ed-box{
 	&::-webkit-scrollbar{
 		-webkit-appearance: none;
 		background-color: @bg2;
@@ -239,9 +243,6 @@ input:disabled{
 			background-color: #8F8F8F;
 		}
 	}
-}
-
-.ed-box{
 
 	
 	&.ed-scroll{
@@ -323,7 +324,7 @@ input:disabled{
 		border: none;
 		outline: none;
 		font: inherit;
-		padding: none;
+		padding: 0px;
 		
 		&.ed-selected{
 			background-color: @bg2;

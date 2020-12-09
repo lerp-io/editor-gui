@@ -39,7 +39,6 @@ ExampleRecursiveMenu = (props)->
 		h Menu,
 			vert: if props.vert? then props.vert else level % 2 == 1
 			select: menu_state[menu_name]
-			align: props.align
 			position: position
 			onSelect: (item_name)->
 				onSelectRecursiveMenuItem(menu_name,item_name)

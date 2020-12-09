@@ -8,11 +8,10 @@ import {clampPosition,clampHeight,clampWidth} from './Align'
 
 BAR_DIM = 12
 REBAR_DIM = 4
-AUTO_HANDLE_SET_THRESHOLD = 20
-AUTO_HANDLE_SNAP_THRESHOLD = 12
 DOT_DIM = 4
 
 Anchor = (props)->
+	
 	anchor_ref = useRef('ed-anchor',anchor_ref)
 	context = useContext(LayoutContext)
 	content_ref = useRef()
@@ -54,22 +53,22 @@ Anchor = (props)->
 
 	snap_bot = false
 
-	if d_left <= Math.min(d_right,Math.min(d_top,d_bottom)) && d_left < AUTO_HANDLE_SET_THRESHOLD
+	if d_left <= Math.min(d_right,Math.min(d_top,d_bottom)) && d_left < props.autoHandleThreshold #AUTO_HANDLE_SET_THRESHOLD
 		handle_pos = 'left'
 		if props.autoSnapHandlePosition
 			props.position[0] = 0
 
-	else if d_top <= Math.min(d_bottom,Math.min(d_left,d_right)) && d_top < AUTO_HANDLE_SET_THRESHOLD
+	else if d_top <= Math.min(d_bottom,Math.min(d_left,d_right)) && d_top < props.autoHandleThreshold
 		handle_pos = 'top'
 		if props.autoSnapHandlePosition
 			props.position[1] = 0
 
-	else if d_right <= Math.min(d_left,Math.min(d_top,d_bottom)) && d_right < AUTO_HANDLE_SET_THRESHOLD
+	else if d_right <= Math.min(d_left,Math.min(d_top,d_bottom)) && d_right < props.autoHandleThreshold
 		handle_pos = 'right'
 		if props.autoSnapHandlePosition
 			props.position[0] = Math.max(0,context.view_rect.width - dim.width - BAR_DIM)
 	
-	else if d_bottom <= Math.min(d_top,Math.min(d_left,d_right)) && d_bottom < AUTO_HANDLE_SET_THRESHOLD
+	else if d_bottom <= Math.min(d_top,Math.min(d_left,d_right)) && d_bottom < props.autoHandleThreshold
 		handle_pos = 'bottom'
 		if props.autoSnapHandlePosition
 			snap_bot = true
@@ -172,7 +171,7 @@ Anchor = (props)->
 
 
 	self_context = Object.assign {},context,
-		align: props.align || 'right-down'
+		align: props.align
 		clamp_width: props.size?[0] || 0
 		clamp_height: props.size?[1] || 0
 		x: content_x
@@ -202,7 +201,7 @@ Anchor = (props)->
 
 
 	if props.size && props.visible
-
+	
 		resize_bar_style = 
 			background: props.barColor || 'black'
 			top: rebar_top
@@ -243,7 +242,6 @@ Anchor = (props)->
 						dir = 'left'
 
 			if resize_dir != dir && dir
-				# log props.resizeHeight
 				if (dir == 'top' || dir == 'bottom') && props.resizeHeight == false
 					return false
 				if (dir == 'left' || dir == 'right') && props.resizeWidth == false
@@ -256,6 +254,7 @@ Anchor = (props)->
 				setResizeDir(undefined)
 
 		resize_bar = h 'div',
+			key: 'resize-bar'
 			style: resize_bar_style
 			cn: 'ed-anchor-handle-resize'
 			onMouseLeave: on_resize_bar_mouse_leave
@@ -277,7 +276,7 @@ Anchor = (props)->
 		onMouseMove: (e)->
 			
 			if resize_start_pos
-				# log resize_start_pos
+			
 				if !is_dragging
 					setDragging(true)
 				
@@ -286,7 +285,7 @@ Anchor = (props)->
 				left = props.position[0]
 				top = props.position[1]
 
-				# log resize_dir
+				
 				switch resize_dir
 					when 'bottom'
 						height = Math.max(0,resize_start_pos[3]+e.clientY-resize_start_pos[1])
@@ -309,11 +308,9 @@ Anchor = (props)->
 						else
 							width = Math.max(0,resize_start_pos[2]-e.clientX+resize_start_pos[0])
 				
-				# log width,props.size[0]
 				props.setPosition(left,top)
 				props.setSize(width,height)
 				
-
 				e.stopPropagation()
 				e.preventDefault()
 				return false
@@ -324,7 +321,6 @@ Anchor = (props)->
 				self_x = drag_start_pos[2]+e.clientX-drag_start_pos[0]
 				self_y = drag_start_pos[3]+e.clientY-drag_start_pos[1]
 				
-
 				props.setPosition(self_x,self_y)
 				if !props.visible
 					props.onBarClick()
@@ -332,7 +328,6 @@ Anchor = (props)->
 				e.preventDefault()
 				return false
 
-			
 
 		onMouseUp: (e)->
 
@@ -352,8 +347,6 @@ Anchor = (props)->
 			else if resize_start_pos != undefined
 				setResizeStartPos(undefined)
 				setDragging(false)
-				# if !is_dragging
-				# 	props.onBarClick()
 				
 				e.stopPropagation()
 				e.preventDefault()
@@ -365,16 +358,11 @@ Anchor = (props)->
 			if resize_dir
 				setResizeDir(undefined)
 				
-			
-			
-
 		onMouseEnter: ()->
-			# log 'mouse enter'
 			setZIndex(999)
 		
 		onMouseLeave: ()->
 			setZIndex(0)
-			# log 'mouse leave'
 			if drag_start_pos != undefined
 				setDragStartPos(undefined)
 				setDragging(false)
@@ -411,12 +399,10 @@ Anchor = (props)->
 						height: dot_height
 
 		resize_bar
-
-			
-			
 		content
 
-		
-				
+
+Anchor.defaultProps = 
+	autoHandleThreshold : 20
 
 export default Anchor

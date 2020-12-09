@@ -27,7 +27,7 @@ import ExampleRecursiveMenu from './ExampleRecursiveMenu.coffee';
 import ExampleDemoBox from './ExampleDemoBox.coffee';
 
 export default test = function() {
-  var anchor2_pos, anchor3_pos, anchor_pos, demo_box_color, demo_box_resize, demo_dot_color, demo_dot_count, dim_2, font_size, is_mounted, menu_1_visible, menu_2_visible, menu_3_visible, renderBox2, setAnchor2Dim, setAnchor2Pos, setAnchor3Pos, setAnchorPos, setDemoBoxColor, setDemoDotColor, setDemoDotCount, setFontSize, setMenu1Visible, setMenu2Visible, setMenu3Visible, setMounted, setSize, size, toggleDemoBoxResize;
+  var anchor2_pos, anchor3_pos, anchor_pos, demo_box_color, demo_box_resize, demo_dot_color, demo_dot_count, dim_2, font_size, height_resize, is_mounted, menu_1_visible, menu_2_visible, menu_3_visible, renderBox2, setAnchor2Dim, setAnchor2Pos, setAnchor3Pos, setAnchorPos, setDemoBoxColor, setDemoDotColor, setDemoDotCount, setFontSize, setMenu1Visible, setMenu2Visible, setMenu3Visible, setMounted, setSize, setSnapThreshold, size, snap_threshold, toggleDemoBoxResize, toggleHeightResize, toggleWidthResize, width_resize;
   [is_mounted, setMounted] = useState(false);
   [size, setSize] = useState(null);
   useEffect(function() {
@@ -40,20 +40,37 @@ export default test = function() {
   [menu_3_visible, setMenu3Visible] = useState(false);
   [dim_2, setAnchor2Dim] = useState([250, 250]);
   [anchor_pos, setAnchorPos] = useState([0, 30]);
-  [anchor2_pos, setAnchor2Pos] = useState([150, 400]);
-  [anchor3_pos, setAnchor3Pos] = useState([0, 300]);
+  [anchor2_pos, setAnchor2Pos] = useState([6000, 30]);
+  [anchor3_pos, setAnchor3Pos] = useState([0, 900]);
   [demo_box_resize, toggleDemoBoxResize] = useState(true);
-  [demo_box_color, setDemoBoxColor] = useState('yellow');
-  [demo_dot_color, setDemoDotColor] = useState('green');
+  [demo_box_color, setDemoBoxColor] = useState('red');
+  [demo_dot_color, setDemoDotColor] = useState('black');
   [demo_dot_count, setDemoDotCount] = useState(2);
   [font_size, setFontSize] = useState(14);
+  [snap_threshold, setSnapThreshold] = useState(20);
+  [width_resize, toggleWidthResize] = useState(true);
+  [height_resize, toggleHeightResize] = useState(true);
   renderBox2 = function() {
-    return h(Box, null, h(In, {
+    return h(Box, {
+      title: 'edit demo box props'
+    }, h(In, {
       type: 'toggle',
-      label: 'togggle demo box resize',
+      label: 'pass size prop',
       value: demo_box_resize,
       set: toggleDemoBoxResize,
       color: 'red'
+    }), h(In, {
+      type: 'toggle',
+      label: 'resize height enabled',
+      value: height_resize,
+      set: toggleHeightResize,
+      valueColor: 'cyan'
+    }), h(In, {
+      type: 'toggle',
+      label: 'resize width enabled',
+      value: width_resize,
+      set: toggleWidthResize,
+      valueColor: 'yellow'
     }), h(In, {
       type: 'color',
       label: 'anchor bar color',
@@ -80,6 +97,14 @@ export default test = function() {
       label: 'font size',
       value: font_size,
       set: setFontSize
+    }), h(In, {
+      type: 'range',
+      step: 1,
+      min: 0,
+      max: 40,
+      label: 'edge snap threshold',
+      value: snap_threshold,
+      set: setSnapThreshold
     }));
   };
   
@@ -91,12 +116,9 @@ export default test = function() {
     fontFamily: 'Inconsolata'
   }, h(ExampleRecursiveMenu, {
     name: 'fixed',
-    // vert: yes
-    align: 'right-down',
     position: [100, 100]
   }), h(Anchor, {
     handlePosition: 'bottom',
-    align: 'left-down',
     autoHandlePosition: true,
     autoSnapHandlePosition: true,
     autoAlign: false,
@@ -120,10 +142,11 @@ export default test = function() {
     dotCount: demo_dot_count,
     barColor: demo_box_color,
     position: anchor2_pos,
-    size: demo_box_resize && dim_2,
+    autoHandleThreshold: snap_threshold,
+    size: demo_box_resize && dim_2 || void 0,
     visible: menu_2_visible,
-    resizeWidth: false,
-    resizeHeight: false,
+    resizeWidth: width_resize,
+    resizeHeight: height_resize,
     onBarClick: function() {
       return setMenu2Visible(!menu_2_visible);
     },

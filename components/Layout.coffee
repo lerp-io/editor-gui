@@ -15,7 +15,11 @@ Layout = (props,state)->
 	[force_update_t,forceUpdate] = useState(0)
 
 	useEffect ()->
+		# log 'new mea'
 		measure_text.current = new Map
+		can_el = document.createElement("canvas")
+		canvas_ref.current = can_el.getContext("2d")
+		canvas_ref.current.font = props.fontSize+'px '+props.fontFamily
 		return
 	,[props.fontFamily,props.fontSize]
 
@@ -24,8 +28,8 @@ Layout = (props,state)->
 		setContext
 			depth: 0
 			dim: props.fontSize * 1.6
-			wpad: props.fontSize * .6
-			paddingLeft: props.fontSize * .6
+			wpad: props.fontSize * .4
+			# paddingLeft: props.fontSize * .6
 			root: yes
 			selected_label: 'root'
 			view_rect: view_rect
@@ -53,18 +57,14 @@ Layout = (props,state)->
 		layout_ref.current.removeEventListener('mouseout',onMouseOut)
 	
 	getLabelWidth = (label)->
-		# log 'get label width'
-		if !canvas_ref.current
-			log 'create label width calculator'
-			can_el = document.createElement("canvas")
-			canvas_ref.current = can_el.getContext("2d")
-			canvas_ref.current.font = props.fontSize+'px '+props.fontFamily#"16px times new roman"
 		
 		ctx = canvas_ref.current
 		text_width = measure_text.current.get(label)
 		if text_width?
 			return text_width
 		else
+			# log 'measure text'
+			# log props.fontSize
 			text_width = ctx.measureText(label).width
 			measure_text.current.set(label,text_width)
 			return text_width

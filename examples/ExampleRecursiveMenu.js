@@ -60,7 +60,6 @@ ExampleRecursiveMenu = function(props) {
     return h(Menu, {
       vert: props.vert != null ? props.vert : level % 2 === 1,
       select: menu_state[menu_name],
-      align: props.align,
       position: position,
       onSelect: function(item_name) {
         return onSelectRecursiveMenuItem(menu_name, item_name);

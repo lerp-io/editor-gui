@@ -56,6 +56,7 @@ Menu = (props)->
 			selected_label_x = total_label_width
 		
 		width = context.getLabelWidth(key)
+		# log 'get label width',key,width,context.wpad*2,context.dim
 		if width > max_label_width
 			max_label_width = width
 		
@@ -80,13 +81,18 @@ Menu = (props)->
 	# style.minHeight = MIN_HEIGHT
 	# style.height = self_height
 	
+
 	if props.align
 		align_key = props.align
 		# log 'FORCE ALIGN FOR ',context.selected_label,' : ',align_key
 	else
-		align_key = guessAlign(self_width,self_height,context)
+		self_x = props.position?[0] || context.x || 0
+		self_y = props.position?[1] || context.y || 0
+		
+
+		align_key = guessAlign(self_width,self_height,context,self_x,self_y)
 		# log 'GUESSED ALIGN FOR ',context.selected_label,' : ',align_key
-		[x,y] = getPosition(self_width,self_height,context,align_key)
+		# [x,y] = getPosition(self_width,self_height,context,align_key)
 		align_key = fixAlign(align_key,context,self_width,self_height)
 		# log 'FIX ALIGN FOR ',context.selected_label,' : ',align_key
 	
@@ -97,9 +103,9 @@ Menu = (props)->
 		self_y = props.position[1]
 	
 	else if context.root
-		self_x = context.x
-		self_y = context.y
-	
+		self_x = context.x || 0
+		self_y = context.y || 0
+		
 	else
 		[self_x,self_y] = getPosition(self_width,self_height,context,align_key)
 		
@@ -149,14 +155,14 @@ Menu = (props)->
 
 			label = child.label || key
 
-
+			# log context.wpad
 			if child.onClick || child.onSelect
 				return h 'div',
 					key:key
 					className: cn 'ed-menu-item-label',props.select == key && 'ed-selected','noselect'
 					style:
-						paddingLeft: context.paddingLeft
-						minWidth: label_widths[i]
+						paddingLeft: context.wpad
+						width: label_widths[i]
 					onClick: child.onClick || child.onSelect
 					label
 
@@ -178,7 +184,7 @@ Menu = (props)->
 				title: title
 				style:
 					minWidth: label_widths[i]
-					paddingLeft: context.paddingLeft
+					paddingLeft: context.wpad
 				onClick: props.onSelect && ( (e)->
 					if e.target.title != title
 						return

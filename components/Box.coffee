@@ -9,7 +9,8 @@ h = createElement
 
 MIN_HEIGHT = 50
 MIN_WIDTH = 320
-
+BAR_DIM = 12
+REBAR_DIM = 4
 
 Box = (props,state)->
 
@@ -37,20 +38,23 @@ Box = (props,state)->
 
 			content_width = Math.max(content_ref.current?.scrollWidth || 0,MIN_WIDTH)
 			content_height = Math.max(content_ref.current?.scrollHeight || 0,MIN_HEIGHT)
+			
 			set_height = clampHeight(context,content_height)
 			set_width = clampWidth(context,content_width)
-			# log 'set width',set_width
-			# log content_width,set_width
-			# log content_height,set_height
-		
-			if set_width != dim_overflow[2] || set_height != dim_overflow[0]
+			
+			if set_width < content_width
+				overflow_x = 'scroll'
+			else
+				overflow_x = undefined
+			
+			if set_height < content_height
+				overflow_y = 'scroll'
+			else
+				overflow_y = undefined
+			
+			if set_width != dim_overflow[2] || set_height != dim_overflow[0] || overflow_y != dim_overflow[1] || overflow_x != dim_overflow[3]
 				self_ref.current.style.width = set_width
 				self_ref.current.style.height = set_height
-				if set_width < content_width
-					overflow_x = 'scroll'
-				if set_height < content_height
-					overflow_y = 'scroll'
-				
 				setDim([set_height,overflow_y,set_width,overflow_x])
 
 			if !visible
@@ -95,7 +99,7 @@ Box = (props,state)->
 	h 'div',
 		ref: self_ref
 		style: style
-		className: cn 'ed-box',!visible && 'ed-hidden',style.overflowY == 'scroll' && 'ed-scroll','noselect'
+		className: cn 'ed-box',!visible && 'ed-hidden','noselect'
 		h 'div',
 			cn:'ed-box-inner'
 			style:

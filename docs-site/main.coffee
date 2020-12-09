@@ -144,18 +144,21 @@ import LayoutMD from '../components/Layout.md'
 import MenuMD from '../components/Menu.md'
 import SectionMD from '../components/Section.md'
 import SeparatorMD from '../components/Separator.md'
-
+import AnchorMD from '../components/Anchor.md'
 import About from '../About.md'
 
+
 COMPONENTS =
+	Layout: 
+		md: LayoutMD
+	Anchor:
+		md: AnchorMD
+	Menu: 
+		md: MenuMD
 	Box: 
 		md: BoxMD
 	In: 
 		md: InMD
-	Layout: 
-		md: LayoutMD
-	Menu: 
-		md: MenuMD
 	Section: 
 		md: SectionMD
 	Separator: 

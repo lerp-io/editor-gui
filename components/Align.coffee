@@ -1,9 +1,16 @@
+MIN_HEIGHT = 10
+MIN_WIDTH = 320
 BAR_DIM = 12
 REBAR_DIM = 4
 #neveragain
 
-guessAlign = (width,height,ctx)->
-	switch ctx.align
+guessAlign = (width,height,ctx,x,y)->
+	if !ctx.align
+		pre_align = initAlign(ctx,x,y,width,height)
+	else
+		pre_align = ctx.align
+	
+	switch pre_align
 		when 'right-down'
 			return ctx.vert && 'right-down' || 'bottom-right'
 		when 'right-up'
@@ -25,6 +32,18 @@ guessAlign = (width,height,ctx)->
 
 
 
+initAlign = (ctx,x,y,width,height)->
+	# log 'init align',x,width/2,ctx.view_rect.width/2
+	if x + width/2 < ctx.view_rect.width/2
+		if y + height/2 < ctx.view_rect.height/2
+			return ctx.vert && 'right-down' || 'bottom-right'
+		else
+			return ctx.vert && 'right-up' || 'top-right'
+	else
+		if y + height/2 < ctx.view_rect.height/2
+			return ctx.vert && 'left-down' || 'bottom-left'
+		else
+			return ctx.vert && 'left-up' || 'top-left'
 
 
 
@@ -140,18 +159,20 @@ fixAlign = (align_key,ctx,width,height)->
 				else return 'top-left'
 
 
-MIN_HEIGHT = 50
-MIN_WIDTH = 320
 
 clampHeight = (ctx,height)->
 	if ctx.root && ctx.clamp_height
-		return Math.max(Math.min(ctx.view_rect.height - BAR_DIM - REBAR_DIM,Math.min(ctx.clamp_height,height)),MIN_HEIGHT)
+		return Math.max(Math.min(ctx.view_rect.height- BAR_DIM - REBAR_DIM,Math.min(ctx.clamp_height,height)),MIN_HEIGHT)
+	else if ctx.root
+		return Math.max(Math.min(ctx.view_rect.height - BAR_DIM - REBAR_DIM,height),MIN_HEIGHT)
 	else
 		return Math.max(Math.min(height,ctx.view_rect.height),MIN_HEIGHT)
 
 clampWidth = (ctx,width)->
 	if ctx.root && ctx.clamp_width
 		return Math.max(Math.min(ctx.view_rect.width - BAR_DIM - REBAR_DIM,ctx.clamp_width),MIN_WIDTH)
+	else if ctx.root
+		return Math.min(ctx.view_rect.width - BAR_DIM - REBAR_DIM,MIN_WIDTH)
 	else
 		return Math.max(Math.min(width,ctx.view_rect.width),MIN_WIDTH)
 
