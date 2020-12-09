@@ -1,6 +1,6 @@
 {
   "name": "editor-gui",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "basic react web ui components",
   "main": "./components/index.coffee",
   "scripts": {

@@ -110,7 +110,7 @@ Menu = (props)->
 
 
 	style = {}
-	style.overflowY = overflow_y
+	style.overflowY = overflow_y && 'scroll'
 	style.zIndex = props.select && 666 || 1
 	style.zIndex += self_context.depth
 	style.left = self_x+'px'

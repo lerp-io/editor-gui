@@ -140,11 +140,20 @@ fixAlign = (align_key,ctx,width,height)->
 				else return 'top-left'
 
 
+MIN_HEIGHT = 50
+MIN_WIDTH = 320
+
 clampHeight = (ctx,height)->
 	if ctx.root && ctx.clamp_height
-		return Math.min(ctx.view_rect.height - BAR_DIM - REBAR_DIM,Math.min(ctx.clamp_height,height))
+		return Math.max(Math.min(ctx.view_rect.height - BAR_DIM - REBAR_DIM,Math.min(ctx.clamp_height,height)),MIN_HEIGHT)
 	else
-		return Math.min(height,ctx.view_rect.height)
+		return Math.max(Math.min(height,ctx.view_rect.height),MIN_HEIGHT)
+
+clampWidth = (ctx,width)->
+	if ctx.root && ctx.clamp_width
+		return Math.max(Math.min(ctx.view_rect.width - BAR_DIM - REBAR_DIM,ctx.clamp_width),MIN_WIDTH)
+	else
+		return Math.max(Math.min(width,ctx.view_rect.width),MIN_WIDTH)
 
 
 
@@ -256,4 +265,4 @@ clampPosition = (ctx,x,y,width,height,align_key)->
 	return [offset_x,offset_y]
 
 
-export {clampPosition,getPosition,fixAlign,guessAlign,clampHeight}
+export {clampPosition,getPosition,fixAlign,guessAlign,clampHeight,clampWidth}

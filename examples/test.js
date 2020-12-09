@@ -19,7 +19,7 @@ import {
   SectionLabel,
   Style,
   Separator,
-  MenuAnchor
+  Anchor
 } from '../components';
 
 import ExampleRecursiveMenu from './ExampleRecursiveMenu.coffee';
@@ -94,7 +94,7 @@ export default test = function() {
     // vert: yes
     align: 'right-down',
     position: [100, 100]
-  }), h(MenuAnchor, {
+  }), h(Anchor, {
     handlePosition: 'bottom',
     align: 'left-down',
     autoHandlePosition: true,
@@ -111,7 +111,7 @@ export default test = function() {
   }, h(ExampleRecursiveMenu, {
     name: 'menu',
     vert: true
-  })), h(MenuAnchor, {
+  })), h(Anchor, {
     handlePosition: 'bottom',
     autoHandlePosition: true,
     autoSnapHandlePosition: true,
@@ -122,6 +122,8 @@ export default test = function() {
     position: anchor2_pos,
     size: demo_box_resize && dim_2,
     visible: menu_2_visible,
+    resizeWidth: false,
+    resizeHeight: false,
     onBarClick: function() {
       return setMenu2Visible(!menu_2_visible);
     },
@@ -131,11 +133,13 @@ export default test = function() {
     setSize: function(width, height) {
       return setAnchor2Dim([width, height]);
     }
-  }, h(ExampleDemoBox)), h(MenuAnchor, {
+  }, h(ExampleDemoBox)), h(Anchor, {
     autoHandlePosition: true,
     autoSnapHandlePosition: true,
     position: anchor3_pos,
     visible: menu_3_visible,
+    resizeWidth: false,
+    resizeHeight: false,
     onBarClick: function() {
       return setMenu3Visible(!menu_3_visible);
     },

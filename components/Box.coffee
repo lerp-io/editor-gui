@@ -3,72 +3,76 @@ import LayoutContext from './LayoutContext'
 import BoxContext from './BoxContext'
 import cn from 'classnames'
 
-import {clampPosition,getPosition,fixAlign,guessAlign,clampHeight} from './Align'
+import {clampPosition,getPosition,fixAlign,guessAlign,clampHeight,clampWidth} from './Align'
 
 h = createElement
 
 MIN_HEIGHT = 50
+MIN_WIDTH = 320
 
 
 Box = (props,state)->
 
 	[visible,setVisible] = useState(false)
-	[height_overflow,setHeight] = useState([MIN_HEIGHT,0])
+	[dim_overflow,setDim] = useState([MIN_HEIGHT,0])
+	# [width_overflow,setWidth] = useState([MIN_WIDTH,0])
 	self_ref = useRef(null)
 	content_ref = useRef(null)
 	
-	height = height_overflow[0]
-	# log height
+	height = dim_overflow[0]
+	width = dim_overflow[2]
 	style = 
-		overflowY: height_overflow[1]
+		overflowY: dim_overflow[1]
+		overflowX: dim_overflow[3]
 	
 	context = useContext(LayoutContext)
 	self_context = 
 		startDrag: context.startDrag
 		stopDrag: context.stopDrag
 
-	
-	self_width = props.width || 320
-	
+
+
 	useEffect ()->
 		if content_ref.current
-			content_height = content_ref.current?.scrollHeight || MIN_HEIGHT
+
+			content_width = Math.max(content_ref.current?.scrollWidth || 0,MIN_WIDTH)
+			content_height = Math.max(content_ref.current?.scrollHeight || 0,MIN_HEIGHT)
 			set_height = clampHeight(context,content_height)
-			# log content_height,self_height
-			if set_height != height_overflow[0]
+			set_width = clampWidth(context,content_width)
+			# log 'set width',set_width
+			# log content_width,set_width
+			# log content_height,set_height
+		
+			if set_width != dim_overflow[2] || set_height != dim_overflow[0]
+				self_ref.current.style.width = set_width
 				self_ref.current.style.height = set_height
+				if set_width < content_width
+					overflow_x = 'scroll'
 				if set_height < content_height
 					overflow_y = 'scroll'
-				setHeight([set_height,overflow_y])
+				
+				setDim([set_height,overflow_y,set_width,overflow_x])
 
 			if !visible
 				setVisible(true)
-
 
 
 	if !context
 		return null
 
 
-	
-	
-	# content_height = content_ref.current?.scrollHeight || MIN_HEIGHT
-	# [style.overflowY,self_height] = adjustHeight(context,self_width,content_height)
-	# log content_height,self_height
-	# log self_height
 	style.minHeight = MIN_HEIGHT
 	style.height = height
-
+	style.width = width
 
 	
 	if props.align
 		align_key = props.align
-		# log 'FORCE ALIGN FOR ',context.selected_label,' : ',align_key
 	else
-		align_key = guessAlign(self_width,height,context)
-		[x,y] = getPosition(self_width,height,context,align_key)
-		align_key = fixAlign(align_key,context,self_width,height)
-		# log 'FIX ALIGN FOR ',context.selected_label,' : ',align_key
+		align_key = guessAlign(width,height,context)
+		[x,y] = getPosition(width,height,context,align_key)
+		align_key = fixAlign(align_key,context,width,height)
+
 
 	if props.position
 		self_x = props.position[0]
@@ -77,25 +81,17 @@ Box = (props,state)->
 		self_x = context.x
 		self_y = context.y
 	else
-		[self_x,self_y] = getPosition(self_width,height,context,align_key)
-		# log self_x,self_y
-		[offset_x,offset_y] = clampPosition(context,self_x,self_y,self_width,height,align_key)
+		[self_x,self_y] = getPosition(width,height,context,align_key)
+		[offset_x,offset_y] = clampPosition(context,self_x,self_y,width,height,align_key)
 		self_x += offset_x
 		self_y += offset_y
-		# [self_width]
-
 		
-	
-	
-	# style.zIndex = props.select && 666 || 1
+
 	style.zIndex = context.depth + 1 + 888
 	style.left = self_x+'px'
 	style.top = self_y+'px'
-	style.width = self_width
 	
 	
-	
-
 	h 'div',
 		ref: self_ref
 		style: style
@@ -104,7 +100,6 @@ Box = (props,state)->
 			cn:'ed-box-inner'
 			style:
 				minHeight: MIN_HEIGHT
-
 				paddingTop: !props.title && '0.425em'
 			ref: content_ref
 			(props.title || props.label) && (h 'div',

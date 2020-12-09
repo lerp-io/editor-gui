@@ -1,5 +1,5 @@
 import {createElement,useState,useEffect,useRef,useReducer} from 'react'
-import {Layout,In,Box,Row,Menu,Section,SectionLabel,Style,Separator,MenuAnchor} from '../components'
+import {Layout,In,Box,Row,Menu,Section,SectionLabel,Style,Separator,Anchor} from '../components'
 
 import ExampleRecursiveMenu from './ExampleRecursiveMenu.coffee'
 import ExampleDemoBox from './ExampleDemoBox.coffee'
@@ -82,7 +82,7 @@ export default test = ()->
 			align: 'right-down'
 			position: [100,100]
 
-		h MenuAnchor,
+		h Anchor,
 			handlePosition: 'bottom'
 			align: 'left-down'
 			autoHandlePosition: yes
@@ -99,7 +99,7 @@ export default test = ()->
 				name: 'menu'
 				vert: yes
 		
-		h MenuAnchor,
+		h Anchor,
 			handlePosition: 'bottom'
 			autoHandlePosition: yes
 			autoSnapHandlePosition: yes
@@ -110,6 +110,8 @@ export default test = ()->
 			position: anchor2_pos
 			size: demo_box_resize && dim_2
 			visible: menu_2_visible
+			resizeWidth: false
+			resizeHeight: false
 			onBarClick: ()->
 				setMenu2Visible(!menu_2_visible)
 			setPosition: (x,y)->
@@ -119,11 +121,13 @@ export default test = ()->
 			h ExampleDemoBox
 		
 		
-		h MenuAnchor,
+		h Anchor,
 			autoHandlePosition: yes
 			autoSnapHandlePosition: yes
 			position: anchor3_pos
 			visible: menu_3_visible
+			resizeWidth: false
+			resizeHeight: false
 			onBarClick: ()->
 				setMenu3Visible(!menu_3_visible)
 			setPosition: (x,y)->

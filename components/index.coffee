@@ -6,7 +6,7 @@ import Box from './Box'
 import In from './In'
 import Section from './Section'
 import Separator from './Separator'
-import MenuAnchor from './MenuAnchor'
+import Anchor from './Anchor'
 
 
-export {Box,In,Layout,Menu,Section,Separator,MenuAnchor}
+export {Box,In,Layout,Menu,Section,Separator,Anchor}

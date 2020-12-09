@@ -91,7 +91,7 @@ module.exports =
 /*!*********************************!*\
   !*** ./components/Align.coffee ***!
   \*********************************/
-/*! exports provided: clampPosition, getPosition, fixAlign, guessAlign, clampHeight */
+/*! exports provided: clampPosition, getPosition, fixAlign, guessAlign, clampHeight, clampWidth */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -101,7 +101,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fixAlign", function() { return fixAlign; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "guessAlign", function() { return guessAlign; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clampHeight", function() { return clampHeight; });
-var BAR_DIM, REBAR_DIM, checkFitAlignDown, checkFitAlignLeft, checkFitAlignRight, checkFitAlignUp, checkFitPositionBottom, checkFitPositionTop, checkfitPositionLeft, checkfitPositionRight, clampHeight, clampPosition, fixAlign, getAlignDirections, getPosition, guessAlign;
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clampWidth", function() { return clampWidth; });
+var BAR_DIM, MIN_HEIGHT, MIN_WIDTH, REBAR_DIM, checkFitAlignDown, checkFitAlignLeft, checkFitAlignRight, checkFitAlignUp, checkFitPositionBottom, checkFitPositionTop, checkfitPositionLeft, checkfitPositionRight, clampHeight, clampPosition, clampWidth, fixAlign, getAlignDirections, getPosition, guessAlign;
 
 BAR_DIM = 12;
 
@@ -304,11 +305,23 @@ fixAlign = function(align_key, ctx, width, height) {
   }
 };
 
+MIN_HEIGHT = 50;
+
+MIN_WIDTH = 320;
+
 clampHeight = function(ctx, height) {
   if (ctx.root && ctx.clamp_height) {
-    return Math.min(ctx.view_rect.height - BAR_DIM - REBAR_DIM, Math.min(ctx.clamp_height, height));
+    return Math.max(Math.min(ctx.view_rect.height - BAR_DIM - REBAR_DIM, Math.min(ctx.clamp_height, height)), MIN_HEIGHT);
   } else {
-    return Math.min(height, ctx.view_rect.height);
+    return Math.max(Math.min(height, ctx.view_rect.height), MIN_HEIGHT);
+  }
+};
+
+clampWidth = function(ctx, width) {
+  if (ctx.root && ctx.clamp_width) {
+    return Math.max(Math.min(ctx.view_rect.width - BAR_DIM - REBAR_DIM, ctx.clamp_width), MIN_WIDTH);
+  } else {
+    return Math.max(Math.min(width, ctx.view_rect.width), MIN_WIDTH);
   }
 };
 
@@ -433,6 +446,444 @@ clampPosition = function(ctx, x, y, width, height, align_key) {
 
 /***/ }),
 
+/***/ "./components/Anchor.coffee":
+/*!**********************************!*\
+  !*** ./components/Anchor.coffee ***!
+  \**********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! classnames */ "classnames");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _LayoutContext__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./LayoutContext */ "./components/LayoutContext.coffee");
+/* harmony import */ var _Align__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Align */ "./components/Align.coffee");
+var AUTO_HANDLE_SET_THRESHOLD, AUTO_HANDLE_SNAP_THRESHOLD, Anchor, BAR_DIM, DOT_DIM, REBAR_DIM, h;
+
+
+
+h = react__WEBPACK_IMPORTED_MODULE_0__["createElement"];
+
+
+
+
+
+
+
+BAR_DIM = 12;
+
+REBAR_DIM = 4;
+
+AUTO_HANDLE_SET_THRESHOLD = 20;
+
+AUTO_HANDLE_SNAP_THRESHOLD = 12;
+
+DOT_DIM = 4;
+
+Anchor = function(props) {
+  var anchor_ref, bar_height, bar_left, bar_top, bar_width, checkAnchorDim, content, content_ref, content_x, content_y, context, d_bottom, d_left, d_right, d_top, dim, dot_height, dot_width, drag_start_pos, handle_pos, i, is_dragging, offset_x, offset_y, on_resize_bar_mouse_down, on_resize_bar_mouse_leave, on_resize_bar_mouse_move, rebar_left, rebar_top, ref, ref1, resize_bar, resize_bar_style, resize_cursor, resize_dir, resize_start_pos, self_context, self_height, self_width, setDim, setDragStartPos, setDragging, setHandlePos, setResizeDir, setResizeStartPos, setZIndex, set_handle_pos, snap_bot, updateZIndex, z_index;
+  anchor_ref = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])('ed-anchor', anchor_ref);
+  context = Object(react__WEBPACK_IMPORTED_MODULE_0__["useContext"])(_LayoutContext__WEBPACK_IMPORTED_MODULE_2__["default"]);
+  content_ref = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])();
+  [dim, setDim] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({});
+  [drag_start_pos, setDragStartPos] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(void 0);
+  [resize_start_pos, setResizeStartPos] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(void 0);
+  [resize_dir, setResizeDir] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(void 0);
+  [set_handle_pos, setHandlePos] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(void 0);
+  [is_dragging, setDragging] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
+  [z_index, setZIndex] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0);
+  updateZIndex = function(z_index) {
+    return setZIndex(z_index);
+  };
+  checkAnchorDim = function() {
+    var rect;
+    if (content_ref.current) {
+      rect = content_ref.current.children[0].getBoundingClientRect();
+      if (dim.width !== rect.width || dim.height !== rect.height) {
+        return setDim({
+          width: rect.width,
+          height: rect.height
+        });
+      }
+    }
+  };
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function() {
+    checkAnchorDim();
+  });
+  if (!context) {
+    return null;
+  }
+  if (dim.width && dim.height) {
+    d_left = Math.max(0, props.position[0]);
+    d_top = Math.max(0, props.position[1]);
+    d_bottom = Math.max(0, context.view_rect.height - (props.position[1] + dim.height + BAR_DIM));
+    d_right = Math.max(0, context.view_rect.width - (props.position[0] + dim.width + BAR_DIM));
+  }
+  snap_bot = false;
+  if (d_left <= Math.min(d_right, Math.min(d_top, d_bottom)) && d_left < AUTO_HANDLE_SET_THRESHOLD) {
+    handle_pos = 'left';
+    if (props.autoSnapHandlePosition) {
+      props.position[0] = 0;
+    }
+  } else if (d_top <= Math.min(d_bottom, Math.min(d_left, d_right)) && d_top < AUTO_HANDLE_SET_THRESHOLD) {
+    handle_pos = 'top';
+    if (props.autoSnapHandlePosition) {
+      props.position[1] = 0;
+    }
+  } else if (d_right <= Math.min(d_left, Math.min(d_top, d_bottom)) && d_right < AUTO_HANDLE_SET_THRESHOLD) {
+    handle_pos = 'right';
+    if (props.autoSnapHandlePosition) {
+      props.position[0] = Math.max(0, context.view_rect.width - dim.width - BAR_DIM);
+    }
+  } else if (d_bottom <= Math.min(d_top, Math.min(d_left, d_right)) && d_bottom < AUTO_HANDLE_SET_THRESHOLD) {
+    handle_pos = 'bottom';
+    if (props.autoSnapHandlePosition) {
+      snap_bot = true;
+      props.position[1] = Math.max(0, context.view_rect.height - dim.height - BAR_DIM);
+    }
+  } else {
+    handle_pos = 'top';
+  }
+  if (props.autoHandlePosition && handle_pos !== set_handle_pos) {
+    setHandlePos(handle_pos);
+  }
+  if (!props.autoHandlePosition) {
+    handle_pos = props.handlePosition || 'left';
+  }
+  dot_width = DOT_DIM;
+  dot_height = DOT_DIM;
+  if (dim.width && dim.height) {
+    switch (handle_pos) {
+      case 'left':
+        self_width = dim.width + BAR_DIM;
+        self_height = dim.height;
+        break;
+      case 'right':
+        self_width = dim.width + BAR_DIM;
+        self_height = dim.height;
+        break;
+      case 'top':
+        self_height = dim.height + BAR_DIM;
+        self_width = dim.width;
+        break;
+      case 'bottom':
+        self_width = dim.width;
+        self_height = dim.height + BAR_DIM;
+    }
+    [offset_x, offset_y] = Object(_Align__WEBPACK_IMPORTED_MODULE_3__["clampPosition"])(context, props.position[0], props.position[1], self_width, self_height, void 0);
+    props.position[0] += offset_x;
+    props.position[1] += offset_y;
+    switch (handle_pos) {
+      case 'left':
+        bar_width = BAR_DIM;
+        bar_height = dim.height;
+        bar_left = props.position[0];
+        bar_top = props.position[1];
+        rebar_left = props.position[0] + dim.width + BAR_DIM;
+        rebar_top = props.position[1];
+        content_x = props.position[0] + BAR_DIM;
+        content_y = props.position[1];
+        if (!props.visible) {
+          dot_height = DOT_DIM * 3;
+        }
+        break;
+      case 'right':
+        bar_width = BAR_DIM;
+        bar_height = dim.height;
+        bar_left = props.position[0] + dim.width;
+        bar_top = props.position[1];
+        rebar_left = props.position[0] - REBAR_DIM;
+        rebar_top = props.position[1];
+        content_x = props.position[0];
+        content_y = props.position[1];
+        if (!props.visible) {
+          dot_height = DOT_DIM * 3;
+        }
+        break;
+      case 'top':
+        bar_width = dim.width;
+        bar_height = BAR_DIM;
+        bar_left = props.position[0];
+        bar_top = props.position[1];
+        rebar_left = props.position[0];
+        rebar_top = props.position[1] + dim.height + BAR_DIM;
+        content_x = props.position[0];
+        content_y = props.position[1] + BAR_DIM;
+        if (!props.visible) {
+          dot_width = DOT_DIM * 3;
+        }
+        break;
+      case 'bottom':
+        bar_width = dim.width;
+        bar_height = BAR_DIM;
+        bar_left = props.position[0];
+        bar_top = props.position[1] + dim.height;
+        rebar_left = props.position[0];
+        rebar_top = props.position[1] - REBAR_DIM;
+        content_x = props.position[0];
+        content_y = props.position[1];
+        if (!props.visible) {
+          dot_width = DOT_DIM * 3;
+        }
+    }
+  }
+  self_context = Object.assign({}, context, {
+    align: props.align || 'right-down',
+    clamp_width: ((ref = props.size) != null ? ref[0] : void 0) || 0,
+    clamp_height: ((ref1 = props.size) != null ? ref1[1] : void 0) || 0,
+    x: content_x,
+    y: content_y,
+    root: true,
+    checkAnchorDim: checkAnchorDim
+  });
+  if (props.visible || ((dim.width == null) || (dim.height == null))) {
+    content = h('div', {
+      cn: 'ed-anchor-content',
+      ref: content_ref
+    }, h(_LayoutContext__WEBPACK_IMPORTED_MODULE_2__["default"].Provider, {
+      value: self_context
+    }, props.children));
+  }
+  switch (resize_dir) {
+    case 'bottom':
+      resize_cursor = 's-resize';
+      break;
+    case 'top':
+      resize_cursor = 'n-resize';
+      break;
+    case 'left':
+      resize_cursor = 'w-resize';
+      break;
+    case 'right':
+      resize_cursor = 'e-resize';
+  }
+  if (props.size && props.visible) {
+    resize_bar_style = {
+      background: props.barColor || 'black',
+      top: rebar_top,
+      left: rebar_left,
+      height: (handle_pos === 'left' || handle_pos === 'right') && bar_height || REBAR_DIM,
+      width: (handle_pos === 'left' || handle_pos === 'right') && REBAR_DIM || bar_width,
+      flexDirection: (handle_pos === 'left' || handle_pos === 'right') && 'column' || 'row',
+      cursor: resize_cursor
+    };
+    on_resize_bar_mouse_down = function(e) {
+      setDragging(true); //need code review
+      setResizeStartPos([e.clientX, e.clientY, dim.width, dim.height, props.position[0], props.position[1]]);
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    };
+    on_resize_bar_mouse_move = function(e) {
+      var dir, rect;
+      rect = e.target.getBoundingClientRect();
+      if (handle_pos === 'bottom' || handle_pos === 'top') {
+        if (e.clientX < rect.left + rect.width * 1 / 3) {
+          dir = 'left';
+        } else if (e.clientX > rect.left + rect.width * 2 / 3) {
+          dir = 'right';
+        } else {
+          if (handle_pos === 'bottom') {
+            dir = 'top';
+          } else {
+            dir = 'bottom';
+          }
+        }
+      } else if (handle_pos === 'left' || handle_pos === 'right') {
+        if (e.clientY < rect.top + rect.height * 1 / 3) {
+          dir = 'top';
+        } else if (e.clientY > rect.top + rect.height * 2 / 3) {
+          dir = 'bottom';
+        } else {
+          if (handle_pos === 'left') {
+            dir = 'right';
+          } else {
+            dir = 'left';
+          }
+        }
+      }
+      if (resize_dir !== dir && dir) {
+        // log props.resizeHeight
+        if ((dir === 'top' || dir === 'bottom') && props.resizeHeight === false) {
+          return false;
+        }
+        if ((dir === 'left' || dir === 'right') && props.resizeWidth === false) {
+          return false;
+        }
+        return setResizeDir(dir);
+      }
+    };
+    on_resize_bar_mouse_leave = function() {
+      if (!is_dragging) {
+        return setResizeDir(void 0);
+      }
+    };
+    resize_bar = h('div', {
+      style: resize_bar_style,
+      cn: 'ed-anchor-handle-resize',
+      onMouseLeave: on_resize_bar_mouse_leave,
+      onMouseMove: on_resize_bar_mouse_move,
+      onMouseDown: on_resize_bar_mouse_down,
+      onMouseEnter: on_resize_bar_mouse_move
+    });
+  }
+  return h('div', {
+    style: {
+      top: 0,
+      left: 0,
+      zIndex: z_index,
+      width: (resize_start_pos || drag_start_pos) && '100vw' || void 0,
+      height: (resize_start_pos || drag_start_pos) && '100vh' || void 0,
+      cursor: resize_cursor
+    },
+    cn: classnames__WEBPACK_IMPORTED_MODULE_1___default()('ed-anchor', drag_start_pos && 'ed-anchor-drag', resize_start_pos && 'ed-anchor-resize'),
+    ref: anchor_ref,
+    onMouseMove: function(e) {
+      var height, left, self_x, self_y, top, width;
+      if (resize_start_pos) {
+        if (!is_dragging) {
+          setDragging(true);
+        }
+        width = props.size[0];
+        height = props.size[1];
+        left = props.position[0];
+        top = props.position[1];
+        // log resize_dir
+        switch (resize_dir) {
+          case 'bottom':
+            height = Math.max(0, resize_start_pos[3] + e.clientY - resize_start_pos[1]);
+            break;
+          case 'top':
+            if (handle_pos === 'left' || handle_pos === 'right') {
+              height = Math.max(0, resize_start_pos[3] - e.clientY + resize_start_pos[1]);
+              top = Math.max(0, resize_start_pos[5] + e.clientY - resize_start_pos[1]);
+            } else {
+              height = Math.max(0, resize_start_pos[3] - e.clientY + resize_start_pos[1]);
+            }
+            break;
+          case 'right':
+            if (handle_pos === 'top' || handle_pos === 'bottom') {
+              width = Math.max(0, resize_start_pos[2] + e.clientX - resize_start_pos[0]);
+            } else {
+              width = Math.max(0, resize_start_pos[2] + e.clientX - resize_start_pos[0]);
+            }
+            break;
+          case 'left':
+            if (handle_pos === 'top' || handle_pos === 'bottom') {
+              width = Math.max(0, resize_start_pos[2] - e.clientX + resize_start_pos[0]);
+              left = Math.max(0, resize_start_pos[4] + e.clientX - resize_start_pos[0]);
+            } else {
+              width = Math.max(0, resize_start_pos[2] - e.clientX + resize_start_pos[0]);
+            }
+        }
+        
+        // log width,props.size[0]
+        props.setPosition(left, top);
+        props.setSize(width, height);
+        e.stopPropagation();
+        e.preventDefault();
+        return false;
+      } else if (drag_start_pos) {
+        if (!is_dragging) {
+          setDragging(true);
+        }
+        self_x = drag_start_pos[2] + e.clientX - drag_start_pos[0];
+        self_y = drag_start_pos[3] + e.clientY - drag_start_pos[1];
+        props.setPosition(self_x, self_y);
+        if (!props.visible) {
+          props.onBarClick();
+        }
+        e.stopPropagation();
+        e.preventDefault();
+        return false;
+      }
+    },
+    onMouseUp: function(e) {
+      if (resize_dir) {
+        setResizeDir(void 0);
+      }
+      if (drag_start_pos !== void 0) {
+        setDragStartPos(void 0);
+        setDragging(false);
+        if (!is_dragging) {
+          props.onBarClick();
+        }
+        e.stopPropagation();
+        e.preventDefault();
+        return false;
+      } else if (resize_start_pos !== void 0) {
+        setResizeStartPos(void 0);
+        setDragging(false);
+        // if !is_dragging
+        // 	props.onBarClick()
+        e.stopPropagation();
+        e.preventDefault();
+        return false;
+      } else if (is_dragging) {
+        setDragging(false);
+      }
+      if (resize_dir) {
+        return setResizeDir(void 0);
+      }
+    },
+    onMouseEnter: function() {
+      // log 'mouse enter'
+      return setZIndex(999);
+    },
+    onMouseLeave: function() {
+      setZIndex(0);
+      // log 'mouse leave'
+      if (drag_start_pos !== void 0) {
+        setDragStartPos(void 0);
+        setDragging(false);
+      }
+      if (resize_start_pos !== void 0) {
+        setResizeStartPos(void 0);
+        return setDragging(false);
+      }
+    }
+  }, h('div', {
+    cn: 'ed-anchor-handle',
+    style: {
+      top: bar_top,
+      left: bar_left,
+      height: bar_height,
+      width: bar_width,
+      flexDirection: (handle_pos === 'left' || handle_pos === 'right') && 'column' || 'row',
+      background: props.barColor || 'black'
+    },
+    onMouseDown: function(e) {
+      setDragStartPos([e.clientX, e.clientY, props.position[0], props.position[1]]);
+      e.stopPropagation();
+      e.preventDefault();
+      return false;
+    }
+  }, (function() {
+    var j, ref2, results;
+    results = [];
+    for (i = j = 0, ref2 = props.dotCount || 1; (0 <= ref2 ? j < ref2 : j > ref2); i = 0 <= ref2 ? ++j : --j) {
+      results.push(h('div', {
+        cn: 'ed-anchor-dot',
+        key: i,
+        style: {
+          background: props.dotColor || 'white',
+          width: dot_width,
+          height: dot_height
+        }
+      }));
+    }
+    return results;
+  })()), resize_bar, content);
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Anchor);
+
+
+/***/ }),
+
 /***/ "./components/Box.coffee":
 /*!*******************************!*\
   !*** ./components/Box.coffee ***!
@@ -449,7 +900,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! classnames */ "classnames");
 /* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _Align__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Align */ "./components/Align.coffee");
-var Box, MIN_HEIGHT, h;
+var Box, MIN_HEIGHT, MIN_WIDTH, h;
 
 
 
@@ -465,35 +916,46 @@ h = react__WEBPACK_IMPORTED_MODULE_0__["createElement"];
 
 MIN_HEIGHT = 50;
 
+MIN_WIDTH = 320;
+
 Box = function(props, state) {
-  var align_key, content_ref, context, height, height_overflow, offset_x, offset_y, self_context, self_ref, self_width, self_x, self_y, setHeight, setVisible, style, visible, x, y;
+  var align_key, content_ref, context, dim_overflow, height, offset_x, offset_y, self_context, self_ref, self_x, self_y, setDim, setVisible, style, visible, width, x, y;
   [visible, setVisible] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
-  [height_overflow, setHeight] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([MIN_HEIGHT, 0]);
+  [dim_overflow, setDim] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([MIN_HEIGHT, 0]);
+  // [width_overflow,setWidth] = useState([MIN_WIDTH,0])
   self_ref = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
   content_ref = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
-  height = height_overflow[0];
-  // log height
+  height = dim_overflow[0];
+  width = dim_overflow[2];
   style = {
-    overflowY: height_overflow[1]
+    overflowY: dim_overflow[1],
+    overflowX: dim_overflow[3]
   };
   context = Object(react__WEBPACK_IMPORTED_MODULE_0__["useContext"])(_LayoutContext__WEBPACK_IMPORTED_MODULE_1__["default"]);
   self_context = {
     startDrag: context.startDrag,
     stopDrag: context.stopDrag
   };
-  self_width = props.width || 320;
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function() {
-    var content_height, overflow_y, ref, set_height;
+    var content_height, content_width, overflow_x, overflow_y, ref, ref1, set_height, set_width;
     if (content_ref.current) {
-      content_height = ((ref = content_ref.current) != null ? ref.scrollHeight : void 0) || MIN_HEIGHT;
+      content_width = Math.max(((ref = content_ref.current) != null ? ref.scrollWidth : void 0) || 0, MIN_WIDTH);
+      content_height = Math.max(((ref1 = content_ref.current) != null ? ref1.scrollHeight : void 0) || 0, MIN_HEIGHT);
       set_height = Object(_Align__WEBPACK_IMPORTED_MODULE_4__["clampHeight"])(context, content_height);
-      // log content_height,self_height
-      if (set_height !== height_overflow[0]) {
+      set_width = Object(_Align__WEBPACK_IMPORTED_MODULE_4__["clampWidth"])(context, content_width);
+      // log 'set width',set_width
+      // log content_width,set_width
+      // log content_height,set_height
+      if (set_width !== dim_overflow[2] || set_height !== dim_overflow[0]) {
+        self_ref.current.style.width = set_width;
         self_ref.current.style.height = set_height;
+        if (set_width < content_width) {
+          overflow_x = 'scroll';
+        }
         if (set_height < content_height) {
           overflow_y = 'scroll';
         }
-        setHeight([set_height, overflow_y]);
+        setDim([set_height, overflow_y, set_width, overflow_x]);
       }
       if (!visible) {
         return setVisible(true);
@@ -503,22 +965,16 @@ Box = function(props, state) {
   if (!context) {
     return null;
   }
-  
-  // content_height = content_ref.current?.scrollHeight || MIN_HEIGHT
-  // [style.overflowY,self_height] = adjustHeight(context,self_width,content_height)
-  // log content_height,self_height
-  // log self_height
   style.minHeight = MIN_HEIGHT;
   style.height = height;
+  style.width = width;
   if (props.align) {
     align_key = props.align;
   } else {
-    // log 'FORCE ALIGN FOR ',context.selected_label,' : ',align_key
-    align_key = Object(_Align__WEBPACK_IMPORTED_MODULE_4__["guessAlign"])(self_width, height, context);
-    [x, y] = Object(_Align__WEBPACK_IMPORTED_MODULE_4__["getPosition"])(self_width, height, context, align_key);
-    align_key = Object(_Align__WEBPACK_IMPORTED_MODULE_4__["fixAlign"])(align_key, context, self_width, height);
+    align_key = Object(_Align__WEBPACK_IMPORTED_MODULE_4__["guessAlign"])(width, height, context);
+    [x, y] = Object(_Align__WEBPACK_IMPORTED_MODULE_4__["getPosition"])(width, height, context, align_key);
+    align_key = Object(_Align__WEBPACK_IMPORTED_MODULE_4__["fixAlign"])(align_key, context, width, height);
   }
-  // log 'FIX ALIGN FOR ',context.selected_label,' : ',align_key
   if (props.position) {
     self_x = props.position[0];
     self_y = props.position[1];
@@ -526,19 +982,14 @@ Box = function(props, state) {
     self_x = context.x;
     self_y = context.y;
   } else {
-    [self_x, self_y] = Object(_Align__WEBPACK_IMPORTED_MODULE_4__["getPosition"])(self_width, height, context, align_key);
-    // log self_x,self_y
-    [offset_x, offset_y] = Object(_Align__WEBPACK_IMPORTED_MODULE_4__["clampPosition"])(context, self_x, self_y, self_width, height, align_key);
+    [self_x, self_y] = Object(_Align__WEBPACK_IMPORTED_MODULE_4__["getPosition"])(width, height, context, align_key);
+    [offset_x, offset_y] = Object(_Align__WEBPACK_IMPORTED_MODULE_4__["clampPosition"])(context, self_x, self_y, width, height, align_key);
     self_x += offset_x;
     self_y += offset_y;
   }
-  // [self_width]
-
-  // style.zIndex = props.select && 666 || 1
   style.zIndex = context.depth + 1 + 888;
   style.left = self_x + 'px';
   style.top = self_y + 'px';
-  style.width = self_width;
   return h('div', {
     ref: self_ref,
     style: style,
@@ -1401,7 +1852,7 @@ Menu = function(props) {
     self_y += offset_y;
   }
   style = {};
-  style.overflowY = overflow_y;
+  style.overflowY = overflow_y && 'scroll';
   style.zIndex = props.select && 666 || 1;
   style.zIndex += self_context.depth;
   style.left = self_x + 'px';
@@ -1497,377 +1948,6 @@ Menu = function(props) {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Menu);
-
-
-/***/ }),
-
-/***/ "./components/MenuAnchor.coffee":
-/*!**************************************!*\
-  !*** ./components/MenuAnchor.coffee ***!
-  \**************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! classnames */ "classnames");
-/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _LayoutContext__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./LayoutContext */ "./components/LayoutContext.coffee");
-/* harmony import */ var _Align__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Align */ "./components/Align.coffee");
-var AUTO_HANDLE_SET_THRESHOLD, AUTO_HANDLE_SNAP_THRESHOLD, BAR_DIM, DOT_DIM, MenuAnchor, REBAR_DIM, h;
-
-
-
-h = react__WEBPACK_IMPORTED_MODULE_0__["createElement"];
-
-
-
-
-
-
-
-BAR_DIM = 12;
-
-REBAR_DIM = 4;
-
-AUTO_HANDLE_SET_THRESHOLD = 20;
-
-AUTO_HANDLE_SNAP_THRESHOLD = 12;
-
-DOT_DIM = 4;
-
-MenuAnchor = function(props) {
-  var anchor_ref, bar_height, bar_left, bar_top, bar_width, checkAnchorDim, content, content_ref, content_x, content_y, context, d_bottom, d_left, d_right, d_top, dim, dot_height, dot_width, drag_start_pos, handle_pos, i, is_dragging, offset_x, offset_y, rebar_left, rebar_top, ref, ref1, resize_bar, resize_start_pos, self_context, self_height, self_width, setDim, setDragStartPos, setDragging, setHandlePos, setResizeStartPos, setZIndex, set_handle_pos, snap_bot, updateZIndex, z_index;
-  anchor_ref = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])('ed-anchor', anchor_ref);
-  context = Object(react__WEBPACK_IMPORTED_MODULE_0__["useContext"])(_LayoutContext__WEBPACK_IMPORTED_MODULE_2__["default"]);
-  content_ref = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])();
-  [dim, setDim] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({});
-  [drag_start_pos, setDragStartPos] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(void 0);
-  [resize_start_pos, setResizeStartPos] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(void 0);
-  [set_handle_pos, setHandlePos] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(void 0);
-  [is_dragging, setDragging] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
-  [z_index, setZIndex] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0);
-  updateZIndex = function(z_index) {
-    return setZIndex(z_index);
-  };
-  
-  // log 'render'
-  checkAnchorDim = function() {
-    var rect;
-    if (content_ref.current) {
-      rect = content_ref.current.children[0].getBoundingClientRect();
-      // log 'on_update',rect
-      if (dim.width !== rect.width || dim.height !== rect.height) {
-        // log 'SET DIM',rect
-        return setDim({
-          width: rect.width,
-          height: rect.height
-        });
-      }
-    }
-  };
-  // log dim
-  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function() {
-    checkAnchorDim();
-  });
-  if (!context) {
-    return null;
-  }
-  
-  // log dim
-  if (dim.width && dim.height) {
-    d_left = Math.max(0, props.position[0]);
-    d_top = Math.max(0, props.position[1]);
-    d_bottom = Math.max(0, context.view_rect.height - (props.position[1] + dim.height + BAR_DIM));
-    d_right = Math.max(0, context.view_rect.width - (props.position[0] + dim.width + BAR_DIM));
-  }
-  // if (props.position[1] + dim.height + BAR_DIM)
-
-  // log d_left,d_top,d_bottom,d_right
-  // log d_top,d_bottom
-  snap_bot = false;
-  if (d_left <= Math.min(d_right, Math.min(d_top, d_bottom)) && d_left < AUTO_HANDLE_SET_THRESHOLD) {
-    handle_pos = 'left';
-    if (props.autoSnapHandlePosition) {
-      // setTimeout ()->
-      props.position[0] = 0;
-    }
-  // ,0
-  } else if (d_top <= Math.min(d_bottom, Math.min(d_left, d_right)) && d_top < AUTO_HANDLE_SET_THRESHOLD) {
-    handle_pos = 'top';
-    if (props.autoSnapHandlePosition) {
-      // setTimeout ()->
-      props.position[1] = 0;
-    }
-  } else if (d_right <= Math.min(d_left, Math.min(d_top, d_bottom)) && d_right < AUTO_HANDLE_SET_THRESHOLD) {
-    handle_pos = 'right';
-    if (props.autoSnapHandlePosition) {
-      props.position[0] = Math.max(0, context.view_rect.width - dim.width - BAR_DIM);
-    }
-  } else if (d_bottom <= Math.min(d_top, Math.min(d_left, d_right)) && d_bottom < AUTO_HANDLE_SET_THRESHOLD) {
-    handle_pos = 'bottom';
-    if (props.autoSnapHandlePosition) {
-      snap_bot = true;
-      props.position[1] = Math.max(0, context.view_rect.height - dim.height - BAR_DIM);
-    }
-  } else {
-    handle_pos = 'top';
-  }
-  if (props.autoHandlePosition && handle_pos !== set_handle_pos) {
-    setHandlePos(handle_pos);
-  }
-  if (!props.autoHandlePosition) {
-    handle_pos = props.handlePosition || 'left';
-  }
-  
-  // log handle_pos
-  dot_width = DOT_DIM;
-  dot_height = DOT_DIM;
-  
-  // self_x = props.position[0]
-  // self_y = props.position[1]
-  if (dim.width && dim.height) {
-    switch (handle_pos) {
-      case 'left':
-        self_width = dim.width + BAR_DIM;
-        self_height = dim.height;
-        break;
-      case 'right':
-        self_width = dim.width + BAR_DIM;
-        self_height = dim.height;
-        break;
-      case 'top':
-        self_height = dim.height + BAR_DIM;
-        self_width = dim.width;
-        break;
-      case 'bottom':
-        self_width = dim.width;
-        self_height = dim.height + BAR_DIM;
-    }
-    [offset_x, offset_y] = Object(_Align__WEBPACK_IMPORTED_MODULE_3__["clampPosition"])(context, props.position[0], props.position[1], self_width, self_height, void 0);
-    props.position[0] += offset_x;
-    props.position[1] += offset_y;
-    switch (handle_pos) {
-      case 'left':
-        bar_width = BAR_DIM;
-        bar_height = dim.height;
-        bar_left = props.position[0];
-        bar_top = props.position[1];
-        rebar_left = props.position[0] + dim.width;
-        rebar_top = props.position[1];
-        content_x = props.position[0] + BAR_DIM;
-        content_y = props.position[1];
-        if (!props.visible) {
-          dot_height = DOT_DIM * 3;
-        }
-        break;
-      case 'right':
-        bar_width = BAR_DIM;
-        bar_height = dim.height;
-        bar_left = props.position[0] + dim.width;
-        bar_top = props.position[1];
-        rebar_left = props.position[0] - REBAR_DIM;
-        rebar_top = props.position[1];
-        content_x = props.position[0];
-        content_y = props.position[1];
-        if (!props.visible) {
-          dot_height = DOT_DIM * 3;
-        }
-        break;
-      case 'top':
-        bar_width = dim.width;
-        bar_height = BAR_DIM;
-        bar_left = props.position[0];
-        bar_top = props.position[1];
-        rebar_left = props.position[0];
-        rebar_top = props.position[1] + dim.height + BAR_DIM;
-        content_x = props.position[0];
-        content_y = props.position[1] + BAR_DIM;
-        if (!props.visible) {
-          dot_width = DOT_DIM * 3;
-        }
-        break;
-      case 'bottom':
-        bar_width = dim.width;
-        bar_height = BAR_DIM;
-        bar_left = props.position[0];
-        bar_top = props.position[1] + dim.height;
-        rebar_left = props.position[0];
-        rebar_top = props.position[1] - REBAR_DIM;
-        content_x = props.position[0];
-        content_y = props.position[1];
-        if (!props.visible) {
-          dot_width = DOT_DIM * 3;
-        }
-    }
-  }
-  
-  // if props.handlePosition == 'right'
-
-  // log props.position
-  // log props.size
-  self_context = Object.assign({}, context, {
-    align: props.align || 'right-down',
-    clamp_width: ((ref = props.size) != null ? ref[0] : void 0) || 0,
-    clamp_height: ((ref1 = props.size) != null ? ref1[1] : void 0) || 0,
-    x: content_x,
-    y: content_y,
-    root: true,
-    checkAnchorDim: checkAnchorDim
-  });
-  
-  // log self_context.view_rect
-  if (props.visible || ((dim.width == null) || (dim.height == null))) {
-    content = h('div', {
-      cn: 'ed-anchor-content',
-      ref: content_ref
-    // style:
-    // 	pointerEvents: drag_start_pos && 'none' || undefined
-    }, h(_LayoutContext__WEBPACK_IMPORTED_MODULE_2__["default"].Provider, {
-      value: self_context
-    }, props.children));
-  }
-  if (props.size && props.visible) {
-    resize_bar = h('div', {
-      style: {
-        background: props.barColor || 'black',
-        top: rebar_top,
-        left: rebar_left,
-        height: (handle_pos === 'left' || handle_pos === 'right') && bar_height || REBAR_DIM,
-        width: (handle_pos === 'left' || handle_pos === 'right') && REBAR_DIM || bar_width,
-        flexDirection: (handle_pos === 'left' || handle_pos === 'right') && 'column' || 'row'
-      },
-      cn: 'ed-anchor-handle-resize',
-      onMouseDown: function(e) {
-        setResizeStartPos([e.clientX, e.clientY, props.size[0], props.size[1]]);
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
-      }
-    });
-  }
-  return h('div', {
-    style: {
-      top: 0,
-      left: 0,
-      zIndex: z_index,
-      width: (resize_start_pos || drag_start_pos) && '100vw' || void 0,
-      height: (resize_start_pos || drag_start_pos) && '100vh' || void 0
-    },
-    cn: classnames__WEBPACK_IMPORTED_MODULE_1___default()('ed-anchor', drag_start_pos && 'ed-anchor-drag', resize_start_pos && 'ed-anchor-resize'),
-    ref: anchor_ref,
-    onMouseMove: function(e) {
-      var self_x, self_y, set_height;
-      if (resize_start_pos) {
-        if (!is_dragging) {
-          setDragging(true);
-        }
-        // self_width = resize_start_pos[2]+e.clientX-resize_start_pos[0]
-        if (snap_bot) {
-          self_height = Math.max(0, resize_start_pos[3] - e.clientY + resize_start_pos[1]);
-        } else {
-          self_height = Math.max(0, resize_start_pos[3] + e.clientY - resize_start_pos[1]);
-        }
-        
-        // max_height = maxHeight(context,self_height)
-        set_height = Object(_Align__WEBPACK_IMPORTED_MODULE_3__["clampHeight"])(context, self_height);
-        
-        // if set_height - max_height
-
-        // if self_height != set_height
-        props.setSize(0, set_height);
-        e.stopPropagation();
-        e.preventDefault();
-        return false;
-      } else if (drag_start_pos) {
-        if (!is_dragging) {
-          setDragging(true);
-        }
-        self_x = drag_start_pos[2] + e.clientX - drag_start_pos[0];
-        self_y = drag_start_pos[3] + e.clientY - drag_start_pos[1];
-        props.setPosition(self_x, self_y);
-        if (!props.visible) {
-          props.onBarClick();
-        }
-        e.stopPropagation();
-        e.preventDefault();
-        return false;
-      }
-    },
-    onMouseUp: function(e) {
-      if (drag_start_pos !== void 0) {
-        setDragStartPos(void 0);
-        setDragging(false);
-        if (!is_dragging) {
-          props.onBarClick();
-        }
-        e.stopPropagation();
-        e.preventDefault();
-        return false;
-      } else if (resize_start_pos !== void 0) {
-        setResizeStartPos(void 0);
-        setDragging(false);
-        if (!is_dragging) {
-          props.onBarClick();
-        }
-        e.stopPropagation();
-        e.preventDefault();
-        return false;
-      }
-    },
-    onMouseEnter: function() {
-      // log 'mouse enter'
-      return setZIndex(999);
-    },
-    onMouseLeave: function() {
-      setZIndex(0);
-      // log 'mouse leave'
-      if (drag_start_pos !== void 0) {
-        setDragStartPos(void 0);
-        setDragging(false);
-      }
-      if (resize_start_pos !== void 0) {
-        setResizeStartPos(void 0);
-        return setDragging(false);
-      }
-    }
-  }, h('div', {
-    cn: 'ed-anchor-handle',
-    style: {
-      top: bar_top,
-      left: bar_left,
-      height: bar_height,
-      width: bar_width,
-      flexDirection: (handle_pos === 'left' || handle_pos === 'right') && 'column' || 'row',
-      background: props.barColor || 'black'
-    },
-    onMouseDown: function(e) {
-      setDragStartPos([e.clientX, e.clientY, props.position[0], props.position[1]]);
-      e.stopPropagation();
-      e.preventDefault();
-      return false;
-    }
-  }, (function() {
-    var j, ref2, results;
-    results = [];
-    for (i = j = 0, ref2 = props.dotCount || 1; (0 <= ref2 ? j < ref2 : j > ref2); i = 0 <= ref2 ? ++j : --j) {
-      results.push(h('div', {
-        cn: 'ed-anchor-dot',
-        key: i,
-        style: {
-          background: props.dotColor || 'white',
-          width: dot_width,
-          height: dot_height
-        }
-      }));
-    }
-    return results;
-  })()), resize_bar, content);
-};
-
-/* harmony default export */ __webpack_exports__["default"] = (MenuAnchor);
 
 
 /***/ }),
@@ -2002,7 +2082,7 @@ module.exports = content.locals || {};
 /*!*********************************!*\
   !*** ./components/index.coffee ***!
   \*********************************/
-/*! exports provided: Box, In, Layout, Menu, Section, Separator, MenuAnchor */
+/*! exports provided: Box, In, Layout, Menu, Section, Separator, Anchor */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2027,8 +2107,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Separator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Separator */ "./components/Separator.coffee");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Separator", function() { return _Separator__WEBPACK_IMPORTED_MODULE_6__["default"]; });
 
-/* harmony import */ var _MenuAnchor__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./MenuAnchor */ "./components/MenuAnchor.coffee");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MenuAnchor", function() { return _MenuAnchor__WEBPACK_IMPORTED_MODULE_7__["default"]; });
+/* harmony import */ var _Anchor__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Anchor */ "./components/Anchor.coffee");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Anchor", function() { return _Anchor__WEBPACK_IMPORTED_MODULE_7__["default"]; });
 
 
 
@@ -2062,7 +2142,7 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, ".noselect {\n  -webkit-touch-callout: none;\n  /* iOS Safari */\n  -webkit-user-select: none;\n  /* Safari */\n  -khtml-user-select: none;\n  /* Konqueror HTML */\n  -moz-user-select: none;\n  /* Old versions of Firefox */\n  -ms-user-select: none;\n  /* Internet Explorer/Edge */\n  user-select: none;\n  /* Non-prefixed version, currently\n                                  supported by Chrome, Edge, Opera and Firefox */\n}\n.ed-layout {\n  z-index: 100;\n  text-rendering: optimizeSpeed;\n  line-height: 95%;\n  font-family: 'DM Mono', monospace;\n  font-size: 0.85em;\n  color: #ffffff;\n  position: fixed;\n  top: 0px;\n  left: 0px;\n  width: 100%;\n  height: 100%;\n  overflow: hidden;\n  pointer-events: none;\n}\n.ed-layout * {\n  pointer-events: all;\n  box-sizing: border-box;\n}\n.ed-layout-dragging {\n  pointer-events: all;\n  cursor: ew-resize;\n}\n.ed-layout-dragging * {\n  pointer-events: none !important;\n}\n.ed-full-w {\n  width: 100%;\n}\n.ed-flex-left,\n.ed-input-wrap {\n  display: flex;\n  flex-wrap: wrap;\n  position: relative;\n  flex-direction: row-reverse;\n  align-items: center;\n  justify-content: flex-end;\n}\n.ed-flex-right,\n.ed-in-wrap {\n  display: flex;\n  position: relative;\n  flex-direction: row;\n  align-items: center;\n  justify-content: flex-start;\n}\n.ed-flex-down {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  justify-content: flex-start;\n}\n.ed-in-wrap {\n  font-size: 0.9em;\n  width: 100%;\n  padding: 0px 0.425em;\n  min-height: 1.6em;\n  flex-wrap: nowrap;\n  margin-bottom: 0.255em;\n}\n.ed-in-wrap.ed-in-half {\n  width: 50%;\n}\n.ed-in-wrap.ed-tight {\n  min-height: 1em;\n}\n.ed-in-wrap:last-child {\n  margin-bottom: 0px;\n}\n.ed-in-wrap-toggle-input {\n  width: auto;\n  flex-shrink: 0;\n}\n.ed-in-wrap-toggle-label {\n  width: auto;\n}\n.ed-input-wrap {\n  width: 150%;\n}\n.ed-input-wrap.ed-in-half {\n  width: fit-content;\n}\n.ed-in-label {\n  width: 100%;\n  margin-left: 0.4em;\n  color: #c8c8c8;\n  white-space: normal;\n  text-align: -webkit-left;\n  align-items: flex-start;\n  justify-content: flex-start;\n  word-break: break-all;\n}\n.ed-in-label-colon {\n  color: #c8c8c8;\n}\ninput:disabled {\n  color: #c8c8c8 !important;\n  -webkit-user-select: none !important;\n  user-select: none !important;\n  cursor: default !important;\n}\n.ed-input {\n  width: inherit;\n  line-height: 1.6em;\n  height: 1.6em;\n  font-family: 'DM Mono', monospace;\n  -webkit-appearance: none;\n  outline: none;\n  color: #ffffff;\n  background-color: #141414;\n  border: none;\n  border-radius: none;\n  padding: 0px 0.425em;\n}\n.ed-input-plain {\n  background-color: #1e1e1e;\n}\n.ed-toggle-outer {\n  width: 1.6em;\n  cursor: pointer;\n  height: 1.6em;\n  background-color: #141414;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.ed-toggle-outer .ed-toggle-inner {\n  width: 12px;\n  height: 12px;\n  border-radius: 6px;\n  background-color: #2a2a2a;\n}\n.ed-toggle-outer .ed-toggle-inner.ed-toggle-active {\n  background: #ffffff;\n}\n.ed-box-title {\n  padding: 0.425em;\n  padding-bottom: 0.2125em;\n  font-weight: 800;\n  text-align: center;\n  display: flex;\n  color: white;\n  align-items: flex-start;\n  justify-content: flex-start;\n  flex-direction: row;\n  width: 100%;\n  z-index: 1;\n  background: #2a2a2a;\n  text-transform: uppercase !important;\n}\n.ed-box-title * {\n  white-space: pre;\n}\n.ed-box-title .ed-in-label-colon {\n  color: #c8c8c8;\n}\n.ed-box-title-sticky {\n  position: sticky;\n  top: 0px;\n}\n.ed-box-content {\n  display: flex;\n  align-self: start;\n  justify-content: start;\n  flex-direction: row;\n  flex-wrap: wrap;\n  padding-bottom: 0.85em;\n}\n.ed-scroll::-webkit-scrollbar {\n  -webkit-appearance: none;\n  background-color: #141414;\n  width: 4px;\n  height: 4px;\n  border-radius: 0px;\n}\n.ed-scroll::-webkit-scrollbar-corner {\n  background-color: #141414;\n}\n.ed-scroll::-webkit-scrollbar-thumb {\n  border-radius: 0px;\n  background-color: #7F7F7F;\n}\n.ed-scroll::-webkit-scrollbar-thumb:hover {\n  background-color: #8F8F8F;\n}\n.ed-box {\n  background-color: #2a2a2a;\n  color: #ffffff;\n  position: fixed;\n  width: 320px;\n  flex-wrap: nowrap;\n}\n.ed-box.ed-scroll {\n  overflow-y: scroll;\n  overflow-x: hidden;\n  width: 324px;\n}\n.ed-box .ed-description {\n  padding: 0px 0.425em;\n  font-size: 0.8em;\n  color: #ebebeb;\n  margin: 0.425em 0px;\n  margin-top: 0px;\n  white-space: normal;\n}\n.ed-menu-child-wrapper {\n  position: relative;\n  left: -100%;\n  top: 12px;\n}\n.ed-menu {\n  color: #ffffff;\n  flex-wrap: nowrap;\n  width: fit-content;\n  height: fit-content;\n  position: fixed;\n}\n.ed-menu.ed-scroll {\n  overflow-y: scroll;\n  overflow-x: hidden;\n}\n.ed-menu.ed-flex-down > .ed-menu-item {\n  width: -webkit-fill-available;\n  height: auto;\n}\n.ed-menu.ed-flex-right > .ed-menu-item {\n  height: -webkit-fill-available;\n  width: auto;\n}\n.ed-menu .ed-menu-labels {\n  background-color: #2a2a2a;\n}\n.ed-menu .ed-menu-item-label {\n  white-space: pre;\n  width: -webkit-fill-available;\n  height: 1.6em;\n  text-transform: uppercase;\n  display: flex;\n  align-items: center;\n  color: #ebebeb;\n  background: none;\n  border: none;\n  outline: none;\n  font: inherit;\n  padding: none;\n  cursor: pointer;\n}\n.ed-menu .ed-menu-item-label.ed-selected {\n  background-color: #141414;\n  color: #ffffff;\n}\n.ed-menu .ed-menu-item-label:hover {\n  color: #ffffff;\n}\n.ed-menu .ed-menu-item {\n  position: relative;\n}\n.ed-menu.ed-menu-alt > .ed-menu-labels > .ed-menu-item-label {\n  background-color: #141414;\n}\n.ed-menu.ed-menu-alt > .ed-menu-labels > .ed-menu-item-label.ed-selected {\n  background-color: #2a2a2a;\n}\n.ed-hidden {\n  visibility: hidden;\n}\n.ed-range-outer {\n  height: 1.6em;\n  width: 100%;\n  background: #141414;\n  position: relative;\n  cursor: ew-resize;\n}\n.ed-range-outer .ed-range-slider {\n  width: 6.5px;\n  height: 1.6em;\n  background: #ffffff;\n}\n.ed-range-outer .ed-range-slider.ed-active {\n  background: #ffffff;\n}\n.ed-range-outer .ed-range-value {\n  position: absolute;\n  left: 14px;\n  top: 50%;\n  transform: translate(0%, -50%);\n}\n.ed-range-outer .ed-range-value.ed-range-value-snap {\n  right: 8px;\n  left: initial;\n}\n.ed-range-outer .ed-range-value.ed-range-value-left {\n  right: 14px;\n  left: initial;\n}\n.ed-range-outer .ed-range-value.ed-range-value-left.ed-range-value-snap {\n  left: 8px;\n  right: initial;\n}\n.ed-button {\n  outline: none;\n  -webkit-appearance: none;\n  border: none;\n  cursor: pointer;\n  width: 100%;\n  height: 1.6em;\n  background: #141414;\n  color: #ebebeb;\n}\n.ed-button:hover {\n  color: #ffffff;\n}\n.ed-color-box {\n  position: relative;\n  -webkit-appearance: none;\n  width: 3.2em;\n  height: 1.6em;\n  flex-shrink: 0;\n  cursor: pointer;\n  margin-right: 0.255em;\n  border: 3px solid black;\n}\n.ed-color-box .ed-color-box-input {\n  visibility: visible;\n  opacity: 0;\n  cursor: pointer;\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  padding: 0px;\n  left: 0px;\n  top: 0px;\n}\n.ed-value-box {\n  width: 100%;\n  height: 1.6em;\n  background-color: #2a2a2a;\n  margin-left: 0.153em;\n  line-height: 1.6em;\n  padding: 0px 0.425em;\n}\n.ed-section {\n  margin: 0.425em 0px;\n  padding: 0.425em 0px;\n  position: relative;\n  border-top: 1px solid rgba(150, 150, 150, 0.3);\n  border-bottom: 1px solid rgba(150, 150, 150, 0.3);\n}\n.ed-section-title {\n  min-height: 1.6em;\n  cursor: pointer;\n  white-space: pre;\n  font-weight: 800;\n  width: 100%;\n  padding: 0px 0.425em;\n  text-transform: uppercase;\n}\n.ed-section-label-toggle-off {\n  cursor: default;\n}\n.ed-section-label-toggle {\n  font-size: 0.85em;\n  width: 100%;\n  padding-right: 0.425em;\n  display: flex;\n  color: #c8c8c8;\n  flex-direction: column;\n  align-items: flex-end;\n  justify-content: flex-end;\n}\n.ed-section-label-toggle.ed-section-label-toggle-active {\n  color: #ebebeb;\n}\n.ed-section-end-label {\n  padding: 0.425em;\n  display: flex;\n  width: 100%;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n}\n.ed-input-select {\n  width: 100%;\n  outline: none;\n  -webkit-appearance: none;\n  height: 24px;\n  cursor: pointer;\n  padding: 0px 0.425em;\n  border: none;\n  color: #ffffff;\n  background: #141414;\n}\n.ed-input-select-arrow {\n  position: absolute;\n  right: 14px;\n  color: #c8c8c8;\n  font-family: monospace;\n}\n.ed-separator {\n  margin-top: 0.53333333em;\n  border-bottom: 1px solid rgba(150, 150, 150, 0.3);\n  height: 0px;\n  width: 100%;\n  margin-bottom: 0.8em;\n}\n.ed-line-chart {\n  width: 100%;\n  height: 80px;\n  background: #141414;\n}\n.ed-line-chart-wrap {\n  flex-direction: column;\n  align-content: flex-start;\n  justify-content: flex-start;\n  align-items: flex-start;\n}\n.ed-line-chart-wrap canvas {\n  cursor: ew-resize;\n  width: 100%;\n  height: 100%;\n}\n.ed-line-chart-label {\n  padding: 0.425em 0px;\n}\n.ed-anchor {\n  display: flex;\n  flex-direction: row;\n  position: fixed;\n}\n.ed-anchor .ed-anchor-handle {\n  position: fixed;\n  background: black;\n  cursor: move;\n  display: flex;\n  justify-content: center;\n  align-content: center;\n  align-items: center;\n}\n.ed-anchor .ed-anchor-handle .ed-anchor-dot {\n  margin: 0.26666667em;\n  pointer-events: none;\n  background: white;\n  width: 0.26666667em;\n  height: 0.26666667em;\n}\n.ed-anchor .ed-anchor-handle-resize {\n  width: 0.8em;\n  height: 0.8em;\n  background: black;\n  position: absolute;\n  cursor: ns-resize;\n  top: 0;\n  left: 0;\n  z-index: 1;\n}\n.ed-anchor.ed-anchor-drag {\n  pointer-events: all;\n  cursor: move;\n}\n.ed-anchor.ed-anchor-drag * {\n  pointer-events: none !important;\n}\n.ed-anchor.ed-anchor-resize {\n  pointer-events: all;\n  cursor: ns-resize;\n}\n.ed-anchor.ed-anchor-resize * {\n  pointer-events: none !important;\n}\n", ""]);
+exports.push([module.i, ".noselect {\n  -webkit-touch-callout: none;\n  /* iOS Safari */\n  -webkit-user-select: none;\n  /* Safari */\n  -khtml-user-select: none;\n  /* Konqueror HTML */\n  -moz-user-select: none;\n  /* Old versions of Firefox */\n  -ms-user-select: none;\n  /* Internet Explorer/Edge */\n  user-select: none;\n  /* Non-prefixed version, currently\n                                  supported by Chrome, Edge, Opera and Firefox */\n}\n.ed-layout {\n  z-index: 100;\n  text-rendering: optimizeSpeed;\n  line-height: 95%;\n  font-family: 'DM Mono', monospace;\n  font-size: 0.85em;\n  color: #ffffff;\n  position: fixed;\n  top: 0px;\n  left: 0px;\n  width: 100%;\n  height: 100%;\n  overflow: hidden;\n  pointer-events: none;\n}\n.ed-layout * {\n  pointer-events: all;\n  box-sizing: border-box;\n}\n.ed-layout-dragging {\n  pointer-events: all;\n  cursor: ew-resize;\n}\n.ed-layout-dragging * {\n  pointer-events: none !important;\n}\n.ed-full-w {\n  width: 100%;\n}\n.ed-flex-left,\n.ed-input-wrap {\n  display: flex;\n  flex-wrap: wrap;\n  position: relative;\n  flex-direction: row-reverse;\n  align-items: center;\n  justify-content: flex-end;\n}\n.ed-flex-right,\n.ed-in-wrap {\n  display: flex;\n  position: relative;\n  flex-direction: row;\n  align-items: center;\n  justify-content: flex-start;\n}\n.ed-flex-down {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  justify-content: flex-start;\n}\n.ed-in-wrap {\n  font-size: 0.9em;\n  width: 100%;\n  padding: 0px 0.425em;\n  min-height: 1.6em;\n  flex-wrap: nowrap;\n  margin-bottom: 0.255em;\n}\n.ed-in-wrap.ed-in-half {\n  width: 50%;\n}\n.ed-in-wrap.ed-tight {\n  min-height: 1em;\n}\n.ed-in-wrap:last-child {\n  margin-bottom: 0px;\n}\n.ed-in-wrap-toggle-input {\n  width: auto;\n  flex-shrink: 0;\n}\n.ed-in-wrap-toggle-label {\n  width: auto;\n}\n.ed-input-wrap {\n  width: 150%;\n}\n.ed-input-wrap.ed-in-half {\n  width: fit-content;\n}\n.ed-in-label {\n  width: 100%;\n  margin-left: 0.4em;\n  color: #c8c8c8;\n  white-space: normal;\n  text-align: -webkit-left;\n  align-items: flex-start;\n  justify-content: flex-start;\n  word-break: break-all;\n}\n.ed-in-label-colon {\n  color: #c8c8c8;\n}\ninput:disabled {\n  color: #c8c8c8 !important;\n  -webkit-user-select: none !important;\n  user-select: none !important;\n  cursor: default !important;\n}\n.ed-input {\n  width: inherit;\n  line-height: 1.6em;\n  height: 1.6em;\n  font-family: 'DM Mono', monospace;\n  -webkit-appearance: none;\n  outline: none;\n  color: #ffffff;\n  background-color: #141414;\n  border: none;\n  border-radius: none;\n  padding: 0px 0.425em;\n}\n.ed-input-plain {\n  background-color: #1e1e1e;\n}\n.ed-toggle-outer {\n  width: 1.6em;\n  cursor: pointer;\n  height: 1.6em;\n  background-color: #141414;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.ed-toggle-outer .ed-toggle-inner {\n  width: 12px;\n  height: 12px;\n  border-radius: 6px;\n  background-color: #2a2a2a;\n}\n.ed-toggle-outer .ed-toggle-inner.ed-toggle-active {\n  background: #ffffff;\n}\n.ed-box-title {\n  padding: 0.425em;\n  padding-bottom: 0.2125em;\n  font-weight: 800;\n  text-align: center;\n  display: flex;\n  color: white;\n  align-items: flex-start;\n  justify-content: flex-start;\n  flex-direction: row;\n  width: 100%;\n  z-index: 1;\n  background: #2a2a2a;\n  text-transform: uppercase !important;\n}\n.ed-box-title * {\n  white-space: pre;\n}\n.ed-box-title .ed-in-label-colon {\n  color: #c8c8c8;\n}\n.ed-box-title-sticky {\n  position: sticky;\n  top: 0px;\n}\n.ed-box-content {\n  display: flex;\n  align-self: start;\n  justify-content: start;\n  flex-direction: row;\n  flex-wrap: wrap;\n  padding-bottom: 0.85em;\n}\n.ed-scroll::-webkit-scrollbar {\n  -webkit-appearance: none;\n  background-color: #141414;\n  width: 4px;\n  height: 4px;\n  border-radius: 0px;\n}\n.ed-scroll::-webkit-scrollbar-corner {\n  background-color: #141414;\n}\n.ed-scroll::-webkit-scrollbar-thumb {\n  border-radius: 0px;\n  background-color: #7F7F7F;\n}\n.ed-scroll::-webkit-scrollbar-thumb:hover {\n  background-color: #8F8F8F;\n}\n.ed-box {\n  background-color: #2a2a2a;\n  color: #ffffff;\n  position: fixed;\n  width: 320px;\n  flex-wrap: nowrap;\n}\n.ed-box.ed-scroll {\n  overflow-y: scroll;\n  overflow-x: hidden;\n  width: 324px;\n}\n.ed-box .ed-description {\n  padding: 0px 0.425em;\n  font-size: 0.8em;\n  color: #ebebeb;\n  margin: 0.425em 0px;\n  margin-top: 0px;\n  white-space: normal;\n}\n.ed-menu-child-wrapper {\n  position: relative;\n  left: -100%;\n  top: 12px;\n}\n.ed-menu {\n  color: #ffffff;\n  flex-wrap: nowrap;\n  width: fit-content;\n  height: fit-content;\n  position: fixed;\n}\n.ed-menu.ed-scroll {\n  overflow-y: scroll;\n  overflow-x: hidden;\n}\n.ed-menu.ed-flex-down > .ed-menu-item {\n  width: -webkit-fill-available;\n  height: auto;\n}\n.ed-menu.ed-flex-right > .ed-menu-item {\n  height: -webkit-fill-available;\n  width: auto;\n}\n.ed-menu .ed-menu-labels {\n  background-color: #2a2a2a;\n}\n.ed-menu .ed-menu-item-label {\n  white-space: pre;\n  width: -webkit-fill-available;\n  height: 1.6em;\n  text-transform: uppercase;\n  display: flex;\n  align-items: center;\n  color: #ebebeb;\n  background: none;\n  border: none;\n  outline: none;\n  font: inherit;\n  padding: none;\n  cursor: pointer;\n}\n.ed-menu .ed-menu-item-label.ed-selected {\n  background-color: #141414;\n  color: #ffffff;\n}\n.ed-menu .ed-menu-item-label:hover {\n  color: #ffffff;\n}\n.ed-menu .ed-menu-item {\n  position: relative;\n}\n.ed-menu.ed-menu-alt > .ed-menu-labels > .ed-menu-item-label {\n  background-color: #141414;\n}\n.ed-menu.ed-menu-alt > .ed-menu-labels > .ed-menu-item-label.ed-selected {\n  background-color: #2a2a2a;\n}\n.ed-hidden {\n  visibility: hidden;\n}\n.ed-range-outer {\n  height: 1.6em;\n  width: 100%;\n  background: #141414;\n  position: relative;\n  cursor: ew-resize;\n}\n.ed-range-outer .ed-range-slider {\n  width: 6.5px;\n  height: 1.6em;\n  background: #ffffff;\n}\n.ed-range-outer .ed-range-slider.ed-active {\n  background: #ffffff;\n}\n.ed-range-outer .ed-range-value {\n  position: absolute;\n  left: 14px;\n  top: 50%;\n  transform: translate(0%, -50%);\n}\n.ed-range-outer .ed-range-value.ed-range-value-snap {\n  right: 8px;\n  left: initial;\n}\n.ed-range-outer .ed-range-value.ed-range-value-left {\n  right: 14px;\n  left: initial;\n}\n.ed-range-outer .ed-range-value.ed-range-value-left.ed-range-value-snap {\n  left: 8px;\n  right: initial;\n}\n.ed-button {\n  outline: none;\n  -webkit-appearance: none;\n  border: none;\n  cursor: pointer;\n  width: 100%;\n  height: 1.6em;\n  background: #141414;\n  color: #ebebeb;\n}\n.ed-button:hover {\n  color: #ffffff;\n}\n.ed-color-box {\n  position: relative;\n  -webkit-appearance: none;\n  width: 3.2em;\n  height: 1.6em;\n  flex-shrink: 0;\n  cursor: pointer;\n  margin-right: 0.255em;\n  border: 3px solid black;\n}\n.ed-color-box .ed-color-box-input {\n  visibility: visible;\n  opacity: 0;\n  cursor: pointer;\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  padding: 0px;\n  left: 0px;\n  top: 0px;\n}\n.ed-value-box {\n  width: 100%;\n  height: 1.6em;\n  background-color: #2a2a2a;\n  margin-left: 0.153em;\n  line-height: 1.6em;\n  padding: 0px 0.425em;\n}\n.ed-section {\n  margin: 0.425em 0px;\n  padding: 0.425em 0px;\n  position: relative;\n  border-top: 1px solid rgba(150, 150, 150, 0.3);\n  border-bottom: 1px solid rgba(150, 150, 150, 0.3);\n}\n.ed-section-title {\n  min-height: 1.6em;\n  cursor: pointer;\n  white-space: pre;\n  font-weight: 800;\n  width: 100%;\n  padding: 0px 0.425em;\n  text-transform: uppercase;\n}\n.ed-section-label-toggle-off {\n  cursor: default;\n}\n.ed-section-label-toggle {\n  font-size: 0.85em;\n  width: 100%;\n  padding-right: 0.425em;\n  display: flex;\n  color: #c8c8c8;\n  flex-direction: column;\n  align-items: flex-end;\n  justify-content: flex-end;\n}\n.ed-section-label-toggle.ed-section-label-toggle-active {\n  color: #ebebeb;\n}\n.ed-section-end-label {\n  padding: 0.425em;\n  display: flex;\n  width: 100%;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n}\n.ed-input-select {\n  width: 100%;\n  outline: none;\n  -webkit-appearance: none;\n  height: 24px;\n  cursor: pointer;\n  padding: 0px 0.425em;\n  border: none;\n  color: #ffffff;\n  background: #141414;\n}\n.ed-input-select-arrow {\n  position: absolute;\n  right: 14px;\n  color: #c8c8c8;\n  font-family: monospace;\n}\n.ed-separator {\n  margin-top: 0.53333333em;\n  border-bottom: 1px solid rgba(150, 150, 150, 0.3);\n  height: 0px;\n  width: 100%;\n  margin-bottom: 0.8em;\n}\n.ed-line-chart {\n  width: 100%;\n  height: 80px;\n  background: #141414;\n}\n.ed-line-chart-wrap {\n  flex-direction: column;\n  align-content: flex-start;\n  justify-content: flex-start;\n  align-items: flex-start;\n}\n.ed-line-chart-wrap canvas {\n  cursor: ew-resize;\n  width: 100%;\n  height: 100%;\n}\n.ed-line-chart-label {\n  padding: 0.425em 0px;\n}\n.ed-anchor {\n  display: flex;\n  flex-direction: row;\n  position: fixed;\n}\n.ed-anchor .ed-anchor-handle {\n  position: fixed;\n  background: black;\n  cursor: move;\n  display: flex;\n  justify-content: center;\n  align-content: center;\n  align-items: center;\n}\n.ed-anchor .ed-anchor-handle .ed-anchor-dot {\n  margin: 0.26666667em;\n  pointer-events: none;\n  background: white;\n  width: 0.26666667em;\n  height: 0.26666667em;\n}\n.ed-anchor .ed-anchor-handle-resize {\n  width: 0.8em;\n  height: 0.8em;\n  background: black;\n  position: absolute;\n  top: 0;\n  left: 0;\n  z-index: 1;\n}\n.ed-anchor.ed-anchor-drag {\n  pointer-events: all;\n  cursor: move;\n}\n.ed-anchor.ed-anchor-drag * {\n  pointer-events: none !important;\n}\n.ed-anchor.ed-anchor-resize {\n  pointer-events: all;\n}\n.ed-anchor.ed-anchor-resize * {\n  pointer-events: none !important;\n}\n", ""]);
 // Exports
 module.exports = exports;
 
