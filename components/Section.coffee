@@ -14,7 +14,7 @@ Section = (props,state)->
 		h 'div',
 			className: cn 'ed-section-title ed-flex-right noselect',!props.visible? && 'ed-section-label-toggle-off'
 			onClick: (e)->
-				props.set?(!props.visible)
+				props.onClick(!props.visible)
 			h 'div',
 				className: 'ed-section-label ed-flex-right ed-full-w'
 				h 'div',

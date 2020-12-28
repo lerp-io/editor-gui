@@ -147,6 +147,7 @@ input:disabled{
 	width: inherit;
 	line-height: @dim;
 	height: @dim;
+	font-size: inherit;
 	font-family: @mainfont;
 	-webkit-appearance: none;
 	outline: none;
@@ -171,9 +172,9 @@ input:disabled{
 	align-items: center;
 	justify-content: center;
 	.ed-toggle-inner{
-		width: 12px;
-		height: 12px;
-		border-radius: 6px;
+		width: @dim/2;
+		height: @dim/2;
+		border-radius: @dim/2;
 		background-color: @bg1;
 		&.ed-toggle-active{
 			background: @color1;
@@ -402,6 +403,7 @@ input:disabled{
 .ed-button{
 	outline: none;
 	-webkit-appearance: none;
+	font: inherit;
 	border: none;
 	cursor: pointer;
 	width: 100%;

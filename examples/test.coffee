@@ -98,6 +98,7 @@ export default test = ()->
 	h Layout,
 		# getLabelWidth: (label)->
 		# 	label.length * 8.15
+		waitForFontLoad: yes
 		fontSize: font_size
 		fontFamily: 'Inconsolata'
 		

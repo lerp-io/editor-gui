@@ -2,7 +2,7 @@ import {createElement,useState,useEffect,useRef} from 'react'
 h = createElement
 import cn from 'classnames'
 import LayoutContext from './LayoutContext'
-
+import waitForFontLoad from './waitForFontLoad.js'
 
 
 Layout = (props,state)->
@@ -13,15 +13,30 @@ Layout = (props,state)->
 	canvas_ref = useRef()
 	[is_dragging,isDragging] = useState(false)
 	[force_update_t,forceUpdate] = useState(0)
+	[font_loaded,setFontLoaded] = useState(null)
+
+	css_font = props.fontSize+'px '+props.fontFamily
 
 	useEffect ()->
-		# log 'new mea'
+		# log 'WAIT FOR WEB FONTS',props.waitForWebfonts
+		if props.waitForFontLoad
+			# log 'WAIT FOR WEB FONTS',props.fontFamily
+			waitForFontLoad(css_font).then ()->
+				# log 'FONT LOADED'
+				setFontLoaded(props.fontFamily)
+		return
+	,[props.fontFamily]
+
+
+	useEffect ()->
+		# log 'SET MEASURE TEXT CANVAS',font_loaded
 		measure_text.current = new Map
 		can_el = document.createElement("canvas")
 		canvas_ref.current = can_el.getContext("2d")
-		canvas_ref.current.font = props.fontSize+'px '+props.fontFamily
+		canvas_ref.current.font = css_font
 		return
-	,[props.fontFamily,props.fontSize]
+	,[props.fontFamily,props.fontSize,win_size,font_loaded]
+
 
 	useEffect ()->
 		view_rect = layout_ref.current.getBoundingClientRect()
@@ -29,21 +44,17 @@ Layout = (props,state)->
 			depth: 0
 			dim: props.fontSize * 1.6
 			wpad: props.fontSize * .4
-			# paddingLeft: props.fontSize * .6
 			root: yes
 			selected_label: 'root'
 			view_rect: view_rect
 			getLabelWidth: getLabelWidth
 			stopDrag: stopDrag
-			forceUpdate: _forceUpdate
+			font_loaded: font_loaded
 			startDrag: startDrag
 
-	,[props.fontFamily,props.fontSize,win_size]
+	,[props.fontFamily,props.fontSize,win_size,font_loaded]
 
-	_forceUpdate = ()->
-		log 'force update'
-		forceUpdate(force_update_t+1)
-	
+
 	startDrag = (onDrag,onDragEnd,onMouseOut)->
 		isDragging(true)
 		layout_ref.current.addEventListener('mousemove',onDrag)
@@ -61,12 +72,13 @@ Layout = (props,state)->
 		ctx = canvas_ref.current
 		text_width = measure_text.current.get(label)
 		if text_width?
+			# log 'GET SAVED LABEL WIDTH',text_width
 			return text_width
 		else
-			# log 'measure text'
-			# log props.fontSize
+			# log 'measure text',props.fontSize,text_width,win_size
 			text_width = ctx.measureText(label).width
 			measure_text.current.set(label,text_width)
+			# log 'GET NEW LABEL WIDTH',text_width
 			return text_width
 
 

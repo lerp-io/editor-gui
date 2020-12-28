@@ -148,6 +148,7 @@ import AnchorMD from '../components/Anchor.md'
 import About from '../About.md'
 
 
+
 COMPONENTS =
 	Layout: 
 		md: LayoutMD
@@ -166,12 +167,13 @@ COMPONENTS =
 
 
 
-
 # EXAMPLES
 import TestExampleMD from '../examples/test.md'
 import TestExample from '../examples/test.coffee'
 import TestExampleCoffee from '!raw-loader!../examples/test.coffee'
 import TestExampleJS from '!raw-loader!../examples/test.js'
+
+
 
 EXAMPLES =
 	"Demo":
@@ -188,6 +190,7 @@ EXAMPLES =
 ---------------------------------------------------------------
 ###
 # import Demo from './demo'
+
 
 
 main = ->
@@ -237,7 +240,6 @@ main = ->
 				h 'div',
 					cn: 'text'
 					h Markdown,{},About
-			
 			h NavBarSection,
 				nav_key: 'examples'
 				render_examples
