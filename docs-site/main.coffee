@@ -6,14 +6,14 @@ import {createElement,useState,useEffect,useRef,useReducer} from 'react'
 import {render} from 'react-dom'
 import {Layout,In,Box,Menu,Section,SectionLabel,Style,Separator} from '../components'
 
-import gfm from 'remark-gfm'
+# import gfm from 'remark-gfm'
 
 global.h = createElement
 global.log = console.log.bind(console)
 
-import Markdown from 'react-markdown'
 import {NavBar,NavBarSection} from './NavBar.coffee'
 
+import {MDXProvider} from '@mdx-js/react'
 import hljs from 'highlight.js/lib/core';
 import javascript from 'highlight.js/lib/languages/javascript'
 import coffeescript from 'highlight.js/lib/languages/coffeescript'
@@ -24,9 +24,7 @@ import 'highlight.js/styles/monokai-sublime.css'
 
 
 Mark = (md)->
-	h Markdown,
-		plugins:[gfm]
-		md
+	h MDXProvider,{},h md
 
 
 
@@ -75,8 +73,6 @@ renderSourceCodeView = (props)->
 				cn: 'lang-select-button '+(code_type == 'coffee' && 'select'||'')
 				onClick: setCodeType.bind(null,if code_type == 'coffee' then undefined else 'coffee')
 				'.coffee'
-			
-		
 		code
 
 
@@ -239,7 +235,7 @@ main = ->
 				nav_key: 'about'
 				h 'div',
 					cn: 'text'
-					h Markdown,{},About
+					h MDXProvider,{},h About
 			h NavBarSection,
 				nav_key: 'examples'
 				render_examples

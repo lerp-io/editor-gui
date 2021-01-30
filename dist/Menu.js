@@ -25,7 +25,7 @@ import {
 } from './Align';
 
 Menu = function(props) {
-  var align_key, autoDeselect, context, label_keys, label_widths, labels, max_label_width, menu_ref, new_height, offset_x, offset_y, overflow_y, ref, scroll_top, selected_child, selected_label_index, selected_label_x, selected_label_y, self_context, self_height, self_width, self_x, self_y, style, total_label_height, total_label_width, vert, x, y;
+  var align_key, autoDeselect, context, label_keys, label_widths, labels, max_label_width, menu_ref, new_height, offset_x, offset_y, overflow_y, ref, ref1, ref2, scroll_top, selected_child, selected_label_index, selected_label_x, selected_label_y, self_context, self_height, self_width, self_x, self_y, style, total_label_height, total_label_width, vert;
   context = useContext(LayoutContext);
   if (props.autoDeselect != null) {
     autoDeselect = props.autoDeselect;
@@ -52,8 +52,6 @@ Menu = function(props) {
   if (!context) {
     return null;
   }
-  
-  // log 'PASSED DOWN CONTEXT',context.selected_label,context
   label_keys = Object.keys(props.items);
   max_label_width = 0;
   total_label_width = 0;
@@ -75,6 +73,7 @@ Menu = function(props) {
       selected_label_x = total_label_width;
     }
     width = context.getLabelWidth(key);
+    // log 'get label width',key,width,context.wpad*2,context.dim
     if (width > max_label_width) {
       max_label_width = width;
     }
@@ -100,9 +99,11 @@ Menu = function(props) {
     align_key = props.align;
   } else {
     // log 'FORCE ALIGN FOR ',context.selected_label,' : ',align_key
-    align_key = guessAlign(self_width, self_height, context);
+    self_x = ((ref1 = props.position) != null ? ref1[0] : void 0) || context.x || 0;
+    self_y = ((ref2 = props.position) != null ? ref2[1] : void 0) || context.y || 0;
+    align_key = guessAlign(self_width, self_height, context, self_x, self_y);
     // log 'GUESSED ALIGN FOR ',context.selected_label,' : ',align_key
-    [x, y] = getPosition(self_width, self_height, context, align_key);
+    // [x,y] = getPosition(self_width,self_height,context,align_key)
     align_key = fixAlign(align_key, context, self_width, self_height);
   }
   // log 'FIX ALIGN FOR ',context.selected_label,' : ',align_key
@@ -110,8 +111,8 @@ Menu = function(props) {
     self_x = props.position[0];
     self_y = props.position[1];
   } else if (context.root) {
-    self_x = context.x;
-    self_y = context.y;
+    self_x = context.x || 0;
+    self_y = context.y || 0;
   } else {
     [self_x, self_y] = getPosition(self_width, self_height, context, align_key);
     [offset_x, offset_y] = clampPosition(context, self_x, self_y, self_width, self_height, align_key);
@@ -119,7 +120,7 @@ Menu = function(props) {
     self_y += offset_y;
   }
   style = {};
-  style.overflowY = overflow_y;
+  style.overflowY = overflow_y && 'scroll';
   style.zIndex = props.select && 666 || 1;
   style.zIndex += self_context.depth;
   style.left = self_x + 'px';
@@ -155,13 +156,14 @@ Menu = function(props) {
         return null;
       }
       label = child.label || key;
+      // log context.wpad
       if (child.onClick || child.onSelect) {
         return h('div', {
           key: key,
           className: cn('ed-menu-item-label', props.select === key && 'ed-selected', 'noselect'),
           style: {
-            paddingLeft: context.paddingLeft,
-            minWidth: label_widths[i]
+            paddingLeft: context.wpad,
+            width: label_widths[i]
           },
           onClick: child.onClick || child.onSelect
         }, label);
@@ -184,7 +186,7 @@ Menu = function(props) {
         title: title,
         style: {
           minWidth: label_widths[i],
-          paddingLeft: context.paddingLeft
+          paddingLeft: context.wpad
         },
         onClick: props.onSelect && (function(e) {
           if (e.target.title !== title) {

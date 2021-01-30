@@ -1,1 +1,1 @@
-no props, basically just <hr>
+no props, basically just `<hr>`

@@ -8,7 +8,7 @@ import {clampPosition,getPosition,fixAlign,guessAlign,clampHeight,clampWidth} fr
 h = createElement
 
 MIN_HEIGHT = 50
-MIN_WIDTH = 320
+MIN_WIDTH = 300
 BAR_DIM = 12
 REBAR_DIM = 4
 

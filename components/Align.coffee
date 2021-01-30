@@ -1,5 +1,5 @@
 MIN_HEIGHT = 10
-MIN_WIDTH = 320
+MIN_WIDTH = 300
 BAR_DIM = 12
 REBAR_DIM = 4
 #neveragain

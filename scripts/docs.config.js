@@ -23,19 +23,26 @@ var cfg = {
 				test: /\.coffee$/,
 				use: ['coffee-loader']
 			},
-			{ test: /\.(xml|html|txt|md|glsl|svg)$/, loader: "raw-loader" },
+			{
+				test: /\.(mdx|md)?$/,
+				use: ['babel-loader', '@mdx-js/loader']
+			},
+			{ test: /\.(xml|html|txt|glsl|svg)$/, loader: "raw-loader" },
 			{ test: /\.less$/, use: ['style-loader','css-loader','less-loader']},
 			{ test: /\.(css)$/, exclude: /^(https?:)?\/\//, use: ['style-loader','css-loader'] },
-			{ test: /\.(woff|woff2|eot|ttf|png)$/,loader: 'url-loader?limit=65000' }
+			{ test: /\.(woff|woff2|eot|ttf|png)$/,loader: 'url-loader' }
 		]
 	},
+
+	externals: {},
 
 	entry: {
 		docs: path.join(__dirname,'..','/docs-site/main.coffee')
 	},
 	
 	resolve: {
-		extensions: [ '.js', '.coffee' , '.tsx', '.ts' ]
+		extensions: [ '.js', '.coffee' , '.tsx', '.ts' ],
+		fallback: { "path": false}
 	},
 
 	output: {
@@ -48,7 +55,19 @@ var cfg = {
 		host: 'localhost',
 		port: 3234,
 		disableHostCheck: true
-		// host: 'localhost'
 	}
 }
+
+if(process.env.NODE_ENV == 'production'){
+	Object.assign(cfg.externals,{
+		'react':'React',
+		'react-dom':'ReactDOM',
+		'lodash':'_',
+		'config': JSON.stringify({env:'production'})
+	})
+}else{
+	Object.assign(cfg.externals)
+}
+
+
 module.exports = cfg;

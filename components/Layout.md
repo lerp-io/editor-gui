@@ -5,5 +5,3 @@ The layout component is the main wrapper component which holds the context for c
 |---|---|---|---|
 | fontFamily  | ✅ | string  | which font to use |
 | fontSize  | ✅ | number  | font size in pixels |
-
-s

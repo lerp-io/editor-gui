@@ -13,7 +13,7 @@ import Section from './Section';
 
 import Separator from './Separator';
 
-import MenuAnchor from './MenuAnchor';
+import Anchor from './Anchor';
 
 export {
   Box,
@@ -22,7 +22,7 @@ export {
   Menu,
   Section,
   Separator,
-  MenuAnchor
+  Anchor
 };
 
 //# sourceMappingURL=index.js.map

@@ -27,7 +27,7 @@ Section = function(props, state) {
   }, section_bar, h('div', {
     className: cn('ed-section-title ed-flex-right noselect', (props.visible == null) && 'ed-section-label-toggle-off'),
     onClick: function(e) {
-      return typeof props.set === "function" ? props.set(!props.visible) : void 0;
+      return props.onClick(!props.visible);
     }
   }, h('div', {
     className: 'ed-section-label ed-flex-right ed-full-w'

@@ -31,8 +31,7 @@ Menu = (props)->
 
 	if !context
 		return null
-	
-	# log 'PASSED DOWN CONTEXT',context.selected_label,context
+
 
 	label_keys = Object.keys(props.items)
 	max_label_width = 0

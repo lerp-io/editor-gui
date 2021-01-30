@@ -13,14 +13,15 @@ var cfg = {
 			{ test: /\.(xml|html|txt|md|glsl|svg)$/, loader: "raw-loader" },
 			{ test: /\.less$/, use: ['style-loader','css-loader','less-loader']},
 			{ test: /\.(css)$/, exclude: /^(https?:)?\/\//, use: ['style-loader','css-loader'] },
-			{ test: /\.(woff|woff2|eot|ttf|png)$/,loader: 'url-loader?limit=65000' }
+			{ test: /\.(woff|woff2|eot|ttf|png)$/,loader: 'url-loader' }
 		]
 	},
 	entry: {
 		index: "./components/index.coffee",
 	},
 	resolve: {
-		extensions: [ '.js', '.coffee' ]
+		extensions: [ '.js', '.coffee' ],
+		fallback: { "path": false}
 	},
 	externals: ["react","react-dom","classnames","color"],
 	output: {

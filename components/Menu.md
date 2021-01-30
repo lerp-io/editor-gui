@@ -1,5 +1,6 @@
 The Menu component contains object of items instead of children which are rendered as labels and can be clicked to render boxes, open submenus, or trigger actions.
 
+
 ### Menu Props
 | name | required? | type | description  |
 |---|---|---|---|
@@ -11,8 +12,10 @@ The Menu component contains object of items instead of children which are render
 | items  | ✅ | {} | object with items **(view item object props below)** and their keys to be rendered in the menu.   |
 
 
+
 ### Menu Item Object Props
 items can be 
+
 | name | required? | type | description  |
 |---|---|---|---|
 | label | | the menu item label.
