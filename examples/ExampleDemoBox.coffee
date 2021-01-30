@@ -263,7 +263,7 @@ export default ExampleDemoBox = ()->
 			h Section,
 				label: 'some section'
 				visible: section_visible_a
-				set: setSectionVisibleA
+				# onClick: setSectionVisibleA
 				h In,
 					type: 'button'
 					value: 'hello 2'
@@ -277,7 +277,7 @@ export default ExampleDemoBox = ()->
 			h Section,
 				label: 'some other section'
 				visible: section_visible_b
-				set: setSectionVisibleB
+				onClick: setSectionVisibleB
 				h In,
 					type: 'button'
 					value: 'hello 2'

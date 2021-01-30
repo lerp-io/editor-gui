@@ -259,8 +259,8 @@ export default ExampleDemoBox = function() {
       set: setValColorB
     }), h(Section, {
       label: 'some section',
-      visible: section_visible_a,
-      set: setSectionVisibleA
+      visible: section_visible_a
+    // onClick: setSectionVisibleA
     }, h(In, {
       type: 'button',
       value: 'hello 2',
@@ -275,7 +275,7 @@ export default ExampleDemoBox = function() {
     })), h(Section, {
       label: 'some other section',
       visible: section_visible_b,
-      set: setSectionVisibleB
+      onClick: setSectionVisibleB
     }, h(In, {
       type: 'button',
       value: 'hello 2',

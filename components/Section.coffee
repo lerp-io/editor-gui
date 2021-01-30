@@ -14,17 +14,17 @@ Section = (props,state)->
 		h 'div',
 			className: cn 'ed-section-title ed-flex-right noselect',!props.visible? && 'ed-section-label-toggle-off'
 			onClick: (e)->
-				props.onClick(!props.visible)
+				props.onClick?(!props.visible)
 			h 'div',
 				className: 'ed-section-label ed-flex-right ed-full-w'
 				h 'div',
 					className: 'ed-in-label-colon ed-pre'
 					'# '
 				props.label
-				props.visible? && (h 'div',
+				props.onClick && (props.visible? && (h 'div',
 					className: cn 'ed-section-label-toggle',props.visible == true || !props.visible? && 'ed-section-label-toggle-active'
 					(props.visible == true && ' ▲' || ' ▼')
-				) || null
+				) || null)
 		(props.visible == true || !props.visible?) && (h 'div',
 			className: 'ed-section-content ed-flex-down ed-full-w'
 			props.children
