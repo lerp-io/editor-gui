@@ -20,6 +20,8 @@ import {
   Separator
 } from '../components';
 
+import '../components/Style.less';
+
 h = createElement;
 
 menuToggleReducerState = {};
