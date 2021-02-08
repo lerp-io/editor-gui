@@ -9,9 +9,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/lerp-io/re-lui.git"
+    "url": "git+ssh://git@github.com/lerp-io/editor-gui.git"
   },
-  "homepage": "https://lerp-io.github.io/re-lui/",
+  "homepage": "https://lerp-io.github.io/editor-gui/",
   "author": "",
   "license": "MIT",
   "devDependencies": {
