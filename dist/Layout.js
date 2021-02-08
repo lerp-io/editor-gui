@@ -14,7 +14,7 @@ import cn from 'classnames';
 
 import LayoutContext from './LayoutContext';
 
-import waitForFontLoad from './waitForFontLoad.js';
+import waitForFontLoad from '../lib/waitForFontLoad.js';
 
 Layout = function(props, state) {
   var canvas_ref, context, css_font, font_loaded, forceUpdate, force_update_t, getLabelWidth, isDragging, is_dragging, layout_ref, measure_text, setContext, setFontLoaded, setWinSize, startDrag, stopDrag, win_size;

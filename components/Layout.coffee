@@ -2,7 +2,7 @@ import {createElement,useState,useEffect,useRef} from 'react'
 h = createElement
 import cn from 'classnames'
 import LayoutContext from './LayoutContext'
-import waitForFontLoad from './waitForFontLoad.js'
+import waitForFontLoad from '../lib/waitForFontLoad.js'
 
 
 Layout = (props,state)->
