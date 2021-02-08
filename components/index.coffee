@@ -1,5 +1,3 @@
-import './Style.less'
-
 import Layout from './Layout'
 import Menu from './Menu'
 import Box from './Box'

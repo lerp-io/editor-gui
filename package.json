@@ -1,12 +1,11 @@
 {
   "name": "editor-gui",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "basic react web ui components",
   "main": "./dist/index.js",
   "scripts": {
     "dev": "coffee -c -b -w --output ./examples/ ./examples/*.coffee & NODE_ENV=development webpack serve --config ./scripts/docs.config.js --mode development",
-    "prod": "coffee -cmw --output ./dist/ ./components & coffee -c -b --output ./examples/ ./examples/*.coffee && NODE_ENV=production webpack --config ./scripts/lib.config.js --progress --mode development && NODE_ENV=production webpack --config ./scripts/lib.config.js --progress --mode development && webpack --config ./scripts/docs.config.js --progress --mode production",
-    "lib": "coffee -cmw --output ./dist/ ./components & webpack --config ./scripts/lib.config.js --watch --progress --mode development"
+    "prod": "lessc components/Style.less > dist/style.css & coffee -cm --output ./dist/ ./components & coffee -c -b --output ./examples/ ./examples/*.coffee &&  webpack --config ./scripts/docs.config.js --progress --mode production"
   },
   "repository": {
     "type": "git",
