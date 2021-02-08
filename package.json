@@ -2,10 +2,10 @@
   "name": "editor-gui",
   "version": "0.2.2",
   "description": "basic react web ui components",
-  "main": "./components/index.coffee",
+  "main": "./dist/index.js",
   "scripts": {
     "dev": "coffee -c -b -w --output ./examples/ ./examples/*.coffee & NODE_ENV=development webpack serve --config ./scripts/docs.config.js --mode development",
-    "prod": "coffee -c -b --output ./examples/ ./examples/*.coffee && NODE_ENV=production webpack --config ./scripts/lib.config.js --progress --mode development && NODE_ENV=production webpack --config ./scripts/lib.config.js --progress --mode development && webpack --config ./scripts/docs.config.js --progress --mode production",
+    "prod": "coffee -cmw --output ./dist/ ./components & coffee -c -b --output ./examples/ ./examples/*.coffee && NODE_ENV=production webpack --config ./scripts/lib.config.js --progress --mode development && NODE_ENV=production webpack --config ./scripts/lib.config.js --progress --mode development && webpack --config ./scripts/docs.config.js --progress --mode production",
     "lib": "coffee -cmw --output ./dist/ ./components & webpack --config ./scripts/lib.config.js --watch --progress --mode development"
   },
   "repository": {
@@ -16,7 +16,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@babel/preset-react": "^7.12.10",
+    "@babel/preset-react": "^7.12.13",
     "@mdx-js/loader": "^1.6.22",
     "babel-loader": "^8.2.2",
     "classnames": "^2.2.6",
@@ -26,8 +26,8 @@
     "css": "^3.0.0",
     "css-loader": "^5.0.1",
     "highlight.js": "^10.5.0",
-    "less": "^4.1.0",
-    "less-loader": "^7.3.0",
+    "less": "^4.1.1",
+    "less-loader": "^8.0.0",
     "mini-css-extract-plugin": "^1.3.5",
     "normalize.css": "^8.0.1",
     "parse-color": "^1.0.0",
@@ -39,9 +39,9 @@
     "remark-gfm": "^1.0.0",
     "string-replace-loader": "^3.0.1",
     "style-loader": "^2.0.0",
-    "ts-loader": "^8.0.14",
-    "webpack": "^5.19.0",
-    "webpack-cli": "^4.4.0",
+    "ts-loader": "^8.0.15",
+    "webpack": "^5.21.2",
+    "webpack-cli": "^4.5.0",
     "webpack-dev-server": "^3.11.2"
   },
   "peerDependencies": {
@@ -52,6 +52,6 @@
     "react-dom": "^17.0.1"
   },
   "dependencies": {
-    "@babel/preset-env": "^7.12.11"
+    "@babel/preset-env": "^7.12.13"
   }
 }

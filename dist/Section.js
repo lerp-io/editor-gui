@@ -27,15 +27,15 @@ Section = function(props, state) {
   }, section_bar, h('div', {
     className: cn('ed-section-title ed-flex-right noselect', (props.visible == null) && 'ed-section-label-toggle-off'),
     onClick: function(e) {
-      return props.onClick(!props.visible);
+      return typeof props.onClick === "function" ? props.onClick(!props.visible) : void 0;
     }
   }, h('div', {
     className: 'ed-section-label ed-flex-right ed-full-w'
   }, h('div', {
     className: 'ed-in-label-colon ed-pre'
-  }, '# '), props.label, (props.visible != null) && (h('div', {
+  }, '# '), props.label, props.onClick && ((props.visible != null) && (h('div', {
     className: cn('ed-section-label-toggle', props.visible === true || (props.visible == null) && 'ed-section-label-toggle-active')
-  }, props.visible === true && ' ▲' || ' ▼')) || null)), (props.visible === true || (props.visible == null)) && (h('div', {
+  }, props.visible === true && ' ▲' || ' ▼')) || null))), (props.visible === true || (props.visible == null)) && (h('div', {
     className: 'ed-section-content ed-flex-down ed-full-w'
   }, props.children)) || null);
 };
