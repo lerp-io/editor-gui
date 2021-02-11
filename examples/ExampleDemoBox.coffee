@@ -304,9 +304,18 @@ export default ExampleDemoBox = ()->
 					xBounds: [0,chart_data.length]
 					xRange: 40
 					yRange: [0,150]
+					colors: ['red','green','yellow']
 					step: 1
-					getY: (x)->
-						chart_data[x]
+					getY: [
+						
+						(x)->
+							chart_data[x]
+						(x)->
+							chart_data[x]-5
+						(x)->
+							chart_data[x]-30+10*Math.sin(x)
+						
+					]
 				h In,
 					type: 'line-chart'
 					label: 'line chart'
@@ -316,8 +325,14 @@ export default ExampleDemoBox = ()->
 					xRange: 10
 					yRange: [-2,2]
 					step: 1
-					getY: (x)->
-						Math.sin(x)
+					colors: ['magenta','cyan']
+					getY: [
+						(x)->
+							Math.sin(x)
+						(x)->
+							Math.cos(x)
+					]
+						
 			h In,
 				type: 'select'
 				set: (key,value)->

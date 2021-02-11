@@ -26,34 +26,44 @@ renderChart = (state,props)->
 	
 	# log x_min,'-',x_max
 	ctx.clearRect(0,0,rect.width,rect.height)
-	ctx.beginPath()
-	ctx.fillStyle = props.color || 'white'
-	ctx.strokeStyle = props.color || 'white'
-	ctx.lineWidth = 1
-
-	i = -1
-	while i < (x_length/step)
-		i += 1
-		x_val = x_min + (i * step)
-		y_val = props.getY(x_val)
-		if !y_val then continue
-		
-
-		r_left = rect.width/props.xRange * (i * step - pan_diff) 
-		r_top = rect.height - (rect.height/y_range * (y_val - y_pan))
-		if props.chart_type == 'bar'
-			r_width = rect.width/props.xRange
-			r_height = (rect.height/y_range * y_val)
-			ctx.rect(r_left, r_top, r_width,r_height)
-		else if props.chart_type == 'line'
-			ctx.lineTo(r_left,r_top)
 	
-	# ctx.closePath()
+	colors = props.colors || []
 
-	if props.chart_type == 'bar'
-		ctx.fill()
-	else
-		ctx.stroke()
+	
+	
+	for j in [0...props.getY.length]
+		i = -1
+		ctx.beginPath()
+
+		ctx.fillStyle = colors[j] || 'white'
+		ctx.strokeStyle = colors[j] || 'white'
+		ctx.lineWidth = 1
+		# r_left = rect.width/props.xRange * (0 * step - pan_diff)
+		# r_top = rect.height - (rect.height/y_range * (y_val - y_pan))
+		
+		
+		while i < (x_length/step)
+			i += 1
+			x_val = x_min + (i * step)
+			y_val = props.getY[j](x_val)
+			if !y_val then continue
+			
+			r_left = rect.width/props.xRange * (i * step - pan_diff) 
+			r_top = rect.height - (rect.height/y_range * (y_val - y_pan))
+			if props.chart_type == 'bar'
+				r_width = rect.width/props.xRange
+				r_height = (rect.height/y_range * y_val)
+				ctx.rect(r_left, r_top, r_width,r_height)
+			else if props.chart_type == 'line'
+				# if i == 0
+				# 	ctx.moveTo(r_left,r_top)
+				ctx.lineTo(r_left,r_top)
+		
+		# ctx.closePath()
+		if props.chart_type == 'bar'
+			ctx.fill()
+		else
+			ctx.stroke()
 	
 
 

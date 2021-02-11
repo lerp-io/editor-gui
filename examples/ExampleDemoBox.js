@@ -304,10 +304,19 @@ export default ExampleDemoBox = function() {
       xBounds: [0, chart_data.length],
       xRange: 40,
       yRange: [0, 150],
+      colors: ['red', 'green', 'yellow'],
       step: 1,
-      getY: function(x) {
-        return chart_data[x];
-      }
+      getY: [
+        function(x) {
+          return chart_data[x];
+        },
+        function(x) {
+          return chart_data[x] - 5;
+        },
+        function(x) {
+          return chart_data[x] - 30 + 10 * Math.sin(x);
+        }
+      ]
     }), h(In, {
       type: 'line-chart',
       label: 'line chart',
@@ -317,9 +326,15 @@ export default ExampleDemoBox = function() {
       xRange: 10,
       yRange: [-2, 2],
       step: 1,
-      getY: function(x) {
-        return Math.sin(x);
-      }
+      colors: ['magenta', 'cyan'],
+      getY: [
+        function(x) {
+          return Math.sin(x);
+        },
+        function(x) {
+          return Math.cos(x);
+        }
+      ]
     })), h(In, {
       type: 'select',
       set: function(key, value) {
