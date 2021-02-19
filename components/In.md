@@ -5,7 +5,7 @@ Instead of splitting up the input into different components of each type, there 
 
 | name | required? | type | description  |
 |---|---|---|---|
-| type  | ✅ | string  | the type of component to add, one of plain/label/text/number, view the component types below for details on each one |
+| type  | ✅ | string  | the type of component to add, view the component types below for details on each one |
 | label  |   | string  | label to appear on right hand  |
 | disabled  |  | boolean  | if input is disabled or not |
 | value  |  | any  | value from set |

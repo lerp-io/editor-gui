@@ -1,6 +1,9 @@
-The layout component is the main wrapper component which holds the context for child menus. Its used internaly for anchoring, positioning, and calculating dimensions. Both font size and font family are required because the label widths and menu positions are dynamically calculated before the render happens.
+The `Anchor` component is a window manager for menus and boxes. It wraps around boxes and can be used to resize, hide, and snap boxes to the edge of the screen. Anchors can be moved around by dragging the thick bar. Anchors can also be resized in all 4 directions by hovering over 3 different sections of the narrow bar.
 
-### Anchor Props
+You can also set custom colors and dots to help you quickly visually identify which anchors are used for what.
+
+---
+## Anchor Component Properties:
 | name | required? | type | description  |
 |---|---|---|---|
 | position  | ✅ | array[number]  | [x,y] position array |

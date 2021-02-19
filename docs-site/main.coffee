@@ -23,6 +23,7 @@ hljs.registerLanguage('coffeescript', coffeescript)
 import 'highlight.js/styles/monokai-sublime.css'
 
 
+
 Mark = (md)->
 	h MDXProvider,{},h md
 
@@ -141,7 +142,7 @@ import MenuMD from '../components/Menu.md'
 import SectionMD from '../components/Section.md'
 import SeparatorMD from '../components/Separator.md'
 import AnchorMD from '../components/Anchor.md'
-import About from '../About.md'
+import About from '../README.md'
 
 
 
@@ -224,6 +225,12 @@ main = ->
 			h Component,
 				name: name
 				md: comp.md
+
+	
+	useEffect ()->
+		document.querySelectorAll('pre code').forEach (block)->
+			hljs.highlightBlock(block)
+	,[]
 
 
 	h 'div',

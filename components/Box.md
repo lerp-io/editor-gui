@@ -1,4 +1,4 @@
-The `Box` component contains a collection of input components, sections, seperators, or optional custom dom children.
+The `Box` component acts as a container for a collection of input components such as inputs, sections, separators, charts, or other optional or custom elements.
 
 ### Box Props
 | name | required? | type | description  |
