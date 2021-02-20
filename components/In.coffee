@@ -293,28 +293,29 @@ In = (props)->
 				value: props.value
 		
 		when 'toggle'
+			triggerToggle = ()->
+				if props.commit || context.dispatch
+					dispatch
+						type: 'toggle'
+						value: !props.value
+				
+				if context.dispatch
+					context.dispatch
+						type: 'toggle'
+						value: !props.value
+				
+				if !props.commit && !context.commit && props.set
+					props.set(!props.value)
+			
 			input = h 'div',
 				className: 'ed-toggle-outer'
 				style:
 					backgroundColor: props.backgroundColor
-				onClick: ()->
-					if props.commit || context.dispatch
-						dispatch
-							type: 'toggle'
-							value: !props.value
-					
-					if context.dispatch
-						context.dispatch
-							type: 'toggle'
-							value: !props.value
-					
-					if !props.commit && !context.commit && props.set
-						props.set(!props.value)
 				h 'div',
 					className: cn 'ed-toggle-inner',props.value && 'ed-toggle-active'
 					style:
 						backgroundColor: props.value && props.valueColor || undefined
-		
+
 		when 'range'
 			if outer_range_ref.current
 				range_rect = outer_range_ref.current.getBoundingClientRect()
@@ -511,6 +512,7 @@ In = (props)->
 	if props.type == 'toggle' 
 		return h 'div',
 			className: cn 'ed-in-wrap','ed-in-wrap-toggle',props.half && 'ed-in-half'
+			onClick: triggerToggle
 			h 'div',
 				className: 'ed-in-wrap-toggle-input'
 				input
