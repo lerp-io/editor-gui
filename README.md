@@ -2,14 +2,9 @@
 
 > `npm install editor-gui`
 
-`editor-gui` is a simple react libray for quickly creating menus and editor panels
+**editor-gui** is a react javascript framework for dynamic editor type guis. It was inspired by other similar libraries such as *imgui* for c++, *dat.gui* for javascript, or *ofxDatgui* for open-frameworks.
 
-### [View Examples & Documentation](http://lerp-io.github.io/editor-gui)
-
----
-**editor-gui** is a react javascript framework built to easily create overlay menus and dynamic input fields for editor type guis. It was inspired by other similar libraries such as *imgui* for c++, *datgui* for javascript, or *ofxDatgui* for openframeworks.
-
-Use this library to help you build editor panels for **html5** canvas or **webgl** projects. Menus, Boxes, and Inputs are easy to create and will work well in any position of the screen.
+Use this library to help you build editor panels for your **HTML5** canvas or **WEBGL** projects. Menus, Boxes, and Inputs are easy to create and will work well in any position of the screen!
 
 
 ---
@@ -74,9 +69,12 @@ render = ->
 This library is designed to be used as a viewport overlay, hence all menus in are inherently `position:fixed` to the viewport. This means that you can't nest it inside a scrolling container or relative to other components in the DOM Tree. All of the examples are rendered inside an iframe container.
 
 
-### Components List:
+### All Components:
 
 - [Layout](https://github.com/lerp-io/editor-gui/blob/master/components/Layout.md)
 - [Anchor](https://github.com/lerp-io/editor-gui/blob/master/components/Anchor.md)
+- [Menu](https://github.com/lerp-io/editor-gui/blob/master/components/Menu.md)
 - [Box](https://github.com/lerp-io/editor-gui/blob/master/components/Box.md)
 - [In](https://github.com/lerp-io/editor-gui/blob/master/components/In.md)
+- [Section](https://github.com/lerp-io/editor-gui/blob/master/components/Section.md)
+- [Separator](https://github.com/lerp-io/editor-gui/blob/master/components/Separator.md)
