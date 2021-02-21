@@ -7,7 +7,9 @@
 ### [View Examples & Documentation](http://lerp-io.github.io/editor-gui)
 
 ---
-**editor-gui** is a react javascript framework built to easily create overlay menus and dynamic input fields for editor type guis. It was inspired by other similar libraries such as *imgui* and *datgui*. You can use this library to help you build editor panels for your html5 canvas or webgl projects. Menus, Boxes, and Inputs are easy to create and will work well in any position of the screen.
+**editor-gui** is a react javascript framework built to easily create overlay menus and dynamic input fields for editor type guis. It was inspired by other similar libraries such as *imgui* for c++, *datgui* for javascript, or *ofxDatgui* for openframeworks.
+
+Use this library to help you build editor panels for **html5** canvas or **webgl** projects. Menus, Boxes, and Inputs are easy to create and will work well in any position of the screen.
 
 
 ---

@@ -34,6 +34,9 @@ ExampleRecursiveMenu = (props)->
 		for i in [0...item_count]
 			items["#{menu_name}#{i}"] = renderRecursiveMenu.bind(null,"#{menu_name}#{i}",level+1)
 			items["#{menu_name}#{i}-box"] = renderBox
+			items["#{menu_name}#{i}-alert"] = 
+				onClick: ->
+					alert('test')
 
 
 		h Menu,

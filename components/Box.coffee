@@ -13,7 +13,8 @@ BAR_DIM = 12
 REBAR_DIM = 4
 
 Box = (props,state)->
-
+	context = useContext(LayoutContext)
+	
 	[visible,setVisible] = useState(false)
 	[dim_overflow,setDim] = useState([MIN_HEIGHT,0])
 	# [width_overflow,setWidth] = useState([MIN_WIDTH,0])
@@ -25,11 +26,6 @@ Box = (props,state)->
 	style = 
 		overflowY: dim_overflow[1]
 		overflowX: dim_overflow[3]
-	
-	context = useContext(LayoutContext)
-	self_context = 
-		startDrag: context.startDrag
-		stopDrag: context.stopDrag
 
 
 
@@ -64,6 +60,9 @@ Box = (props,state)->
 	if !context
 		return null
 
+	self_context = 
+		startDrag: context.startDrag
+		stopDrag: context.stopDrag
 
 	style.minHeight = MIN_HEIGHT
 	style.height = height

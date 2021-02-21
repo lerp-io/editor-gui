@@ -78,7 +78,7 @@ export default ExampleDemoBox = function() {
     return h(Box, {
       // top: no
       // top: yes
-      title: toggle_title && 'box title',
+      title: toggle_title && 'demo box title',
       stickyTitle: stick_title
     // description: 'this is some sort of test description with a semi long line of text!'
     // h In,
@@ -123,6 +123,7 @@ export default ExampleDemoBox = function() {
       type: 'text',
       label: 'val',
       // min: -10
+      disabled: true,
       // max: 10
       // step: 1
       value: val_text_a,
@@ -186,6 +187,7 @@ export default ExampleDemoBox = function() {
       type: 'range',
       label: 'copy of range A',
       value: val_range_a,
+      disabled: true,
       set: setValRangeA,
       toFixed: 3,
       min: 1,
@@ -298,9 +300,8 @@ export default ExampleDemoBox = function() {
       min: 1,
       max: 10
     }), h(In, {
-      type: 'line-chart',
+      type: 'bar-chart',
       label: 'bar chart',
-      chart_type: 'bar',
       xBounds: [0, chart_data.length],
       xRange: 40,
       yRange: [0, 150],
@@ -320,7 +321,6 @@ export default ExampleDemoBox = function() {
     }), h(In, {
       type: 'line-chart',
       label: 'line chart',
-      chart_type: 'line',
       color: 'cyan',
       xBounds: [-100, 100],
       xRange: 10,

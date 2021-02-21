@@ -20,6 +20,10 @@ var cfg = {
 				}
 			},
 			{
+				test: /\.svg$/,
+				use: ['@svgr/webpack']
+			},
+			{
 				test: /\.coffee$/,
 				use: ['coffee-loader']
 			},
@@ -27,7 +31,7 @@ var cfg = {
 				test: /\.(mdx|md)?$/,
 				use: ['babel-loader', '@mdx-js/loader']
 			},
-			{ test: /\.(xml|html|txt|glsl|svg)$/, loader: "raw-loader" },
+			{ test: /\.(xml|html|txt|glsl)$/, loader: "raw-loader" },
 			{ test: /\.less$/, use: ['style-loader','css-loader','less-loader']},
 			{ test: /\.(css)$/, exclude: /^(https?:)?\/\//, use: ['style-loader','css-loader'] },
 			{ test: /\.(woff|woff2|eot|ttf|png)$/,loader: 'url-loader' }

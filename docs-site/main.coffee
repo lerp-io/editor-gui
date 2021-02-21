@@ -101,14 +101,14 @@ Example = (props)->
 		h 'div',
 			cn: 'example-title'
 			props.title
-		h 'div',
-			cn: 'text example-markdown'
-			Mark(props.md)
-		
 		renderExample(props.component)
 		renderSourceCodeView
 			js: props.js_source
 			coffee: props.coffee_source
+		h 'div',
+			cn: 'text example-markdown'
+			Mark(props.md)
+		
 
 
 
@@ -142,7 +142,7 @@ import MenuMD from '../components/Menu.md'
 import SectionMD from '../components/Section.md'
 import SeparatorMD from '../components/Separator.md'
 import AnchorMD from '../components/Anchor.md'
-import About from '../README.md'
+import About from './README.md'
 
 
 
@@ -170,14 +170,29 @@ import TestExample from '../examples/test.coffee'
 import TestExampleCoffee from '!raw-loader!../examples/test.coffee'
 import TestExampleJS from '!raw-loader!../examples/test.js'
 
+import AnchorExampleMD from '../examples/anchor.md'
+import AnchorExample from '../examples/anchor.coffee'
+import AnchorExampleCoffee from '!raw-loader!../examples/anchor.coffee'
+import AnchorExampleJS from '!raw-loader!../examples/anchor.js'
+
+import ChartExampleMD from '../examples/chart.md'
+import ChartExample from '../examples/chart.coffee'
+import ChartExampleCoffee from '!raw-loader!../examples/chart.coffee'
+import ChartExampleJS from '!raw-loader!../examples/chart.js'
 
 
-EXAMPLES =
-	"Demo":
-		component: TestExample
-		coffee_source: TestExampleCoffee
-		js_source: TestExampleJS
-		md: TestExampleMD
+
+EXAMPLES = 
+	'Basic Anchor': 
+		component: AnchorExample
+		coffee_source: AnchorExampleCoffee
+		js_source: AnchorExampleJS
+		md: AnchorExampleMD
+	'Simple Line and Bar Charts': 
+		component: ChartExample
+		coffee_source: ChartExampleCoffee
+		js_source: ChartExampleJS
+		md: ChartExampleMD
 
 
 
@@ -188,7 +203,13 @@ EXAMPLES =
 ###
 # import Demo from './demo'
 
-
+import i_github from './github.svg'
+import i_help from './help-circle.svg'
+demo_example =
+	component: TestExample
+	coffee_source: TestExampleCoffee
+	js_source: TestExampleJS
+	md: TestExampleMD
 
 main = ->
 	[nav_select,selectNav] = useState(null)
@@ -198,7 +219,18 @@ main = ->
 		h 'span',
 			cn: 'banner-text-c'
 			'.js'
-		# h Demo
+		h 'div',
+			cn: 'header-icons'
+			h 'a',
+				cn: 'icon'
+				href: 'https://github.com/lerp-io/editor-gui'
+				h i_github
+			h 'a',
+				cn: 'icon'
+				href: 'https://ysid.dev/'
+				h i_help,
+					style:
+						stroke: 'grey'
 
 
 	render_examples = []
@@ -236,8 +268,10 @@ main = ->
 	h 'div',
 		cn: 'main'
 		header
+		renderExample(demo_example.component)
 		h NavBar,
 			select: nav_select
+			
 			h NavBarSection,
 				nav_key: 'about'
 				h 'div',

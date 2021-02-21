@@ -58,6 +58,11 @@ ExampleRecursiveMenu = function(props) {
     for (i = j = 0, ref = item_count; (0 <= ref ? j < ref : j > ref); i = 0 <= ref ? ++j : --j) {
       items[`${menu_name}${i}`] = renderRecursiveMenu.bind(null, `${menu_name}${i}`, level + 1);
       items[`${menu_name}${i}-box`] = renderBox;
+      items[`${menu_name}${i}-alert`] = {
+        onClick: function() {
+          return alert('test');
+        }
+      };
     }
     return h(Menu, {
       vert: props.vert != null ? props.vert : level % 2 === 1,

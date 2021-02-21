@@ -50,17 +50,17 @@ renderChart = (state,props)->
 			
 			r_left = rect.width/props.xRange * (i * step - pan_diff) 
 			r_top = rect.height - (rect.height/y_range * (y_val - y_pan))
-			if props.chart_type == 'bar'
+			if props.type == 'bar-chart'
 				r_width = rect.width/props.xRange
 				r_height = (rect.height/y_range * y_val)
 				ctx.rect(r_left, r_top, r_width,r_height)
-			else if props.chart_type == 'line'
+			else if props.type == 'line-chart'
 				# if i == 0
 				# 	ctx.moveTo(r_left,r_top)
 				ctx.lineTo(r_left,r_top)
 		
 		# ctx.closePath()
-		if props.chart_type == 'bar'
+		if props.type == 'bar-chart'
 			ctx.fill()
 		else
 			ctx.stroke()
@@ -277,35 +277,35 @@ In = (props)->
 					background: props.backgroundColor
 					color: props.valueColor
 				onChange: (e)->
-					if props.commit || context.dispatch
-						dispatch
-							type: props.type
-							value: e.target.value
+					# if props.commit || context.dispatch
+					# 	dispatch
+					# 		type: props.type
+					# 		value: e.target.value
 					
-					if context.dispatch
-						context.dispatch
-							type: props.type
-							value: e.target.value
+					# if context.dispatch
+					# 	context.dispatch
+					# 		type: props.type
+					# 		value: e.target.value
 					
-					if !props.commit && !context.commit && props.set
-						props.set(e.target.value)
+					# if !props.commit && !context.commit && props.set
+					props.set?(e.target.value)
 				
 				value: props.value
 		
 		when 'toggle'
 			triggerToggle = ()->
-				if props.commit || context.dispatch
-					dispatch
-						type: 'toggle'
-						value: !props.value
+				# if props.commit || context.dispatch
+				# 	dispatch
+				# 		type: 'toggle'
+				# 		value: !props.value
 				
-				if context.dispatch
-					context.dispatch
-						type: 'toggle'
-						value: !props.value
+				# if context.dispatch
+				# 	context.dispatch
+				# 		type: 'toggle'
+				# 		value: !props.value
 				
-				if !props.commit && !context.commit && props.set
-					props.set(!props.value)
+				# if props.set
+				props.set?(!props.value)
 			
 			input = h 'div',
 				className: 'ed-toggle-outer'
@@ -353,7 +353,7 @@ In = (props)->
 				style:
 					color: if props.valueColor? then props.valueColor else undefined 
 					backgroundColor: props.backgroundColor
-				onMouseDown: (e)->
+				onMouseDown: !props.disabled && (e)->
 					
 					slider_state_ref.current.cx = e.clientX 
 					old_value = null
@@ -448,8 +448,8 @@ In = (props)->
 						ref: input_ref
 						className: cn 'ed-color-box-input',(props.disabled && 'ed-disabled')
 						onChange: (e)->
-							if !context.commit && props.set
-								props.set(e.target.value)
+							# if !context.commit && props.set
+							props.set?(e.target.value)
 						type: 'color'
 
 				h 'input',
@@ -493,7 +493,7 @@ In = (props)->
 					className: 'ed-input-select-arrow'
 					'▼'
 						
-		when 'line-chart'
+		when 'line-chart','bar-chart'
 			input = h 'div',
 				className: 'ed-line-chart'
 				h LineChart,props
@@ -526,7 +526,7 @@ In = (props)->
 			input
 
 	h 'div',
-		className: cn 'ed-in-wrap',props.half && 'ed-in-half',props.type == 'plain' && 'ed-tight'
+		className: cn 'ed-in-wrap',props.half && 'ed-in-half',props.type == 'plain' && 'ed-tight',props.disabled && 'ed-in-disabled'
 		input_wrapper
 		label
 		props.children

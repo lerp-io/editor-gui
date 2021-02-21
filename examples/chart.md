@@ -1,0 +1,1 @@
+This example shows all the different things you can do with charts. Charts can be used for realtime data and are a handy tool.

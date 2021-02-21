@@ -102,9 +102,11 @@
 		margin-bottom: 0px;
 	}
 }
+
 .ed-in-wrap-toggle{
 	cursor: pointer;
 }
+
 .ed-in-wrap-toggle-input{
 	width: auto;
 	flex-shrink: 0;
@@ -144,6 +146,13 @@ input:disabled{
 	-webkit-user-select: none !important;
 	user-select: none !important;
 	cursor: default !important;
+}
+
+.ed-in-disabled{
+	*{
+		cursor: default !important;
+	}
+	
 }
 
 .ed-input{
@@ -250,7 +259,9 @@ input:disabled{
 }
 
 .ed-box{
-
+	text{
+		margin-left: 10px;
+	}
 	overflow-y: scroll;
 	&.ed-scroll{
 		overflow-y: scroll;

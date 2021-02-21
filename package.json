@@ -7,7 +7,7 @@
     "dev": "coffee -c -b -w --output ./examples/ ./examples/*.coffee & NODE_ENV=development webpack serve --config ./scripts/docs.config.js --mode development",
     "docs": "coffee -c -b --output ./examples/ ./examples/*.coffee && NODE_ENV=production webpack --config ./scripts/docs.config.js --progress --mode production",
     "lib": "NODE_ENV=production webpack --config ./scripts/lib.config.js --progress --mode production",
-    "prod":"npm run docs && npm run lib"
+    "prod": "npm run docs && npm run lib"
   },
   "repository": {
     "type": "git",
@@ -52,6 +52,7 @@
     "react-dom": "^17.0.1"
   },
   "dependencies": {
-    "@babel/preset-env": "^7.12.13"
+    "@babel/preset-env": "^7.12.13",
+    "@svgr/webpack": "^5.5.0"
   }
 }

@@ -72,7 +72,7 @@ export default ExampleDemoBox = ()->
 		h Box,
 			# top: no
 			# top: yes
-			title: toggle_title && 'box title'
+			title: toggle_title && 'demo box title'
 			stickyTitle: stick_title
 			# description: 'this is some sort of test description with a semi long line of text!'
 			# h In,
@@ -122,6 +122,7 @@ export default ExampleDemoBox = ()->
 				type: 'text'
 				label: 'val'
 				# min: -10
+				disabled: yes
 				# max: 10
 				# step: 1
 				value: val_text_a
@@ -175,6 +176,7 @@ export default ExampleDemoBox = ()->
 				backgroundColor: 'pink'
 				valueColor: 'black'
 				value: val_range_a
+				
 				set: setValRangeA
 				toFixed: 3
 				min: 1
@@ -186,6 +188,7 @@ export default ExampleDemoBox = ()->
 				type: 'range'
 				label: 'copy of range A'
 				value: val_range_a
+				disabled: yes
 				set: setValRangeA
 				toFixed: 3
 				min: 1
@@ -298,9 +301,8 @@ export default ExampleDemoBox = ()->
 					min: 1
 					max: 10
 				h In,
-					type: 'line-chart'
+					type: 'bar-chart'
 					label: 'bar chart'
-					chart_type: 'bar'
 					xBounds: [0,chart_data.length]
 					xRange: 40
 					yRange: [0,150]
@@ -319,7 +321,6 @@ export default ExampleDemoBox = ()->
 				h In,
 					type: 'line-chart'
 					label: 'line chart'
-					chart_type: 'line'
 					color: 'cyan'
 					xBounds: [-100,100]
 					xRange: 10
