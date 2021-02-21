@@ -109,7 +109,7 @@ LineChart = (props)->
 		# 	setTickStep(tick_step+1)
 		# ,100
 		return
-	,[tick_step,props.tick_step]
+	,[tick_step,props.tick_step,props.yRange[0],props.yRange[1],props.xRange,props.step,props.type,props.colors[0],props.colors[1],props.colors[2],props.colors[3],props.colors[4]]
 
 
 	if rect
@@ -501,7 +501,7 @@ In = (props)->
 			throw new Error 'invalid input type'
 	
 
-	if props.type == 'line-chart'
+	if props.type == 'line-chart' || props.type == 'bar-chart'
 		return h 'div',
 			className: 'ed-in-wrap ed-line-chart-wrap'
 			h 'div',

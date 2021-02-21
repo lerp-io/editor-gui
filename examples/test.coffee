@@ -21,7 +21,7 @@ export default test = ()->
 	[dim_2,setAnchor2Dim] = useState([250,250])
 
 
-	[anchor_pos,setAnchorPos] = useState([0,30])
+	[anchor_pos,setAnchorPos] = useState([window.innerWidth/2,30])
 	[anchor2_pos,setAnchor2Pos] = useState([6000,30])
 	[anchor3_pos,setAnchor3Pos] = useState([0,900])
 	

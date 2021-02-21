@@ -33,24 +33,20 @@ the type of input component you want to use.
 - **line-chart** : bar chart
 - **bar-chart** : line chart, same code as bar chart except renders as lines.
 
-Rendering charts is easy
+Rendering charts is pretty straight forward..
 ```coffeescript
 
 	h In,
-		type: 'line-chart'
-		xBounds: [-100,100] #chart viewport bounds in x direction
-		xRange: 10 #
-		yRange: [-2,2]
+		type: 'line-chart' # or 'bar-chart'
+		xBounds: [-100,100] #the x data bounds - the "x" argument in the getY callbacks.
+		xRange: 10 #the viewport x range ( basically width of data which is rendered )
+		yRange: [-2,2] #the min and max y range.
 		step: 1
-		colors: ['magenta','cyan']
+		colors: ['magenta','cyan'] #set your bar/line colors
 		getY: [
-			(x)->
+			(x)-> #callbacks for fetching your data
 				Math.sin(x)
-			(x)->
+			(x)-> #callbacks for fetching your data
 				Math.cos(x)
 		]
 ```
-
-#### props.label [string] 
-label for the input which will appear on the left side.
-

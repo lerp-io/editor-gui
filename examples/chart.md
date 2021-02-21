@@ -1,1 +1,1 @@
-This example shows all the different things you can do with charts. Charts can be used for realtime data and are a handy tool.
+This example shows all the different things you can do with `In` type `"line-chart"` and `"bar-chart"`. Charts can be used for realtime data and are a handy tool. If you want more features for charts or different types, just ask or make a pull request.
