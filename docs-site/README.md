@@ -1,8 +1,8 @@
-## A simple javascript component library for **react**.
+## react component library for editor guis & middleware
 
 ---
 
-> `npm install editor-gui`
+> npm install editor-gui
 
 ---
 
