@@ -1,7 +1,5 @@
 ## react component library for editor guis & middleware
 
----
-
 > npm install editor-gui
 
 ---
