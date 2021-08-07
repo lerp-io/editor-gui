@@ -9,17 +9,13 @@ NavBarContext = createContext
 
 renderNavTree = (set_key,props,offset,select,level,click)->
 	tree = []
-	# log 'render nav tree',set_key,tree_items
-	# log props
+
 	tree_items = props.children
 	scroll_top = props.top || 0
 	for key,child_props of tree_items
 		tree.push renderNavTree(key,child_props,offset,select,level+1)
 	
 	my_select = select.indexOf(set_key) >= 0
-
-	# log my_select
-	# log props
 
 	if set_key
 		return h 'div',
@@ -41,9 +37,7 @@ renderNavTree = (set_key,props,offset,select,level,click)->
 
 
 findNavKey = (tree,scrollY,select)->
-	# log tree
 	for key,it of tree
-		# log it.top,it.bot,scrollY
 		if scrollY < it.bot && scrollY >= it.top
 			select.push key
 			findNavKey(it.children,scrollY,select)

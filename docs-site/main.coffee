@@ -205,11 +205,13 @@ EXAMPLES =
 
 import i_github from './github.svg'
 import i_help from './help-circle.svg'
+
 demo_example =
 	component: TestExample
 	coffee_source: TestExampleCoffee
 	js_source: TestExampleJS
 	md: TestExampleMD
+
 
 main = ->
 	[nav_select,selectNav] = useState(null)
@@ -271,7 +273,6 @@ main = ->
 		renderExample(demo_example.component)
 		h NavBar,
 			select: nav_select
-			
 			h NavBarSection,
 				nav_key: 'about'
 				h 'div',

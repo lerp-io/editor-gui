@@ -161,7 +161,7 @@ Menu = (props)->
 					className: cn 'ed-menu-item-label',props.select == key && 'ed-selected','noselect'
 					style:
 						paddingLeft: context.wpad
-						width: label_widths[i]
+						minWidth: label_widths[i]
 					onClick: child.onClick || child.onSelect
 					label
 

@@ -28,7 +28,6 @@ Box = (props,state)->
 		overflowX: dim_overflow[3]
 
 
-
 	useEffect ()->
 		if content_ref.current
 
