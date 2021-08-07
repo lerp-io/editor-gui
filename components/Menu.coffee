@@ -67,7 +67,7 @@ Menu = (props)->
 	vert = props.vert
 
 	if vert
-		self_height = context.dim * label_keys.length
+		self_height = total_label_height
 		self_width = max_label_width+context.wpad*2
 	else
 		self_height = context.dim
@@ -88,7 +88,7 @@ Menu = (props)->
 		self_x = props.position?[0] || context.x || 0
 		self_y = props.position?[1] || context.y || 0
 		
-
+		
 		align_key = guessAlign(self_width,self_height,context,self_x,self_y)
 		# log 'GUESSED ALIGN FOR ',context.selected_label,' : ',align_key
 		# [x,y] = getPosition(self_width,self_height,context,align_key)

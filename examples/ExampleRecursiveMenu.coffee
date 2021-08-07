@@ -38,6 +38,11 @@ ExampleRecursiveMenu = (props)->
 				onClick: ->
 					alert('test')
 
+		# these should not render
+		items['null'] = null
+		items['undefined'] = undefined
+		
+
 
 		h Menu,
 			vert: if props.vert? then props.vert else level % 2 == 1

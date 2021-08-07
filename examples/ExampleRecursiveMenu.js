@@ -64,6 +64,9 @@ ExampleRecursiveMenu = function(props) {
         }
       };
     }
+    // these should not render
+    items['null'] = null;
+    items['undefined'] = void 0;
     return h(Menu, {
       vert: props.vert != null ? props.vert : level % 2 === 1,
       select: menu_state[menu_name],
