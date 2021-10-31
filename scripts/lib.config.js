@@ -29,7 +29,7 @@ var cfg = {
 			},
 			{
 				test: /\.(mdx|md)?$/,
-				use: ['babel-loader', '@mdx-js/loader']
+				use: [{loader:'babel-loader',options:{presets:['@babel/preset-react']}}, '@mdx-js/loader'],
 			},
 			{ test: /\.(xml|html|txt|glsl|svg)$/, loader: "raw-loader" },
 			{ test: /\.less$/, use: ['style-loader','css-loader','less-loader']},
