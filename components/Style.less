@@ -329,6 +329,7 @@ input:disabled{
 		background-color: @bg1;
 		// backdrop-filter: @blur;
 	}
+
 	.ed-menu-item-label{
 		white-space: pre;
 		// background-color: @bg1;
@@ -358,6 +359,26 @@ input:disabled{
 		}
 		
 	}
+
+	.ed-menu-item-box{
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: @color2;
+		background: none;
+		outline: none;
+		padding: 0px;
+		border: none;
+		*{
+			pointer-events: none;
+		}
+		&.ed-selected{
+			border: 3px solid;
+		}
+		
+	}
+
+
 	.ed-menu-item{
 		position: relative;
 	}

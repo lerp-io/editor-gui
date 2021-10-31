@@ -27,7 +27,7 @@ import ExampleRecursiveMenu from './ExampleRecursiveMenu.coffee';
 import ExampleDemoBox from './ExampleDemoBox.coffee';
 
 export default test = function() {
-  var anchor2_pos, anchor3_pos, anchor_pos, demo_box_color, demo_box_resize, demo_dot_color, demo_dot_count, dim_2, font_size, height_resize, is_mounted, menu_1_visible, menu_2_visible, menu_3_visible, renderBox2, setAnchor2Dim, setAnchor2Pos, setAnchor3Pos, setAnchorPos, setDemoBoxColor, setDemoDotColor, setDemoDotCount, setFontSize, setMenu1Visible, setMenu2Visible, setMenu3Visible, setMounted, setSize, setSnapThreshold, size, snap_threshold, toggleDemoBoxResize, toggleHeightResize, toggleWidthResize, width_resize;
+  var anchor2_pos, anchor3_pos, anchor4_pos, anchor_pos, demo_box_color, demo_box_resize, demo_dot_color, demo_dot_count, dim_2, font_size, height_resize, is_mounted, menu_1_visible, menu_2_visible, menu_3_visible, menu_4_visible, renderBox2, renderToolBox, selectToolBox, selectToolBox2, setAnchor2Dim, setAnchor2Pos, setAnchor3Pos, setAnchor4Pos, setAnchorPos, setDemoBoxColor, setDemoDotColor, setDemoDotCount, setFontSize, setMenu1Visible, setMenu2Visible, setMenu3Visible, setMenu4Visible, setMounted, setSize, setSnapThreshold, size, snap_threshold, toggleDemoBoxResize, toggleHeightResize, toggleWidthResize, tool_box_select, tool_box_select2, width_resize;
   [is_mounted, setMounted] = useState(false);
   [size, setSize] = useState(null);
   useEffect(function() {
@@ -37,11 +37,13 @@ export default test = function() {
   }, []);
   [menu_1_visible, setMenu1Visible] = useState(true);
   [menu_2_visible, setMenu2Visible] = useState(false);
-  [menu_3_visible, setMenu3Visible] = useState(false);
+  [menu_3_visible, setMenu3Visible] = useState(true);
+  [menu_4_visible, setMenu4Visible] = useState(true);
   [dim_2, setAnchor2Dim] = useState([250, 250]);
   [anchor_pos, setAnchorPos] = useState([window.innerWidth / 2, 30]);
   [anchor2_pos, setAnchor2Pos] = useState([6000, 30]);
   [anchor3_pos, setAnchor3Pos] = useState([0, 900]);
+  [anchor4_pos, setAnchor4Pos] = useState([400, 300]);
   [demo_box_resize, toggleDemoBoxResize] = useState(true);
   [demo_box_color, setDemoBoxColor] = useState('red');
   [demo_dot_color, setDemoDotColor] = useState('black');
@@ -50,6 +52,57 @@ export default test = function() {
   [snap_threshold, setSnapThreshold] = useState(20);
   [width_resize, toggleWidthResize] = useState(true);
   [height_resize, toggleHeightResize] = useState(true);
+  [tool_box_select, selectToolBox] = useState(void 0);
+  [tool_box_select2, selectToolBox2] = useState(void 0);
+  renderToolBox = function() {
+    return h(Menu, {
+      vert: true,
+      dim: 50,
+      onSelect: selectToolBox,
+      selectBorderColor: 'red',
+      select: tool_box_select,
+      items: {
+        edit: {
+          label: h('i', {
+            cn: 'fa-solid fa-hand'
+          })
+        },
+        select: {
+          label: h('i', {
+            cn: 'fa-solid fa-arrow-pointer'
+          }),
+          selectBorderColor: 'cyan'
+        },
+        layers: {
+          label: h('i', {
+            cn: 'fa-solid fa-layer-group'
+          }),
+          render: function() {
+            return h(Menu, {
+              vert: false,
+              dim: 50,
+              test: true,
+              selectBorderColor: 'yellow',
+              onSelect: selectToolBox2,
+              select: tool_box_select2,
+              items: {
+                edit: {
+                  label: h('i', {
+                    cn: 'fa-solid fa-hand'
+                  })
+                },
+                select: {
+                  label: h('i', {
+                    cn: 'fa-solid fa-arrow-pointer'
+                  })
+                }
+              }
+            });
+          }
+        }
+      }
+    });
+  };
   renderBox2 = function() {
     return h(Box, {
       title: 'edit demo box props'
@@ -170,5 +223,20 @@ export default test = function() {
     setPosition: function(x, y) {
       return setAnchor3Pos([x, y]);
     }
-  }, renderBox2()));
+  }, renderBox2()), h(Anchor, {
+    dotColor: 'black',
+    barColor: 'yellow',
+    autoHandlePosition: true,
+    autoSnapHandlePosition: true,
+    position: anchor4_pos,
+    visible: menu_4_visible,
+    resizeWidth: false,
+    resizeHeight: false,
+    onBarClick: function() {
+      return setMenu4Visible(!menu_4_visible);
+    },
+    setPosition: function(x, y) {
+      return setAnchor4Pos([x, y]);
+    }
+  }, renderToolBox()));
 };

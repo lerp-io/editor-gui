@@ -20,11 +20,13 @@ Menu = (props)->
 		autoDeselect = yes
 	
 	self_context = Object.assign {},context,{autoDeselect:autoDeselect,root:no,vert:props.vert,depth:context?.depth+1}
+	self_context.dim = props.dim || self_context.dim
+	if props.dim
+		self_context.squares = true
 	menu_ref = useRef()
 
 	useEffect ()->
 		return ()->
-			# log 'DECELECT'
 			if self_context.autoDeselect
 				props.onSelect?(undefined,undefined)
 	,[]
@@ -32,7 +34,7 @@ Menu = (props)->
 	if !context
 		return null
 
-
+	
 	label_keys = Object.keys(props.items)
 	max_label_width = 0
 	total_label_width = 0
@@ -40,14 +42,26 @@ Menu = (props)->
 	selected_label_y = 0
 	selected_label_x = 0
 	total_label_height = 0
+
+
 	label_widths = label_keys.map (key,i)->
-		
-		
-		if !props.items[key]
+
+		item = props.items[key]
+
+
+		if !item
 			return 0
 		
-		if props.items[key].label
-			key = props.items[key].label
+		if props.dim
+			if props.select == key
+				selected_label_index = i
+				selected_label_y = total_label_height
+				selected_label_x = total_label_width
+			total_label_width += self_context.dim
+			total_label_height += self_context.dim
+			max_label_width = self_context.dim
+			return self_context.dim
+
 		
 		if key == props.select
 			selected_label_index = i
@@ -59,18 +73,19 @@ Menu = (props)->
 		if width > max_label_width
 			max_label_width = width
 		
+		
 		total_label_width += width + context.wpad*2
-		total_label_height += context.dim
+		total_label_height += self_context.dim
 		return width + context.wpad*2
-	
+
 	
 	vert = props.vert
-
+	
 	if vert
 		self_height = total_label_height
-		self_width = max_label_width+context.wpad*2
+		self_width = props.dim || max_label_width+context.wpad*2
 	else
-		self_height = context.dim
+		self_height = props.dim || self_context.dim
 		self_width = total_label_width
 	
 	new_height = clampHeight(context,self_height)
@@ -107,8 +122,8 @@ Menu = (props)->
 		
 	else
 		[self_x,self_y] = getPosition(self_width,self_height,context,align_key)
-		
 		[offset_x,offset_y] = clampPosition(context,self_x,self_y,self_width,self_height,align_key)
+		
 		self_x += offset_x
 		self_y += offset_y
 
@@ -150,23 +165,33 @@ Menu = (props)->
 			child = props.items[key]
 			if !child
 				return null
-
+			# if child.render
+			# 	return h 'div',
+			# 		className: cn 'ed-menu-item-box',props.select == key && 'ed-selected','noselect'
+			# 		child.render()
 
 			label = child.label || key
 
-			# log context.wpad
+			if props.dim
+				label_style = 
+					width: props.dim
+					height: props.dim
+					borderColor: child.selectBorderColor || props.selectBorderColor
+			else
+				label_style = 
+					paddingLeft: context.wpad
+					minWidth: label_widths[i]
+
 			if child.onClick || child.onSelect
 				return h 'div',
 					key:key
-					className: cn 'ed-menu-item-label',props.select == key && 'ed-selected','noselect'
-					style:
-						paddingLeft: context.wpad
-						minWidth: label_widths[i]
+					className: cn props.dim && 'ed-menu-item-box','ed-menu-item-label',props.select == key && 'ed-selected','noselect'
+					style: label_style
 					onClick: child.onClick || child.onSelect
 					label
 
 			title = key+'-'+i
-			label_keys.push(key)
+			# label_keys.push(key)
 
 			if props.select == key
 				if (typeof child == 'function')
@@ -181,9 +206,7 @@ Menu = (props)->
 			return h 'button',
 				key:key
 				title: title
-				style:
-					minWidth: label_widths[i]
-					paddingLeft: context.wpad
+				style: label_style
 				onClick: props.onSelect && ( (e)->
 					if e.target.title != title
 						return
@@ -195,7 +218,7 @@ Menu = (props)->
 					e.preventDefault()
 					return false
 				) || undefined
-				className: cn 'ed-menu-item-label',props.select == key && 'ed-selected','noselect'
+				className: cn props.dim && 'ed-menu-item-box','ed-menu-item-label',props.select == key && 'ed-selected','noselect'
 				label
 
 

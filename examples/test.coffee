@@ -16,7 +16,8 @@ export default test = ()->
 
 	[menu_1_visible,setMenu1Visible] = useState(true)
 	[menu_2_visible,setMenu2Visible] = useState(false)
-	[menu_3_visible,setMenu3Visible] = useState(false)
+	[menu_3_visible,setMenu3Visible] = useState(true)
+	[menu_4_visible,setMenu4Visible] = useState(true)
 
 	[dim_2,setAnchor2Dim] = useState([250,250])
 
@@ -24,6 +25,8 @@ export default test = ()->
 	[anchor_pos,setAnchorPos] = useState([window.innerWidth/2,30])
 	[anchor2_pos,setAnchor2Pos] = useState([6000,30])
 	[anchor3_pos,setAnchor3Pos] = useState([0,900])
+	[anchor4_pos,setAnchor4Pos] = useState([400,300])
+	
 	
 	[demo_box_resize,toggleDemoBoxResize] = useState(true)
 
@@ -37,6 +40,48 @@ export default test = ()->
 
 	[width_resize,toggleWidthResize] = useState(true)
 	[height_resize,toggleHeightResize] = useState(true)
+
+	[tool_box_select,selectToolBox] = useState(undefined)
+	[tool_box_select2,selectToolBox2] = useState(undefined)
+
+
+	renderToolBox = ->
+		h Menu,
+			vert: yes
+			dim: 50
+			onSelect: selectToolBox
+			selectBorderColor: 'red'
+			select: tool_box_select
+			items: 
+				edit: 
+					label: h 'i',
+						cn: 'fa-solid fa-hand'
+				select:
+					label: h 'i',
+						cn: 'fa-solid fa-arrow-pointer'
+					selectBorderColor: 'cyan'
+				layers:
+					label: h 'i',
+						cn: 'fa-solid fa-layer-group'
+					render: ()->
+						h Menu,
+							vert: no
+							dim: 50
+							test: yes
+							selectBorderColor: 'yellow'
+							onSelect: selectToolBox2
+							select: tool_box_select2
+							items: 
+								edit: 
+									label: h 'i',
+										cn: 'fa-solid fa-hand'
+								select:
+									label: h 'i',
+										cn: 'fa-solid fa-arrow-pointer'
+								
+				
+				
+
 
 	renderBox2 = ->
 		h Box,
@@ -158,4 +203,22 @@ export default test = ()->
 			setPosition: (x,y)->
 				setAnchor3Pos([x,y])
 			renderBox2()
+		
+
+		h Anchor,
+			dotColor: 'black'
+			barColor: 'yellow'
+			autoHandlePosition: yes
+			autoSnapHandlePosition: yes
+			position: anchor4_pos
+			visible: menu_4_visible
+			resizeWidth: false
+			resizeHeight: false
+			onBarClick: ()->
+				setMenu4Visible(!menu_4_visible)
+			setPosition: (x,y)->
+				setAnchor4Pos([x,y])
+			renderToolBox()
 			
+
+		
