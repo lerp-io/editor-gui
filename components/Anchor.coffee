@@ -25,15 +25,19 @@ Anchor = (props)->
 	updateZIndex = (z_index)->
 		setZIndex(z_index)
 	
-	
+	# log 'UPDATE'
 	checkAnchorDim = ()->
 		if content_ref.current
 			rect = content_ref.current.children[0].getBoundingClientRect()
+			if props.size && (props.size[0] != rect.width ||  props.size[1] != rect.height)
+				# log props.size[0],rect.width
+				props.setSize?(rect.width,rect.height)
 			if dim.width != rect.width || dim.height != rect.height
 				setDim({
 					width: rect.width
 					height: rect.height
 				})
+
 	
 	useEffect ()->
 		checkAnchorDim()

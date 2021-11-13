@@ -27,6 +27,15 @@ Layout = (props,state)->
 		return
 	,[props.fontFamily]
 
+	useEffect ()->
+		if !context
+			onWindowResize = ->
+				setWinSize(window.innerWidth+'-'+window.innerHeight)
+			onWindowResize()
+			window.addEventListener 'resize',onWindowResize
+		return ()->
+			window.removeEventListener 'resize',onWindowResize
+	,[]
 
 	useEffect ()->
 		# log 'SET MEASURE TEXT CANVAS',font_loaded
@@ -83,16 +92,7 @@ Layout = (props,state)->
 
 
 
-	useEffect ()->
-		if !context
-			onWindowResize = ()->
-				setWinSize(window.innerWidth+'-'+window.innerHeight)
-			onWindowResize()
-			window.addEventListener 'resize',onWindowResize
-			return
-		return ()->
-			window.removeEventListener 'resize',onWindowResize
-	,[]
+
 
 	h LayoutContext.Provider,
 		value: context
