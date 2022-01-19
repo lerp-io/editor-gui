@@ -480,11 +480,11 @@ In = (props)->
 						value:key
 						props.options[key]
 			
-			if !props.options[props.value]
-				options.unshift h 'option',
-					key: '-'
-					value: null
-					props.value || '-'
+				if !props.options[props.value]
+					options.unshift h 'option',
+						key: '-'
+						value: null
+						props.value || '-'
 		
 			input = h 'div',
 				className: 'ed-flex-right ed-full-w'
