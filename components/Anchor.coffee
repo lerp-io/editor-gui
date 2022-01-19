@@ -214,7 +214,10 @@ Anchor = (props)->
 			width:  (handle_pos == 'left' || handle_pos == 'right') && REBAR_DIM || bar_width
 			flexDirection: (handle_pos == 'left' || handle_pos == 'right') && 'column' || 'row'
 			cursor: resize_cursor
-
+		
+		self_context.handle_pos = handle_pos
+		self_context.handle_style = resize_bar_style
+		
 		on_resize_bar_mouse_down = (e)->
 			setDragging(true) #need code review
 			setResizeStartPos([e.clientX,e.clientY,dim.width,dim.height,props.position[0],props.position[1]])

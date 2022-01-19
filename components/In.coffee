@@ -467,12 +467,18 @@ In = (props)->
 								value: e.target.value
 		when 'select'
 			# value_exists = false
-			options = Object.keys(props.options).map (key)->
-				
-				h 'option',
-					key: key
-					value:key
-					props.options[key]
+			if Array.isArray(props.options)
+				options = props.options.map (val)->
+					h 'option',
+						key: val[0]
+						value: val[0]
+						val[1]
+			else
+				options = Object.keys(props.options).map (key)->
+					h 'option',
+						key: key
+						value:key
+						props.options[key]
 			
 			if !props.options[props.value]
 				options.unshift h 'option',
@@ -522,7 +528,7 @@ In = (props)->
 			
 	if input?
 		input_wrapper = h 'div',
-			className: cn 'ed-input-wrap',props.half && 'ed-in-half'
+			className: cn 'ed-input-wrap',props.half && 'ed-in-half' || (props.full || props.type == 'button') && 'ed-in-full' 
 			input
 
 	h 'div',

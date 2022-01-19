@@ -3,7 +3,7 @@ h = createElement
 import cn from 'classnames'
 # import decidePosition from './decidePosition.coffee'
 import LayoutContext from './LayoutContext'
-
+import BoxContext from './BoxContext'
 
 
 import {clampPosition,getPosition,fixAlign,guessAlign,clampHeight} from './Align'
@@ -11,7 +11,10 @@ import {clampPosition,getPosition,fixAlign,guessAlign,clampHeight} from './Align
 
 Menu = (props)->
 	context = useContext(LayoutContext)
-	
+	box_context = useContext(BoxContext)
+	if context && box_context
+		Object.assign context,box_context
+
 	if props.autoDeselect?
 		autoDeselect = props.autoDeselect
 	else if context?.autoDeselect?
@@ -105,22 +108,25 @@ Menu = (props)->
 		
 		
 		align_key = guessAlign(self_width,self_height,context,self_x,self_y)
-		# log 'GUESSED ALIGN FOR ',context.selected_label,' : ',align_key
+		
 		# [x,y] = getPosition(self_width,self_height,context,align_key)
 		align_key = fixAlign(align_key,context,self_width,self_height)
 		# log 'FIX ALIGN FOR ',context.selected_label,' : ',align_key
 	
+	# if box_context.root == true
+
 	
 
 	if props.position
 		self_x = props.position[0]
 		self_y = props.position[1]
 	
-	else if context.root
+	else if context.root && !context.box
 		self_x = context.x || 0
 		self_y = context.y || 0
 		
 	else
+		# log 'GET MENU POSITION',context,align_key
 		[self_x,self_y] = getPosition(self_width,self_height,context,align_key)
 		[offset_x,offset_y] = clampPosition(context,self_x,self_y,self_width,self_height,align_key)
 		

@@ -62,6 +62,8 @@ Box = (props,state)->
 	self_context = 
 		startDrag: context.startDrag
 		stopDrag: context.stopDrag
+		vert: yes
+		box: true
 
 	style.minHeight = MIN_HEIGHT
 	style.height = height
@@ -101,7 +103,7 @@ Box = (props,state)->
 		h 'div',
 			cn:'ed-box-inner'
 			style:
-				minHeight: MIN_HEIGHT
+				minHeight: props.minHeight || MIN_HEIGHT
 				# paddingTop: !props.title && '0.425em'
 			ref: content_ref
 			(props.title || props.label) && (h 'div',

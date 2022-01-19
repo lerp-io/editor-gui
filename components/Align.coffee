@@ -188,10 +188,13 @@ getAlignDirections = (align_key)->
 	top = a[0] == 'top'
 	return [left,right,bottom,top,up,down]
 
-
+BAR_DIM = 12
+REBAR_DIM = 4
+DOT_DIM = 4
 
 getPosition = (width,height,ctx,align_key)->
 	x = y = 0
+	# log 'GET POS',align_key,ctx
 	switch align_key
 		when 'right-down'
 			x = ctx.x + ctx.width
@@ -200,6 +203,10 @@ getPosition = (width,height,ctx,align_key)->
 			x = (ctx.x + ctx.width)
 			y = ctx.sel_y + ctx.dim - height
 		when 'left-down'
+			# if ctx.handle_pos == 'right'
+			# 	x = ctx.x - width - REBAR_DIM
+			# 	y = ctx.sel_y
+			# else
 			x = ctx.x - width
 			y = ctx.sel_y
 		when 'left-up'

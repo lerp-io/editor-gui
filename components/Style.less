@@ -120,15 +120,26 @@
 .ed-input-wrap{
 	
 	&:extend(.ed-flex-left);
-	width: 150%;
+	width: 100%;
+	flex-shrink: 1;
+	max-width: 60%;
+	min-width: 150px;
 	&.ed-in-half{
-		width: fit-content;
+		width: -webkit-fill-available;
+		max-width: -webkit-fill-available;
 	}
 }
 
-.ed-in-label{
+.ed-in-full{
+	max-width: 100%;
 	width: 100%;
-	margin-left: 0.4em;
+}
+
+.ed-in-label{
+	width: fit-content;
+	max-width: 150px;
+	flex-shrink: 2;
+	padding-left: 0.4em;
 	color: @color3;
 	white-space: normal;
 	text-align: -webkit-left;
@@ -156,9 +167,10 @@ input:disabled{
 }
 
 .ed-input{
-	width: inherit;
+	width: 100%;
 	line-height: @dim;
 	height: @dim;
+	user-select: all;
 	font-size: inherit;
 	font-family: @mainfont;
 	-webkit-appearance: none;
@@ -169,6 +181,9 @@ input:disabled{
 	border-radius: none;
 	white-space: pre;
 	padding: 0px @padding;
+	text-align: end;
+	overflow-y: hidden;
+	overflow-x: auto;
 	// margin-left: @padding2;
 	
 }
@@ -238,7 +253,7 @@ input:disabled{
 }
 
 
-.ed-box,.ed-menu{
+.ed-box,.ed-menu,.ed-input{
 	&::-webkit-scrollbar{
 		-webkit-appearance: none;
 		background-color: @bg2;
