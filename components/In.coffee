@@ -347,76 +347,78 @@ In = (props)->
 				className: cn 'ed-range-value',value_alpha > .5 && 'ed-range-value-left',props.snapValueToEdge && 'ed-range-value-snap'
 				props_range_value
 			
+			onMouseDown = (e)->
+				slider_state_ref.current.cx = e.clientX 
+				old_value = null
+				onDrag = (e)->
+					range_rect = outer_range_ref.current.getBoundingClientRect()
+					
+					x = e.clientX
+					y = e.clientY
+
+					y_d = Math.abs ( y - ( range_rect.top + ( range_rect.bottom - range_rect.top )/2 ))
+					y_min_d = range_rect.height/2
+					
+					if y_d > y_min_d
+						y_d = 1 + (y_d - y_min_d)*.1
+					else
+						y_d = 1
+
+					
+					diff_x = ( x - slider_state_ref.current.cx ) / y_d
+					
+					slider_state_ref.current.cx = x
+					range_slider_x = Math.min(Math.max(0,slider_state_ref.current.range_slider_x + diff_x),range_rect.width-6)
+					value_alpha = range_slider_x/(range_rect.width-6)
+					min =  (props.min || 0)
+					max = (props.max || 1)
+					value = min + (max - min)*value_alpha
+					
+
+					if props.step?
+						# log value,'/',props.step,'*',props.step
+						new_value = Math.min(Math.max(Math.floor(value/props.step)*props.step,min),max)
+						setStepValue(value)
+						if new_value != old_value
+							props.set(new_value)
+							old_value = new_value
+					else
+						props.set(value)
+					e.preventDefault()
+					e.stopPropagation()
+					return false
+		
+				onDragEnd = (e)->
+					e.preventDefault()
+					e.stopPropagation()
+					context.stopDrag(onDrag,onDragEnd,onMouseOut)
+					return false
+				
+				onMouseOut = (e)->
+					e.stopPropagation()
+					e.preventDefault()
+					f = e.relatedTarget || e.toElement
+					if f && f.nodeName != "HTML"
+						return false
+					context.stopDrag(onDrag,onDragEnd,onMouseOut)
+					# log 'MOUSE OUT'
+					window.getSelection().removeAllRanges()
+					return false
+
+				# context.body.style.cursor = 'ew-resize'
+				context.startDrag(onDrag,onDragEnd,onMouseOut)
+				# context.body.addEventListener 'mousemove',onDrag
+				# context.body.addEventListener 'mouseup',onDragEnd
+				# context.body.addEventListener 'mouseout',onMouseOut
+
+
 			input = h 'div',
 				className: cn 'ed-range-outer'
 				ref: outer_range_ref
 				style:
 					color: if props.valueColor? then props.valueColor else undefined 
 					backgroundColor: props.backgroundColor
-				onMouseDown: !props.disabled && (e)->
-					
-					slider_state_ref.current.cx = e.clientX 
-					old_value = null
-					onDrag = (e)->
-						range_rect = outer_range_ref.current.getBoundingClientRect()
-						
-						x = e.clientX
-						y = e.clientY
-
-						y_d = Math.abs ( y - ( range_rect.top + ( range_rect.bottom - range_rect.top )/2 ))
-						y_min_d = range_rect.height/2
-						
-						if y_d > y_min_d
-							y_d = 1 + (y_d - y_min_d)*.1
-						else
-							y_d = 1
-
-						
-						diff_x = ( x - slider_state_ref.current.cx ) / y_d
-						
-						slider_state_ref.current.cx = x
-						range_slider_x = Math.min(Math.max(0,slider_state_ref.current.range_slider_x + diff_x),range_rect.width-6)
-						value_alpha = range_slider_x/(range_rect.width-6)
-						min =  (props.min || 0)
-						max = (props.max || 1)
-						value = min + (max - min)*value_alpha
-						
-
-						if props.step?
-							# log value,'/',props.step,'*',props.step
-							new_value = Math.min(Math.max(Math.floor(value/props.step)*props.step,min),max)
-							setStepValue(value)
-							if new_value != old_value
-								props.set(new_value)
-								old_value = new_value
-						else
-							props.set(value)
-						e.preventDefault()
-						e.stopPropagation()
-						return false
-
-					onDragEnd = (e)->
-						e.preventDefault()
-						e.stopPropagation()
-						context.stopDrag(onDrag,onDragEnd,onMouseOut)
-						return false
-					
-					onMouseOut = (e)->
-						e.stopPropagation()
-						e.preventDefault()
-						f = e.relatedTarget || e.toElement
-						if f && f.nodeName != "HTML"
-							return false
-						context.stopDrag(onDrag,onDragEnd,onMouseOut)
-						# log 'MOUSE OUT'
-						window.getSelection().removeAllRanges()
-						return false
-
-					# context.body.style.cursor = 'ew-resize'
-					context.startDrag(onDrag,onDragEnd,onMouseOut)
-					# context.body.addEventListener 'mousemove',onDrag
-					# context.body.addEventListener 'mouseup',onDragEnd
-					# context.body.addEventListener 'mouseout',onMouseOut
+				onMouseDown: !props.disabled && onMouseDown || undefined
 				
 				h 'div',
 					className: 'ed-range-slider'
