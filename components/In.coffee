@@ -267,7 +267,7 @@ In = (props)->
 					background: props.backgroundColor
 					color: props.valueColor
 				props.value
-				
+
 		when 'text','number'
 			input = h 'input',
 				type: props.type
@@ -291,7 +291,7 @@ In = (props)->
 					props.set?(e.target.value)
 				
 				value: props.value
-		
+
 		when 'toggle'
 			triggerToggle = ()->
 				# if props.commit || context.dispatch
@@ -479,13 +479,13 @@ In = (props)->
 						key: key
 						value:key
 						props.options[key]
-			
+
 				if !props.options[props.value]
 					options.unshift h 'option',
 						key: '-'
 						value: null
 						props.value || '-'
-		
+
 			input = h 'div',
 				className: 'ed-flex-right ed-full-w'
 				h 'select',
@@ -494,7 +494,7 @@ In = (props)->
 					onChange: (e)=>
 						props.set?(e.target.value)
 					options
-					
+
 				h 'div',
 					className: 'ed-input-select-arrow'
 					'▼'
