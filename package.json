@@ -1,6 +1,6 @@
 {
   "name": "editor-gui",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "basic react web ui components",
   "main": "./dist/editor-gui.js",
   "scripts": {
