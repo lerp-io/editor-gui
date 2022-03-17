@@ -89,7 +89,7 @@ Box = (props,state)->
 		[offset_x,offset_y] = clampPosition(context,self_x,self_y,width,height,align_key)
 		self_x += offset_x
 		self_y += offset_y
-		
+
 
 	style.zIndex = context.depth + 1 + 888
 	style.left = self_x+'px'

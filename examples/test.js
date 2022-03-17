@@ -48,7 +48,7 @@ export default test = function() {
   [demo_box_color, setDemoBoxColor] = useState('red');
   [demo_dot_color, setDemoDotColor] = useState('black');
   [demo_dot_count, setDemoDotCount] = useState(2);
-  [font_size, setFontSize] = useState(14);
+  [font_size, setFontSize] = useState(16);
   [snap_threshold, setSnapThreshold] = useState(20);
   [width_resize, toggleWidthResize] = useState(true);
   [height_resize, toggleHeightResize] = useState(true);
@@ -167,7 +167,7 @@ export default test = function() {
     // 	label.length * 8.15
     waitForFontLoad: true,
     fontSize: font_size,
-    fontFamily: 'Inconsolata'
+    fontFamily: FONT_FAMILY
   }, h(ExampleRecursiveMenu, {
     name: 'fixed',
     position: [100, 100]

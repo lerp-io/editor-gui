@@ -30,7 +30,7 @@ export default anchor = function() {
   return h(Layout, {
     waitForFontLoad: true,
     fontSize: 14,
-    fontFamily: 'Inconsolata'
+    fontFamily: FONT_FAMILY
   }, h(Anchor, {
     handlePosition: handle_pos,
     autoHandlePosition: auto_handle_pos,

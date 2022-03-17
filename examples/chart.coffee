@@ -40,7 +40,7 @@ export default anchor = ()->
 	h Layout,
 		waitForFontLoad: yes
 		fontSize: 14
-		fontFamily: 'Inconsolata'
+		fontFamily: FONT_FAMILY
 		h Box,
 			position: [0,50]
 			title: 'chart options'

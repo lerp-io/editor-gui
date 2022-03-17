@@ -34,7 +34,7 @@ export default test = ()->
 	[demo_dot_color,setDemoDotColor] = useState('black')
 	[demo_dot_count,setDemoDotCount] = useState(2)
 	
-	[font_size,setFontSize] = useState(14)
+	[font_size,setFontSize] = useState(16)
 
 	[snap_threshold,setSnapThreshold] = useState(20)
 
@@ -145,7 +145,7 @@ export default test = ()->
 		# 	label.length * 8.15
 		waitForFontLoad: yes
 		fontSize: font_size
-		fontFamily: 'Inconsolata'
+		fontFamily: FONT_FAMILY
 		
 		
 		h ExampleRecursiveMenu,

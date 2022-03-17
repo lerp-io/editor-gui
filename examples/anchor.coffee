@@ -14,7 +14,7 @@ export default anchor = ()->
 	h Layout,
 		waitForFontLoad: yes
 		fontSize: 14
-		fontFamily: 'Inconsolata'
+		fontFamily: FONT_FAMILY
 		h Anchor,
 			handlePosition: handle_pos
 			autoHandlePosition: auto_handle_pos

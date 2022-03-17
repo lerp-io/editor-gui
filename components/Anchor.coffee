@@ -109,8 +109,11 @@ Anchor = (props)->
 				self_height = dim.height+BAR_DIM
 
 		[offset_x,offset_y] = clampPosition(context,props.position[0],props.position[1],self_width,self_height,undefined)
+		old_position = [props.position[0],props.position[1]]
 		props.position[0] += offset_x
 		props.position[1] += offset_y
+		
+		
 
 
 		switch handle_pos
@@ -172,7 +175,7 @@ Anchor = (props)->
 
 				if !props.visible
 					dot_width = DOT_DIM * 3
-
+		
 
 	self_context = Object.assign {},context,
 		align: props.align
@@ -182,6 +185,7 @@ Anchor = (props)->
 		y: content_y
 		root: yes
 		checkAnchorDim: checkAnchorDim
+		old_position: old_position
 
 
 	if props.visible || (!dim.width? || !dim.height?)
@@ -204,8 +208,8 @@ Anchor = (props)->
 			resize_cursor = 'e-resize'
 
 
-	if props.size && props.visible
-	
+	if props.size && props.visible && props.setSize
+
 		resize_bar_style = 
 			background: props.barColor || 'black'
 			top: rebar_top
@@ -224,7 +228,7 @@ Anchor = (props)->
 			e.preventDefault()
 			e.stopPropagation()
 			return false
-
+		
 		on_resize_bar_mouse_move = (e)->
 			rect = e.target.getBoundingClientRect()
 			if handle_pos == 'bottom' || handle_pos == 'top'
@@ -259,7 +263,7 @@ Anchor = (props)->
 		on_resize_bar_mouse_leave = ->
 			if !is_dragging
 				setResizeDir(undefined)
-
+		
 		resize_bar = h 'div',
 			key: 'resize-bar'
 			style: resize_bar_style
@@ -392,6 +396,7 @@ Anchor = (props)->
 				background: props.barColor || 'black'
 				
 			onMouseDown: (e)->
+				
 				setDragStartPos([e.clientX,e.clientY,props.position[0],props.position[1]])
 				e.stopPropagation()
 				e.preventDefault()

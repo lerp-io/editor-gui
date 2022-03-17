@@ -62,7 +62,7 @@ export default anchor = function() {
   return h(Layout, {
     waitForFontLoad: true,
     fontSize: 14,
-    fontFamily: 'Inconsolata'
+    fontFamily: FONT_FAMILY
   }, h(Box, {
     position: [0, 50],
     title: 'chart options'

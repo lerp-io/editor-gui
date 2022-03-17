@@ -435,8 +435,9 @@ In = (props)->
 				style:
 					color: props.valueColor
 					background: props.backgroundColor
-				onClick: (e)->
+				onClick: !props.disabled && ((e)->
 					props.onSelect?(e) || props.onClick?(e) || props.set?(e)
+				) || undefined
 				props.value || 'button'
 
 		when 'color'
@@ -470,11 +471,20 @@ In = (props)->
 		when 'select'
 			# value_exists = false
 			if Array.isArray(props.options)
+				val_exists = false
 				options = props.options.map (val)->
+					if val[0] == props.value
+						val_exists = true
 					h 'option',
 						key: val[0]
 						value: val[0]
 						val[1]
+				
+				if !val_exists
+					options.unshift h 'option',
+						key: '-'
+						value: null
+						props.value || '-'
 			else
 				options = Object.keys(props.options).map (key)->
 					h 'option',
@@ -520,7 +530,7 @@ In = (props)->
 	if props.type == 'toggle' 
 		return h 'div',
 			className: cn 'ed-in-wrap','ed-in-wrap-toggle',props.half && 'ed-in-half'
-			onClick: triggerToggle
+			onClick: !props.disabled && triggerToggle || undefined
 			h 'div',
 				className: 'ed-in-wrap-toggle-input'
 				input

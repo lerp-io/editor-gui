@@ -74,8 +74,6 @@ checkfitPositionRight = (ctx,width,height)->
 
 
 
-
-
 fixAlign = (align_key,ctx,width,height)->
 	switch align_key
 		when 'right-down'
@@ -159,7 +157,6 @@ fixAlign = (align_key,ctx,width,height)->
 				else return 'top-left'
 
 
-
 clampHeight = (ctx,height)->
 	if ctx.root && ctx.clamp_height
 		return Math.max(Math.min(ctx.view_rect.height- BAR_DIM - REBAR_DIM,Math.min(ctx.clamp_height,height)),MIN_HEIGHT)
@@ -167,6 +164,7 @@ clampHeight = (ctx,height)->
 		return Math.max(Math.min(ctx.view_rect.height - BAR_DIM - REBAR_DIM,height),MIN_HEIGHT)
 	else
 		return Math.max(Math.min(height,ctx.view_rect.height),MIN_HEIGHT)
+
 
 clampWidth = (ctx,width)->
 	if ctx.root && ctx.clamp_width
@@ -194,7 +192,6 @@ DOT_DIM = 4
 
 getPosition = (width,height,ctx,align_key)->
 	x = y = 0
-	# log 'GET POS',align_key,ctx
 	switch align_key
 		when 'right-down'
 			x = ctx.x + ctx.width
@@ -203,10 +200,6 @@ getPosition = (width,height,ctx,align_key)->
 			x = (ctx.x + ctx.width)
 			y = ctx.sel_y + ctx.dim - height
 		when 'left-down'
-			# if ctx.handle_pos == 'right'
-			# 	x = ctx.x - width - REBAR_DIM
-			# 	y = ctx.sel_y
-			# else
 			x = ctx.x - width
 			y = ctx.sel_y
 		when 'left-up'
@@ -229,11 +222,15 @@ getPosition = (width,height,ctx,align_key)->
 	
 	return [x,y]
 
+
+
 clampPosition = (ctx,x,y,width,height,align_key)->
-	offset_x = 0 
+	offset_x = 0
 	offset_y = 0
+	
 	add_offset_x = 0
 	add_offset_y = 0
+
 	if x + width > ctx.view_rect.right 
 		offset_x = ctx.view_rect.right - (x + width)
 	else if x < ctx.view_rect.left
@@ -243,52 +240,22 @@ clampPosition = (ctx,x,y,width,height,align_key)->
 		offset_y = ctx.view_rect.bottom - (y + height)
 	else if y < ctx.view_rect.top
 		offset_y = ctx.view_rect.top - y
-	
-	# log align_key
+
 	if offset_y && !offset_x
 		if align_key == 'top-left' || align_key == 'bottom-left'
 			add_offset_x = -ctx.dim/2
 		else if align_key == 'top-right' || align_key == 'bottom-right'
 			add_offset_x = ctx.dim/2
-		# else if align_key == 'left-up' || align_key == 'left-down'
-		# 	add_offset_x = -ctx.dim/2
-		# else if align_key == 'right-up' || align_key == 'right-down'
-		# 	add_offset_x = ctx.dim/2
+
 	
 	if offset_x && !offset_y
-		# if align_key == 'top-left' || align_key == 'bottom-left'
-		# 	add_offset_y = -ctx.dim/2
-		# else if align_key == 'top-right' || align_key == 'bottom-right'
-		# 	add_offset_y = ctx.dim/2
 		if align_key == 'right-down' || align_key == 'left-down'
 			add_offset_y = -ctx.dim/2
 		else if align_key == 'right-up' || align_key == 'left-up'
 			add_offset_y = ctx.dim/2
 
-
-
 	offset_x += add_offset_x
 	offset_y += add_offset_y
-	# if offset_x && !offset_y
-	# 	offset_y -= ctx.dim/2
-		
-
-
-				
-	# log offset_x,offset_y
-	# if align_key
-	# 	if align_key == 'right-down' || align_key == 'right-down' || align_key == 'left-down' || align_key == 'left-up'
-	# 		if offset_x
-	# 			log align_key,offset_x
-	# 			offset_y += ctx.dim/2
-	# 		else 
-	# 	else
-	# 		if offset_x
-	# 			log align_key,offset_x
-	# 			offset_y -= ctx.dim/2
-	# 		else if offset_y
-	# 			log align_key,offset_y
-	# 			offset_x -= ctx.dim/2
 
 	return [offset_x,offset_y]
 

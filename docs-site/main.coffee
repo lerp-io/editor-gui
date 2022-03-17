@@ -10,6 +10,7 @@ import {Layout,In,Box,Menu,Section,SectionLabel,Style,Separator} from '../compon
 
 global.h = createElement
 global.log = console.log.bind(console)
+global.FONT_FAMILY = 'Azeret Mono'
 
 import {NavBar,NavBarSection} from './NavBar.coffee'
 
