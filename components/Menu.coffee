@@ -11,6 +11,8 @@ import {clampPosition,getPosition,fixAlign,guessAlign,clampHeight} from './Align
 
 Menu = (props)->
 	context = useContext(LayoutContext)
+	if context
+		context.dim = props.dim || context.dim
 	
 	if props.autoDeselect?
 		autoDeselect = props.autoDeselect
@@ -20,6 +22,7 @@ Menu = (props)->
 		autoDeselect = yes
 	
 	self_context = Object.assign {},context,{autoDeselect:autoDeselect,root:no,vert:props.vert,depth:context?.depth+1}
+	
 	menu_ref = useRef()
 
 	useEffect ()->
@@ -54,14 +57,14 @@ Menu = (props)->
 			selected_label_y = total_label_height
 			selected_label_x = total_label_width
 		
-		width = context.getLabelWidth(key)
+		width = props.dim && props.dim || context.getLabelWidth(key)
 		# log 'get label width',key,width,context.wpad*2,context.dim
 		if width > max_label_width
 			max_label_width = width
 		
-		total_label_width += width + context.wpad*2
+		total_label_width += width + (!props.dim && context.wpad*2 || 0)
 		total_label_height += context.dim
-		return width + context.wpad*2
+		return props.dim && props.dim || (width + context.wpad*2)
 	
 	
 	vert = props.vert
@@ -152,16 +155,18 @@ Menu = (props)->
 				return null
 
 
-			label = child.label || key
+			label = child.label || child.icon || key
+			
 
 			# log context.wpad
 			if child.onClick || child.onSelect
 				return h 'div',
 					key:key
-					className: cn 'ed-menu-item-label',props.select == key && 'ed-selected','noselect'
+					className: cn 'ed-menu-item-label',props.select == key && 'ed-selected','noselect',child.icon? && 'ed-menu-item-icon'
 					style:
-						paddingLeft: context.wpad
-						minWidth: label_widths[i]
+						paddingLeft: if child.icon then 0 else context.wpad
+						minWidth: if child.icon then context.dim else label_widths[i]
+						minHeight: if child.icon then context.dim else 0
 					onClick: child.onClick || child.onSelect
 					label
 
@@ -182,8 +187,9 @@ Menu = (props)->
 				key:key
 				title: title
 				style:
-					minWidth: label_widths[i]
-					paddingLeft: context.wpad
+					minWidth: if child.icon then context.dim else label_widths[i]
+					minHeight: if child.icon then context.dim else 0
+					paddingLeft: if child.icon then 0 else context.wpad
 				onClick: props.onSelect && ( (e)->
 					if e.target.title != title
 						return
@@ -195,7 +201,7 @@ Menu = (props)->
 					e.preventDefault()
 					return false
 				) || undefined
-				className: cn 'ed-menu-item-label',props.select == key && 'ed-selected','noselect'
+				className: cn 'ed-menu-item-label',props.select == key && 'ed-selected','noselect',child.icon? && 'ed-menu-item-icon'
 				label
 
 

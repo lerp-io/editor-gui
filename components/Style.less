@@ -8,12 +8,29 @@
 @color4: rgba(150, 150, 150,0.3);
 
 @mainfont: 'DM Mono', monospace;
-@fontsize: .85em;
-@padding: @fontsize*.5;
-@padding2: @fontsize;
-@margin: @padding*.6;
-@dim: 1.60em;
 
+:root {
+	--dimb2: 3.2em;
+	--dimb1: 1.6em;
+	--dim: 0.8em;
+	--dims1: 0.4em;
+	--dims2: 0.2em;
+	--dims3: 0.1em;
+	--dims4: 0.05em;
+}
+
+
+@fontsize: var(--dims1);
+@padding: var(--dims2);
+@padding2: var(--dims1);
+@margin: var(--dims2);
+@margins1: var(--dims3);
+@dimb2: var(--dimb2);
+@dimb1: var(--dimb1);
+@dim: var(--dim);
+@dims1: var(--dims1);
+@dims2: var(--dims2);
+@dims3: var(--dims3);
 
 .noselect {
   -webkit-touch-callout: none; /* iOS Safari */
@@ -84,7 +101,6 @@
 }
 
 .ed-in-wrap{
-	font-size: .9em;
 	width: 100%;
 	padding: 0px @padding;
 	min-height: @dim;
@@ -157,8 +173,8 @@ input:disabled{
 
 .ed-input{
 	width: inherit;
-	line-height: @dim;
-	height: @dim;
+	line-height: @dimb1;
+	height: @dimb1;
 	font-size: inherit;
 	font-family: @mainfont;
 	-webkit-appearance: none;
@@ -177,17 +193,17 @@ input:disabled{
 }
 
 .ed-toggle-outer{
-	width: @dim;
+	width: @dimb1;
 	cursor: pointer;
-	height: @dim;
+	height: @dimb1;
 	background-color: @bg2;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	.ed-toggle-inner{
-		width: (@dim/2);
-		height: (@dim/2);
-		border-radius: (@dim/2);
+		width: @dim;
+		height: @dim;
+		border-radius: @dims1;
 		background-color: @bg1;
 		&.ed-toggle-active{
 			background: @color1;
@@ -198,7 +214,7 @@ input:disabled{
 .ed-box-title{
 	
 	padding: @padding;
-	padding-bottom: @padding/2;
+	padding-bottom: @padding2;
 	// margin-bottom: @padding;
 	font-weight: 800;
 	text-align: center;
@@ -334,7 +350,7 @@ input:disabled{
 		// background-color: @bg1;
 		color: @color2;
 		width: -webkit-fill-available;
-		height: @dim;
+		height: @dimb1;
 		text-transform: uppercase;
 		display: flex;
 		align-items: center;
@@ -344,6 +360,9 @@ input:disabled{
 		outline: none;
 		font: inherit;
 		padding: 0px;
+		*{
+			pointer-events: none;
+		}
 		
 		&.ed-selected{
 			background-color: @bg2;
@@ -357,6 +376,13 @@ input:disabled{
 			background: @bg3;
 		}
 		
+	}
+	.ed-menu-item-icon{
+		// width: @dimb2;
+		// height: @dimb2;
+		align-items: center;
+		justify-content: center;
+		padding: 0px;
 	}
 	.ed-menu-item{
 		position: relative;
@@ -384,13 +410,13 @@ input:disabled{
 }
 
 .ed-range-outer{
-	height: @dim;
+	height: @dimb1;
     width: 100%;
 	background: @bg2;
 	position: relative;
 	.ed-range-slider{
 		width: 6.5px;
-		height: @dim;
+		height: @dimb1;
 		background: @color1;
 		&.ed-active{
 			background: @color1;
@@ -426,7 +452,7 @@ input:disabled{
 	border: none;
 	cursor: pointer;
 	width: 100%;
-	height: @dim;
+	height: @dimb1;
 	background: @bg2;
 	color: @color2;
 	&:hover{
@@ -437,8 +463,8 @@ input:disabled{
 .ed-color-box{
 	position: relative;
 	-webkit-appearance: none;
-	width: @dim * 2;
-	height: @dim;
+	width: @dimb1;
+	height: @dimb1;
 	flex-shrink: 0;
 	cursor: pointer;
 	margin-right: @margin;
@@ -459,10 +485,10 @@ input:disabled{
 .ed-value-box{
 	width: 100%;
 	// flex-shrink: 1;
-	height: @dim;
+	height: @dimb1;
 	background-color: @bg1;
-	margin-left: @margin*.6;
-	line-height: @dim;
+	margin-left: @margins1;
+	line-height: @dimb1;
 	padding: 0px @padding;
 }
 
@@ -470,6 +496,7 @@ input:disabled{
 
 .ed-section{
 	// margin: 0px;
+	margin-top: @dimb1;
 	margin: @padding 0px;
 	padding: @padding 0px;
 	position: relative;
@@ -537,11 +564,11 @@ input:disabled{
 }
 
 .ed-separator{
-	margin-top: @dim / 3;
+	margin-top: @dims2;
 	border-bottom: 1px solid @color4;
 	height: 0px;
 	width: 100%;
-	margin-bottom: @dim / 2;
+	margin-bottom: @dims1;
 }
 
 .ed-line-chart{
@@ -579,11 +606,11 @@ input:disabled{
 		align-content: center;
 		align-items: center;
 		.ed-anchor-dot{
-			margin: (@dim/6);
+			margin: @dims2;
 			pointer-events: none;
 			background: white;
-			width: (@dim/6);
-			height: (@dim/6);
+			width: @dims2;
+			height: @dims2;
 		}
 	}
 
@@ -592,8 +619,8 @@ input:disabled{
 	}
 
 	.ed-anchor-handle-resize{
-		width: (@dim/2);
-		height: (@dim/2);
+		width: @dims1;
+		height: @dims1;
 		background: black;
 		position: absolute;
 		// cursor: ns-resize;

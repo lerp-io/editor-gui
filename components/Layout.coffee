@@ -42,7 +42,7 @@ Layout = (props,state)->
 		view_rect = layout_ref.current.getBoundingClientRect()
 		setContext
 			depth: 0
-			dim: props.fontSize * 1.6
+			dim: props.fontSize * 2
 			wpad: props.fontSize * .4
 			root: yes
 			selected_label: 'root'
