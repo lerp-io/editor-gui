@@ -450,6 +450,7 @@ In = (props)->
 					h 'input',
 						ref: input_ref
 						className: cn 'ed-color-box-input',(props.disabled && 'ed-disabled')
+						value: props.value
 						onChange: (e)->
 							# if !context.commit && props.set
 							props.set?(e.target.value)
