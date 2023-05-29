@@ -3,9 +3,10 @@ import 'normalize.css'
 import './main.less'
 
 import {createElement,useState,useEffect,useRef,useReducer} from 'react'
-import {render} from 'react-dom'
+import {createRoot} from 'react-dom/client'
 import {Layout,In,Box,Menu,Section,SectionLabel,Style,Separator} from '../components'
 
+global.root = createRoot(window.main)
 # import gfm from 'remark-gfm'
 
 global.h = createElement
@@ -38,7 +39,7 @@ renderSourceCodeView = (props)->
 	useEffect ()->
 		if pre_ref.current && code_type
 			hljs.highlightBlock(pre_ref.current)
-		render(h(main),window.main)
+		root.render(h(main))
 		return
 	,[pre_ref.current,code_type]
 	
@@ -62,11 +63,6 @@ renderSourceCodeView = (props)->
 		
 		h 'div',
 			cn: 'lang-select-box'
-
-			# h 'div',
-			# 	cn: 'lang-select-button '+(show_code && 'select' || '')
-			# 	onClick: toggleShowCode.bind(null,!show_code)
-			# 	'</>'
 			h 'button',
 				cn: 'lang-select-button '+(code_type == 'js' && 'select' ||'')
 				onClick: setCodeType.bind(null,if code_type == 'js' then undefined else 'js')
@@ -87,7 +83,8 @@ renderExample = (component)->
 			doc = iframe_ref.current.contentDocument
 			doc.head.innerHTML = document.head.innerHTML
 			doc.body.innerHTML = '<div id="example"></div>'
-			render(h(component),doc.getElementById('example'))
+			example_root = createRoot(doc.getElementById('example'))
+			example_root.render(h(component))
 		return
 	,[]
 	h 'iframe',
@@ -148,19 +145,19 @@ import About from './README.md'
 
 
 COMPONENTS =
-	Layout: 
+	Layout:
 		md: LayoutMD
 	Anchor:
 		md: AnchorMD
-	Menu: 
+	Menu:
 		md: MenuMD
-	Box: 
+	Box:
 		md: BoxMD
-	In: 
+	In:
 		md: InMD
-	Section: 
+	Section:
 		md: SectionMD
-	Separator: 
+	Separator:
 		md: SeparatorMD
 
 
@@ -183,13 +180,13 @@ import ChartExampleJS from '!raw-loader!../examples/chart.js'
 
 
 
-EXAMPLES = 
-	'Basic Anchor': 
+EXAMPLES =
+	'Basic Anchor':
 		component: AnchorExample
 		coffee_source: AnchorExampleCoffee
 		js_source: AnchorExampleJS
 		md: AnchorExampleMD
-	'Simple Line and Bar Charts': 
+	'Simple Line and Bar Charts':
 		component: ChartExample
 		coffee_source: ChartExampleCoffee
 		js_source: ChartExampleJS
@@ -287,4 +284,4 @@ main = ->
 				render_components
 
 
-render(h(main),window.main)
+root.render(h(main))

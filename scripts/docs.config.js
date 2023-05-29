@@ -29,47 +29,49 @@ var cfg = {
 			},
 			{
 				test: /\.(mdx|md)?$/,
-				use: [{loader:'babel-loader',options:{presets:['@babel/preset-react']}}, '@mdx-js/loader'],
+				use: [{ loader: 'babel-loader', options: { presets: ['@babel/preset-react'] } }, '@mdx-js/loader'],
 			},
 			{ test: /\.(xml|html|txt|glsl)$/, loader: "raw-loader" },
-			{ test: /\.less$/, use: ['style-loader','css-loader','less-loader']},
-			{ test: /\.(css)$/, exclude: /^(https?:)?\/\//, use: ['style-loader','css-loader'] },
-			{ test: /\.(woff|woff2|eot|ttf|png)$/,loader: 'url-loader' }
+			{ test: /\.less$/, use: ['style-loader', 'css-loader', 'less-loader'] },
+			{ test: /\.(css)$/, exclude: /^(https?:)?\/\//, use: ['style-loader', 'css-loader'] },
+			{ test: /\.(woff|woff2|eot|ttf|png)$/, loader: 'url-loader' }
 		]
 	},
 
 	externals: {},
 
 	entry: {
-		docs: path.join(__dirname,'..','/docs-site/main.coffee')
+		docs: path.join(__dirname, '..', '/docs-site/main.coffee')
 	},
-	
+
 	resolve: {
-		extensions: [ '.js', '.coffee' , '.tsx', '.ts' ],
-		fallback: { "path": false}
+		extensions: ['.js', '.coffee', '.tsx', '.ts'],
+		fallback: { "path": false }
 	},
 
 	output: {
-		path: path.join(__dirname,'..','/dist'),
+		path: path.join(__dirname, '..', '/dist'),
 		publicPath: '/dist',
+
 		filename: "[name].js"
 	},
-	
+
 	devServer: {
 		host: 'localhost',
 		port: 3234,
-		disableHostCheck: true
+		static: path.join(__dirname, '..', '/dist'),
+		// disableHostCheck: true
 	}
 }
 
-if(process.env.NODE_ENV == 'production'){
-	Object.assign(cfg.externals,{
-		'react':'React',
-		'react-dom':'ReactDOM',
-		'lodash':'_',
-		'config': JSON.stringify({env:'production'})
+if (process.env.NODE_ENV == 'production') {
+	Object.assign(cfg.externals, {
+		'react': 'React',
+		'react-dom': 'ReactDOM',
+		'lodash': '_',
+		'config': JSON.stringify({ env: 'production' })
 	})
-}else{
+} else {
 	Object.assign(cfg.externals)
 }
 

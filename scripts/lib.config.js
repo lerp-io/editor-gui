@@ -29,24 +29,24 @@ var cfg = {
 			},
 			{
 				test: /\.(mdx|md)?$/,
-				use: [{loader:'babel-loader',options:{presets:['@babel/preset-react']}}, '@mdx-js/loader'],
+				use: [{ loader: 'babel-loader', options: { presets: ['@babel/preset-react'] } }, '@mdx-js/loader'],
 			},
 			{ test: /\.(xml|html|txt|glsl|svg)$/, loader: "raw-loader" },
-			{ test: /\.less$/, use: ['style-loader','css-loader','less-loader']},
-			{ test: /\.(css)$/, exclude: /^(https?:)?\/\//, use: ['style-loader','css-loader'] },
-			{ test: /\.(woff|woff2|eot|ttf|png)$/,loader: 'url-loader' }
+			{ test: /\.less$/, use: ['style-loader', 'css-loader', 'less-loader'] },
+			{ test: /\.(css)$/, exclude: /^(https?:)?\/\//, use: ['style-loader', 'css-loader'] },
+			{ test: /\.(woff|woff2|eot|ttf|png)$/, loader: 'url-loader' }
 		]
 	},
 	entry: {
 		index: "./components/index.coffee",
 	},
 	resolve: {
-		extensions: [ '.js', '.coffee' ],
-		fallback: { "path": false}
+		extensions: ['.js', '.coffee'],
+		fallback: { "path": false }
 	},
-	externals: ["react","react-dom","classnames","color"],
+	externals: ["react", "react-dom", "lodash", "classnames", "color"],
 	output: {
-		path: path.join(__dirname,'..','/dist'),
+		path: path.join(__dirname, '..', '/dist'),
 		publicPath: '/',
 		filename: "editor-gui.js",
 		libraryTarget: 'commonjs2'
