@@ -23,7 +23,7 @@ Box = (props,state)->
 	
 	height = dim_overflow[0]
 	width = dim_overflow[2]
-	style = 
+	style =
 		overflowY: dim_overflow[1]
 		overflowX: dim_overflow[3]
 
@@ -59,13 +59,13 @@ Box = (props,state)->
 	if !context
 		return null
 
-	self_context = 
+	self_context =
 		startDrag: context.startDrag
 		stopDrag: context.stopDrag
 		vert: yes
 		box: true
 
-	style.minHeight = MIN_HEIGHT
+	style.minHeight = props.minHeight || MIN_HEIGHT
 	style.height = height
 	style.width = width
 
@@ -104,7 +104,6 @@ Box = (props,state)->
 			cn:'ed-box-inner'
 			style:
 				minHeight: props.minHeight || MIN_HEIGHT
-				# paddingTop: !props.title && '0.425em'
 			ref: content_ref
 			(props.title || props.label) && (h 'div',
 				className: cn 'ed-box-title',props.stickyTitle && 'ed-box-title-sticky'
