@@ -60,7 +60,6 @@ var cfg = {
 		host: 'localhost',
 		port: 3234,
 		static: path.join(__dirname, '..', '/'),
-		disableHostCheck: true
 	}
 }
 
