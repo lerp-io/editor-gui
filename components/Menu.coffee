@@ -120,7 +120,7 @@ Menu = (props)->
 	if props.position
 		self_x = props.position[0]
 		self_y = props.position[1]
-	
+
 	else if context.root && !context.box
 		self_x = context.x || 0
 		self_y = context.y || 0
@@ -188,10 +188,12 @@ Menu = (props)->
 					paddingLeft: context.wpad
 					minWidth: label_widths[i]
 
+			selected = props.select == key
 			if child.onClick || child.onSelect
+				
 				return h 'div',
 					key:key
-					className: cn props.dim && 'ed-menu-item-box','ed-menu-item-label',props.select == key && 'ed-selected','noselect'
+					className: cn props.dim && 'ed-menu-item-box','ed-menu-item-label',selected && 'ed-selected','noselect'
 					style: label_style
 					onClick: child.onClick || child.onSelect
 					label

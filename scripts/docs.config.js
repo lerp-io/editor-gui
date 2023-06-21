@@ -59,8 +59,8 @@ var cfg = {
 	devServer: {
 		host: 'localhost',
 		port: 3234,
-		static: path.join(__dirname, '..', '/dist'),
-		// disableHostCheck: true
+		static: path.join(__dirname, '..', '/'),
+		disableHostCheck: true
 	}
 }
 
