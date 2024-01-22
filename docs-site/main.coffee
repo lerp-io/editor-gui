@@ -2,8 +2,13 @@
 import 'normalize.css'
 import './main.less'
 
+<<<<<<< HEAD
 import {createElement,useState,useEffect,useRef,useReducer} from 'react'
 import {createRoot} from 'react-dom/client'
+=======
+import {createElement,useState,useEffect,useRef,useReducer,createRoot} from 'react'
+import {render} from 'react-dom'
+>>>>>>> d434218 (cleanup hex card view layout)
 import {Layout,In,Box,Menu,Section,SectionLabel,Style,Separator} from '../components'
 
 global.root = createRoot(window.main)
@@ -39,7 +44,12 @@ renderSourceCodeView = (props)->
 	useEffect ()->
 		if pre_ref.current && code_type
 			hljs.highlightBlock(pre_ref.current)
+<<<<<<< HEAD
 		root.render(h(main))
+=======
+		main = main || createRoot(window.main)
+		render(h(main))
+>>>>>>> d434218 (cleanup hex card view layout)
 		return
 	,[pre_ref.current,code_type]
 	
