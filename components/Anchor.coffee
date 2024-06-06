@@ -11,6 +11,7 @@ REBAR_DIM = 4
 DOT_DIM = 4
 
 Anchor = (props)->
+	autoHandleThreshold = props.autoHandleThreshold || 20
 	
 	anchor_ref = useRef('ed-anchor',anchor_ref)
 	context = useContext(LayoutContext)
@@ -57,22 +58,22 @@ Anchor = (props)->
 
 	snap_bot = false
 
-	if d_left <= Math.min(d_right,Math.min(d_top,d_bottom)) && d_left < props.autoHandleThreshold #AUTO_HANDLE_SET_THRESHOLD
+	if d_left <= Math.min(d_right,Math.min(d_top,d_bottom)) && d_left < autoHandleThreshold #AUTO_HANDLE_SET_THRESHOLD
 		handle_pos = 'left'
 		if props.autoSnapHandlePosition
 			props.position[0] = 0
 
-	else if d_top <= Math.min(d_bottom,Math.min(d_left,d_right)) && d_top < props.autoHandleThreshold
+	else if d_top <= Math.min(d_bottom,Math.min(d_left,d_right)) && d_top < autoHandleThreshold
 		handle_pos = 'top'
 		if props.autoSnapHandlePosition
 			props.position[1] = 0
 
-	else if d_right <= Math.min(d_left,Math.min(d_top,d_bottom)) && d_right < props.autoHandleThreshold
+	else if d_right <= Math.min(d_left,Math.min(d_top,d_bottom)) && d_right < autoHandleThreshold
 		handle_pos = 'right'
 		if props.autoSnapHandlePosition
 			props.position[0] = Math.max(0,context.view_rect.width - dim.width - BAR_DIM)
 	
-	else if d_bottom <= Math.min(d_top,Math.min(d_left,d_right)) && d_bottom < props.autoHandleThreshold
+	else if d_bottom <= Math.min(d_top,Math.min(d_left,d_right)) && d_bottom < autoHandleThreshold
 		handle_pos = 'bottom'
 		if props.autoSnapHandlePosition
 			snap_bot = true
@@ -414,7 +415,6 @@ Anchor = (props)->
 		content
 
 
-Anchor.defaultProps = 
-	autoHandleThreshold : 20
+
 
 export default Anchor
