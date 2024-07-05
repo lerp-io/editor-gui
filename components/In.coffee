@@ -38,7 +38,8 @@ renderChart = (state,props)->
 		
 		# r_left = rect.width/props.xRange * (0 * step - pan_diff)
 		# r_top = rect.height - (rect.height/y_range * (y_val - y_pan))
-		
+		if props.type == 'line-chart'
+			ctx.strokeStyle = colors[j]
 		
 		while i < (x_length/step)
 			i += 1
@@ -47,7 +48,6 @@ renderChart = (state,props)->
 			if !y_val then continue
 
 			ctx.fillStyle = colors[j](x_val) || 'white'
-			ctx.strokeStyle = colors[j](x_val) || 'white'
 			ctx.lineWidth = 1
 			
 			r_left = rect.width/props.xRange * (i * step - pan_diff) 
@@ -61,8 +61,9 @@ renderChart = (state,props)->
 				# 	ctx.moveTo(r_left,r_top)
 				ctx.lineTo(r_left,r_top)
 				# ctx.closePath()
-			ctx.fill()
-		
+			if props.type == 'bar-chart'
+				ctx.fill()
+			
 		# ctx.closePath()
 		if props.type != 'bar-chart'
 			ctx.stroke()
