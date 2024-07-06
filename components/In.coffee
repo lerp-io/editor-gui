@@ -52,17 +52,15 @@ renderChart = (state,props)->
 			
 			r_left = rect.width/props.xRange * (i * step - pan_diff) 
 			r_top = rect.height - (rect.height/y_range * (y_val - y_pan))
+			
 			if props.type == 'bar-chart'
 				r_width = rect.width/props.xRange
 				r_height = (rect.height/y_range * y_val)
-				ctx.rect(r_left, r_top, r_width,r_height)
+				ctx.fillRect(r_left, r_top, r_width,r_height)
+			
 			else if props.type == 'line-chart'
-				# if i == 0
-				# 	ctx.moveTo(r_left,r_top)
 				ctx.lineTo(r_left,r_top)
-				# ctx.closePath()
-			if props.type == 'bar-chart'
-				ctx.fill()
+
 			
 		# ctx.closePath()
 		if props.type != 'bar-chart'

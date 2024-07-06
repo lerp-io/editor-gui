@@ -1,6 +1,6 @@
 {
   "name": "editor-gui",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "react editor gui components (like imgui)",
   "main": "./dist/editor-gui.js",
   "scripts": {
