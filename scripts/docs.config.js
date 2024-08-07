@@ -59,10 +59,7 @@ var cfg = {
 	devServer: {
 		host: 'localhost',
 		port: 3234,
-<<<<<<< HEAD
 		static: path.join(__dirname, '..', '/'),
-=======
->>>>>>> d434218 (cleanup hex card view layout)
 	}
 }
 
