@@ -48,6 +48,8 @@ Layout = (props,state)->
 
 
 	useEffect ()->
+		if !layout_ref.current
+			return
 		view_rect = layout_ref.current.getBoundingClientRect()
 		setContext
 			depth: 0
