@@ -21,8 +21,8 @@ Box = (props,state)->
 	self_ref = useRef(null)
 	content_ref = useRef(null)
 	
-	height = dim_overflow[0]
-	width = dim_overflow[2]
+	height = props.height || dim_overflow[0]
+	width = props.width || dim_overflow[2]
 	style =
 		overflowY: dim_overflow[1]
 		overflowX: dim_overflow[3]

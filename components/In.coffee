@@ -124,6 +124,9 @@ LineChart = (props)->
 				canvas_state.current.cx = e.clientX 
 
 				onDrag = (e)->
+					if !canvas_ref.current
+						return
+
 					x = e.clientX
 					y = e.clientY
 					rect = canvas_ref.current.getBoundingClientRect()
@@ -354,6 +357,8 @@ In = (props)->
 				slider_state_ref.current.cx = e.clientX 
 				old_value = null
 				onDrag = (e)->
+					if !outer_range_ref.current
+						return
 					range_rect = outer_range_ref.current.getBoundingClientRect()
 					
 					x = e.clientX
