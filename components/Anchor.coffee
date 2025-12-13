@@ -28,7 +28,7 @@ Anchor = (props)->
 	
 	# log 'UPDATE'
 	checkAnchorDim = ()->
-		if content_ref.current
+		if content_ref.current && content_ref.current.children[0]
 			rect = content_ref.current.children[0].getBoundingClientRect()
 			if props.size && (props.size[0] != rect.width ||  props.size[1] != rect.height)
 				# log props.size[0],rect.width
@@ -231,6 +231,8 @@ Anchor = (props)->
 			return false
 		
 		on_resize_bar_mouse_move = (e)->
+			if !e.target
+				return
 			rect = e.target.getBoundingClientRect()
 			if handle_pos == 'bottom' || handle_pos == 'top'
 				if e.clientX < rect.left + rect.width * 1/3
