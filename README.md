@@ -87,4 +87,4 @@ This library is designed to be used as a viewport overlay, hence all menus in ar
 ## Support
 
 
-[my other stuff]([https://yury.lerp.io/](https://yury.lerp.io/#))
+my other stuff: https://yury.lerp.io/#)
