@@ -85,8 +85,6 @@ This library is designed to be used as a viewport overlay, hence all menus in ar
 
 
 ## Support
-[Buymeacoffee](https://www.buymeacoffee.com/yurysidorov)
 
-[BTC: bc1qqft7dazwh2mvp4c5p49pakjs6apdac24ny7rs3](https://blockchair.com/bitcoin/address/bc1qqft7dazwh2mvp4c5p49pakjs6apdac24ny7rs3)
 
-[my other stuff](https://ysid.dev)
+[my other stuff]([https://yury.lerp.io/](https://yury.lerp.io/#))
