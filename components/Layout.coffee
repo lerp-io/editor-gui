@@ -17,6 +17,41 @@ Layout = (props,state)->
 
 	css_font = props.fontSize+'px '+props.fontFamily
 
+
+	updateContext = ()->
+		if !layout_ref.current
+			return
+
+		parent_element = layout_ref.current.parentElement
+		if parent_element
+			view_rect =
+				left: 0
+				top: 0
+				right: parent_element.clientWidth
+				bottom: parent_element.clientHeight
+				width: parent_element.clientWidth
+				height: parent_element.clientHeight
+		else
+			view_rect =
+				left: 0
+				top: 0
+				right: layout_ref.current.clientWidth
+				bottom: layout_ref.current.clientHeight
+				width: layout_ref.current.clientWidth
+				height: layout_ref.current.clientHeight
+
+		setContext
+			depth: 0
+			dim: props.fontSize * 1.6
+			wpad: props.fontSize * .4
+			root: yes
+			selected_label: 'root'
+			view_rect: view_rect
+			getLabelWidth: getLabelWidth
+			stopDrag: stopDrag
+			font_loaded: font_loaded
+			startDrag: startDrag
+
 	useEffect ()->
 		# log 'WAIT FOR WEB FONTS',props.waitForWebfonts
 		if props.waitForFontLoad
@@ -48,21 +83,16 @@ Layout = (props,state)->
 
 
 	useEffect ()->
-		if !layout_ref.current
+		updateContext()
+		if !layout_ref.current || !layout_ref.current.parentElement
 			return
-		view_rect = layout_ref.current.getBoundingClientRect()
-		setContext
-			depth: 0
-			dim: props.fontSize * 1.6
-			wpad: props.fontSize * .4
-			root: yes
-			selected_label: 'root'
-			view_rect: view_rect
-			getLabelWidth: getLabelWidth
-			stopDrag: stopDrag
-			font_loaded: font_loaded
-			startDrag: startDrag
 
+		parent_element = layout_ref.current.parentElement
+		resize_observer = new ResizeObserver ()->
+			updateContext()
+		resize_observer.observe(parent_element)
+		return ()->
+			resize_observer.disconnect()
 	,[props.fontFamily,props.fontSize,win_size,font_loaded]
 
 

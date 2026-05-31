@@ -92,8 +92,15 @@ Box = (props,state)->
 
 
 	style.zIndex = context.depth + 1 + 888
-	style.left = self_x+'px'
-	style.top = self_y+'px'
+	if context.root
+		render_x = self_x
+		render_y = self_y
+	else
+		render_x = self_x - (context.x || 0)
+		render_y = self_y - (context.y || 0)
+
+	style.left = render_x+'px'
+	style.top = render_y+'px'
 	
 	
 	h 'div',

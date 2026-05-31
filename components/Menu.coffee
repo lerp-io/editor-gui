@@ -139,28 +139,52 @@ Menu = (props)->
 	style.overflowY = overflow_y && 'scroll'
 	style.zIndex = props.select && 666 || 1
 	style.zIndex += self_context.depth
-	style.left = self_x+'px'
-	style.top = self_y+'px'
 	style.height = self_height+'px'
 	# if offset_x || offset_y
 	# 	style.transform = "translate(#{offset_x}px,#{offset_y}px)"
 	if props.style
 		Object.assign style,props.style
 
+	actual_x = self_x
+	actual_y = self_y
+	handled_transform = false
+	if props.style?.left == '50%'
+		actual_x = (context.view_rect.width - self_width)/2
+		handled_transform = true
+	if props.style?.top == '50%'
+		actual_y = (context.view_rect.height - self_height)/2
+		handled_transform = true
+	if props.style?.left == 0 || props.style?.left == '0'
+		actual_x = 0
+	if props.style?.top == 0 || props.style?.top == '0'
+		actual_y = 0
+
+	if context.root
+		render_x = actual_x
+		render_y = actual_y
+	else
+		render_x = actual_x - (context.x || 0)
+		render_y = actual_y - (context.y || 0)
+
+	style.left = render_x+'px'
+	style.top = render_y+'px'
+	if handled_transform
+		delete style.transform
+
 	self_context.width = self_width
 	self_context.height = self_height
-	self_context.x = self_x
-	self_context.y = self_y
+	self_context.x = actual_x
+	self_context.y = actual_y
 	self_context.vert = props.vert
 	self_context.root = false
 	self_context.align = align_key
 	self_context.selected_label = props.select
 	if props.vert
-		self_context.sel_x = self_x
-		self_context.sel_y = self_y + selected_label_y + scroll_top
+		self_context.sel_x = actual_x
+		self_context.sel_y = actual_y + selected_label_y + scroll_top
 	else
-		self_context.sel_x = self_x + selected_label_x
-		self_context.sel_y = self_y + scroll_top
+		self_context.sel_x = actual_x + selected_label_x
+		self_context.sel_y = actual_y + scroll_top
 	
 	self_context.sel_w = label_widths[selected_label_index]
 

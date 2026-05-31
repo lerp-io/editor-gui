@@ -39,7 +39,7 @@
 	font-family: @mainfont;
 	font-size: @fontsize;
 	color: @color1;
-	position: fixed;
+	position: relative;
 	top: 0px;
 	left: 0px;
 	width: 100%;
@@ -316,7 +316,7 @@ input:disabled {
 	// backdrop-filter: @blur;
 	background-color: @bg1;
 	color: @color1;
-	position: fixed;
+	position: absolute;
 	width: 300px;
 
 	// box-shadow: inset 0px 0px 2px #757575;
@@ -351,7 +351,7 @@ input:disabled {
 	flex-wrap: nowrap;
 	width: fit-content;
 	height: fit-content;
-	position: fixed;
+	position: absolute;
 
 	&.ed-scroll {
 		overflow-y: scroll;
@@ -660,10 +660,10 @@ input:disabled {
 .ed-anchor {
 	display: flex;
 	flex-direction: row;
-	position: fixed;
+	position: absolute;
 
 	.ed-anchor-handle {
-		position: fixed;
+		position: absolute;
 		background: black;
 		cursor: move;
 		display: flex;

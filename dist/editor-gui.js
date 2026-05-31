@@ -885,7 +885,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.noselect {
   font-family: 'DM Mono', monospace;
   font-size: 0.85em;
   color: #ffffff;
-  position: fixed;
+  position: relative;
   top: 0px;
   left: 0px;
   width: 100%;
@@ -1103,7 +1103,7 @@ input:disabled {
   overflow-y: scroll;
   background-color: #2a2a2a;
   color: #ffffff;
-  position: fixed;
+  position: absolute;
   width: 300px;
   flex-wrap: nowrap;
 }
@@ -1133,7 +1133,7 @@ input:disabled {
   flex-wrap: nowrap;
   width: fit-content;
   height: fit-content;
-  position: fixed;
+  position: absolute;
 }
 .ed-menu.ed-scroll {
   overflow-y: scroll;
@@ -1364,10 +1364,10 @@ input:disabled {
 .ed-anchor {
   display: flex;
   flex-direction: row;
-  position: fixed;
+  position: absolute;
 }
 .ed-anchor .ed-anchor-handle {
-  position: fixed;
+  position: absolute;
   background: black;
   cursor: move;
   display: flex;
@@ -1404,7 +1404,7 @@ input:disabled {
 .ed-anchor.ed-anchor-resize * {
   pointer-events: none !important;
 }
-`, "",{"version":3,"sources":["webpack://./components/Style.less"],"names":[],"mappings":"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","sourcesContent":["@bg1: rgba(42, 42, 42, 1.0);\n@bg2: rgba(20, 20, 20, 1.0);\n@bg3: rgba(30, 30, 30, 1.0);\n\n@color1: rgb(255, 255, 255);\n@color2: rgb(235, 235, 235);\n@color3: rgb(200, 200, 200);\n@color4: rgba(150, 150, 150, 0.3);\n\n@mainfont: 'DM Mono', monospace;\n@fontsize: .85em;\n@padding: @fontsize*.5;\n@padding2: @fontsize;\n@margin: @padding*.6;\n@dim: 1.60em;\n\n\n.noselect {\n\t-webkit-touch-callout: none;\n\t/* iOS Safari */\n\t-webkit-user-select: none;\n\t/* Safari */\n\t-khtml-user-select: none;\n\t/* Konqueror HTML */\n\t-moz-user-select: none;\n\t/* Old versions of Firefox */\n\t-ms-user-select: none;\n\t/* Internet Explorer/Edge */\n\tuser-select: none;\n\t/* Non-prefixed version, currently\n                                  supported by Chrome, Edge, Opera and Firefox */\n}\n\n.ed-layout {\n\tz-index: 100;\n\t// transform: translate3D(0.0px,0.0px,0.0px);\n\ttext-rendering: optimizeSpeed;\n\tline-height: 95%;\n\tfont-family: @mainfont;\n\tfont-size: @fontsize;\n\tcolor: @color1;\n\tposition: fixed;\n\ttop: 0px;\n\tleft: 0px;\n\twidth: 100%;\n\theight: 100%;\n\toverflow: hidden;\n\tpointer-events: none;\n\n\t* {\n\t\tpointer-events: all;\n\t\tbox-sizing: border-box;\n\t}\n}\n\n.ed-layout-dragging {\n\tpointer-events: all;\n\tcursor: ew-resize;\n\n\t* {\n\t\tpointer-events: none !important;\n\t}\n}\n\n.ed-full-w {\n\twidth: 100%;\n}\n\n.ed-flex-left {\n\tdisplay: flex;\n\tflex-wrap: wrap;\n\tposition: relative;\n\tflex-direction: row-reverse;\n\talign-items: center;\n\tjustify-content: flex-end;\n}\n\n.ed-flex-right {\n\tdisplay: flex;\n\tposition: relative;\n\t// flex-wrap: wrap;\n\tflex-direction: row;\n\talign-items: center;\n\tjustify-content: flex-start;\n}\n\n.ed-flex-down {\n\tdisplay: flex;\n\tflex-direction: column;\n\talign-items: flex-start;\n\tjustify-content: flex-start;\n}\n\n.ed-in-wrap {\n\tfont-size: .9em;\n\twidth: 100%;\n\tpadding: 0px @padding;\n\tmin-height: @dim;\n\t&:extend(.ed-flex-right);\n\tflex-wrap: nowrap;\n\t// margin-top: @padding;\n\tmargin-bottom: @margin;\n\n\t&.ed-in-half {\n\t\twidth: 50%;\n\t}\n\n\t&.ed-tight {\n\t\tmin-height: 1em;\n\t}\n\n\t&:last-child {\n\t\tmargin-bottom: 0.425em;\n\t}\n}\n\n.ed-in-wrap-toggle {\n\tcursor: pointer;\n}\n\n.ed-in-wrap-toggle-input {\n\twidth: auto;\n\tflex-shrink: 0;\n\t// margin-right: 4px;\n}\n\n.ed-in-wrap-toggle-label {\n\twidth: auto;\n}\n\n.ed-input-wrap {\n\n\t&:extend(.ed-flex-left);\n\twidth: 100%;\n\tflex-shrink: 1;\n\tmax-width: 60%;\n\tmin-width: 150px;\n\n\t&.ed-in-half {\n\t\twidth: -webkit-fill-available;\n\t\tmax-width: -webkit-fill-available;\n\t}\n}\n\n.ed-in-full {\n\tmax-width: 100%;\n\twidth: 100%;\n}\n\n.ed-in-label {\n\twidth: fit-content;\n\tmax-width: 150px;\n\tflex-shrink: 2;\n\tpadding-left: 0.4em;\n\tcolor: @color3;\n\twhite-space: normal;\n\ttext-align: -webkit-left;\n\talign-items: flex-start;\n\tjustify-content: flex-start;\n\tword-break: break-all;\n}\n\n.ed-in-label-colon {\n\tcolor: @color3;\n}\n\ninput:disabled {\n\tcolor: @color3 !important;\n\t-webkit-user-select: none !important;\n\tuser-select: none !important;\n\tcursor: default !important;\n}\n\n.ed-in-disabled {\n\tpointer-events: none;\n\tcursor: not-allowed !important;\n\n\t* {\n\t\tcursor: not-allowed !important;\n\t}\n}\n\n.ed-input {\n\twidth: 100%;\n\tline-height: @dim;\n\theight: @dim;\n\tuser-select: all;\n\tfont-size: inherit;\n\tfont-family: @mainfont;\n\t-webkit-appearance: none;\n\toutline: none;\n\tcolor: @color1;\n\tbackground-color: @bg2;\n\tborder: none;\n\tborder-radius: none;\n\twhite-space: pre;\n\tpadding: 0px @padding;\n\ttext-align: end;\n\toverflow-y: hidden;\n\toverflow-x: auto;\n\t// margin-left: @padding2;\n\n}\n\n.ed-input-plain {\n\tbackground-color: @bg3;\n}\n\n.ed-toggle-outer {\n\twidth: @dim;\n\tcursor: pointer;\n\theight: @dim;\n\tbackground-color: @bg2;\n\tdisplay: flex;\n\talign-items: center;\n\tjustify-content: center;\n\n\t.ed-toggle-inner {\n\t\twidth: (@dim/2);\n\t\theight: (@dim/2);\n\t\tborder-radius: (@dim/2);\n\t\tbackground-color: @bg1;\n\n\t\t&.ed-toggle-active {\n\t\t\tbackground: @color1;\n\t\t}\n\t}\n}\n\n.ed-box-title {\n\n\tpadding: @padding;\n\tpadding-bottom: @padding/2;\n\t// margin-bottom: @padding;\n\tfont-weight: 800;\n\ttext-align: center;\n\tdisplay: flex;\n\tcolor: white;\n\n\t* {\n\t\twhite-space: pre;\n\t}\n\n\talign-items:flex-start;\n\tjustify-content: flex-start;\n\tflex-direction: row;\n\twidth: 100%;\n\n\tz-index: 1;\n\tbackground: @bg1;\n\n\t.ed-in-label-colon {\n\t\tcolor: @color3;\n\t}\n\n\ttext-transform: uppercase !important;\n}\n\n.ed-box-title-sticky {\n\tposition: sticky;\n\ttop: 0px;\n\tbackground: @color1;\n\tcolor: @bg1;\n\tmargin-bottom: @padding;\n}\n\n.ed-box-content {\n\t// padding: 0px @padding;\n\tdisplay: flex;\n\talign-self: start;\n\tjustify-content: start;\n\tflex-direction: row;\n\tflex-wrap: wrap;\n}\n\n\n.ed-box,\n.ed-menu,\n.ed-input {\n\t&::-webkit-scrollbar {\n\t\t-webkit-appearance: none;\n\t\tbackground-color: @bg2;\n\t\twidth: 4px;\n\t\theight: 4px;\n\t\tborder-radius: 0px;\n\t}\n\n\t&::-webkit-scrollbar-corner {\n\t\tbackground-color: @bg2;\n\t}\n\n\t&::-webkit-scrollbar-thumb {\n\t\tborder-radius: 0px;\n\t\tbackground-color: #7F7F7F;\n\n\t\t&:hover {\n\t\t\tbackground-color: #8F8F8F;\n\t\t}\n\t}\n}\n\n.ed-box {\n\ttext {\n\t\tmargin-left: 10px;\n\t}\n\n\toverflow-y: scroll;\n\n\t&.ed-scroll {\n\t\toverflow-y: scroll;\n\t\toverflow-x: hidden;\n\t\twidth: 324px;\n\t}\n\n\t// box-shadow: inset 0px 0px 4px #00000052;\n\t// backdrop-filter: @blur;\n\tbackground-color: @bg1;\n\tcolor: @color1;\n\tposition: fixed;\n\twidth: 300px;\n\n\t// box-shadow: inset 0px 0px 2px #757575;\n\t// border: 1px solid black;\n\t// padding: @padding @padding2;\n\tflex-wrap: nowrap;\n\n\t.ed-description {\n\t\tpadding: 0px @padding;\n\t\t// padding-top: 0;\n\t\tfont-size: 0.8em;\n\t\tcolor: @color2;\n\t\tmargin: @padding 0px;\n\t\tmargin-top: 0px;\n\t\twhite-space: normal;\n\t\t// border-bottom: 3px solid @color2;\n\t}\n}\n\n// .ed-menu.ed-flex-right>.ed-menu.ed-flex-down{\n// \tmin-width: -webkit-fill-available;\n// }\n.ed-menu-child-wrapper {\n\tposition: relative;\n\tleft: -100%;\n\ttop: 12px;\n}\n\n.ed-menu {\n\t// box-shadow:  0px 0px 3px black;\n\tcolor: @color1;\n\tflex-wrap: nowrap;\n\twidth: fit-content;\n\theight: fit-content;\n\tposition: fixed;\n\n\t&.ed-scroll {\n\t\toverflow-y: scroll;\n\t\toverflow-x: hidden;\n\t}\n\n\t&.ed-flex-down {\n\t\t>.ed-menu-item {\n\t\t\twidth: -webkit-fill-available;\n\t\t\theight: auto;\n\t\t}\n\t}\n\n\t&.ed-flex-right {\n\t\t>.ed-menu-item {\n\t\t\theight: -webkit-fill-available;\n\t\t\twidth: auto\n\t\t}\n\t}\n\n\t.ed-menu-labels {\n\t\tbackground-color: @bg1;\n\t\t// backdrop-filter: @blur;\n\t}\n\n\t.ed-menu-item-label {\n\t\twhite-space: pre;\n\t\t// background-color: @bg1;\n\t\tcolor: @color2;\n\t\twidth: -webkit-fill-available;\n\t\theight: @dim;\n\t\ttext-transform: uppercase;\n\t\tdisplay: flex;\n\t\talign-items: center;\n\t\tcolor: @color2;\n\t\tbackground: none;\n\t\tborder: none;\n\t\toutline: none;\n\t\tfont: inherit;\n\t\tpadding: 0px;\n\n\t\t&.ed-selected {\n\t\t\tbackground-color: @bg2;\n\t\t\t// backdrop-filter: @blur;\n\t\t\tcolor: @color1 !important;\n\t\t}\n\n\t\tcursor: pointer;\n\n\t\t// padding: 0px 12px;\n\t\t&:hover {\n\t\t\tcolor: @color1;\n\t\t\tbackground: @bg3;\n\t\t}\n\n\t}\n\n\t.ed-menu-item-box {\n\t\tdisplay: flex;\n\t\talign-items: center;\n\t\tjustify-content: center;\n\t\tcolor: @color2;\n\t\tbackground: none;\n\t\toutline: none;\n\t\tpadding: 0px;\n\t\tborder: none;\n\n\t\t* {\n\t\t\tpointer-events: none;\n\t\t}\n\n\t\t&.ed-selected {\n\t\t\tbackground: @color2;\n\t\t\tcolor: @bg2 !important;\n\t\t}\n\n\t}\n\n\n\t.ed-menu-item {\n\t\tposition: relative;\n\t}\n\n\t&.ed-menu-alt {\n\n\t\t>.ed-menu-labels>.ed-menu-item-label {\n\t\t\tbackground-color: @bg2;\n\t\t}\n\n\t\t>.ed-menu-labels>.ed-menu-item-label.ed-selected {\n\t\t\tbackground-color: @bg1;\n\t\t}\n\t}\n}\n\n// .ed-menu-item-child{\n// \tposition: absolute;\n// \tleft: 0px;\n// \ttop: 0px;\n// }\n\n.ed-hidden {\n\tvisibility: hidden;\n}\n\n.ed-range-outer {\n\theight: @dim;\n\twidth: 100%;\n\tbackground: @bg2;\n\tposition: relative;\n\n\t.ed-range-slider {\n\t\twidth: 6.5px;\n\t\theight: @dim;\n\t\tbackground: @color1;\n\n\t\t&.ed-active {\n\t\t\tbackground: @color1;\n\t\t}\n\n\t}\n\n\t.ed-range-value {\n\t\tposition: absolute;\n\t\tleft: 14px;\n\t\ttop: 50%;\n\t\ttransform: translate(0%, -50%);\n\n\t\t&.ed-range-value-snap {\n\t\t\tright: 8px;\n\t\t\tleft: initial;\n\t\t}\n\n\t\t&.ed-range-value-left {\n\t\t\tright: 14px;\n\t\t\tleft: initial;\n\n\t\t\t&.ed-range-value-snap {\n\t\t\t\tleft: 8px;\n\t\t\t\tright: initial;\n\t\t\t}\n\t\t}\n\n\t}\n\n\tcursor: ew-resize;\n}\n\n.ed-button {\n\toutline: none;\n\t-webkit-appearance: none;\n\tfont: inherit;\n\tborder: none;\n\tcursor: pointer;\n\twidth: 100%;\n\theight: @dim;\n\tbackground: @bg2;\n\tcolor: @color2;\n\n\t&:hover {\n\t\tcolor: @color1;\n\t}\n}\n\n.ed-color-box {\n\tposition: relative;\n\t-webkit-appearance: none;\n\twidth: @dim * 2;\n\theight: @dim;\n\tflex-shrink: 0;\n\tcursor: pointer;\n\tmargin-right: @margin;\n\tborder: 3px solid black;\n\n\t.ed-color-box-input {\n\t\tvisibility: visible;\n\t\topacity: 0;\n\t\tcursor: pointer;\n\t\twidth: 100%;\n\t\theight: 100%;\n\t\tposition: absolute;\n\t\tpadding: 0px;\n\t\tleft: 0px;\n\t\ttop: 0px;\n\t}\n}\n\n.ed-value-box {\n\twidth: 100%;\n\t// flex-shrink: 1;\n\theight: @dim;\n\tbackground-color: @bg1;\n\tmargin-left: @margin*.6;\n\tline-height: @dim;\n\tpadding: 0px @padding;\n}\n\n\n\n.ed-section {\n\t// margin: 0px;\n\tmargin: @padding 0px;\n\tpadding: @padding 0px;\n\tposition: relative;\n\n\t// text-transform: uppercase;\n\t// margin-bottom: 2px;\n\tborder-top: 1px solid @color4;\n\tborder-bottom: 1px solid @color4;\n\t// margin-bottom: 200px;\n\t// padding: @padding;\n}\n\n.ed-section-title {\n\tmin-height: @dim;\n\tcursor: pointer;\n\twhite-space: pre;\n\n\tfont-weight: 800;\n\twidth: 100%;\n\tpadding: 0px @padding;\n\ttext-transform: uppercase;\n}\n\n.ed-section-label-toggle-off {\n\tcursor: default;\n}\n\n.ed-section-label-toggle {\n\tfont-size: @fontsize;\n\twidth: 100%;\n\tpadding-right: @padding;\n\tdisplay: flex;\n\tcolor: @color3;\n\tflex-direction: column;\n\talign-items: flex-end;\n\tjustify-content: flex-end;\n\n\t&.ed-section-label-toggle-active {\n\t\tcolor: @color2;\n\t}\n}\n\n.ed-section-end-label {\n\tpadding: @padding;\n\tdisplay: flex;\n\twidth: 100%;\n\tflex-direction: row;\n\talign-items: center;\n\tjustify-content: center;\n\t// padding-left: @padding2;\n}\n\n.ed-input-select {\n\twidth: 100%;\n\toutline: none;\n\t-webkit-appearance: none;\n\theight: 24px;\n\tcursor: pointer;\n\tpadding: 0px @padding;\n\tborder: none;\n\tcolor: @color1;\n\tbackground: @bg2;\n}\n\n.ed-input-select-arrow {\n\tposition: absolute;\n\tright: 14px;\n\tcolor: @color3;\n\tfont-family: monospace;\n\n}\n\n.ed-separator {\n\tmargin-top: @dim / 3;\n\tborder-bottom: 1px solid @color4;\n\theight: 0px;\n\twidth: 100%;\n\tmargin-bottom: @dim / 2;\n}\n\n.ed-line-chart {\n\twidth: 100%;\n\theight: 80px;\n\tbackground: @bg2;\n}\n\n.ed-line-chart-wrap {\n\tflex-direction: column;\n\talign-content: flex-start;\n\tjustify-content: flex-start;\n\talign-items: flex-start;\n\n\tcanvas {\n\t\tcursor: ew-resize;\n\t\twidth: 100%;\n\t\theight: 100%;\n\t}\n}\n\n.ed-line-chart-label {\n\t// width: 50%;\n\tpadding: @padding 0px;\n}\n\n.ed-anchor {\n\tdisplay: flex;\n\tflex-direction: row;\n\tposition: fixed;\n\n\t.ed-anchor-handle {\n\t\tposition: fixed;\n\t\tbackground: black;\n\t\tcursor: move;\n\t\tdisplay: flex;\n\t\tjustify-content: center;\n\t\talign-content: center;\n\t\talign-items: center;\n\n\t\t.ed-anchor-dot {\n\t\t\tmargin: (@dim/6);\n\t\t\tpointer-events: none;\n\t\t\tbackground: white;\n\t\t\twidth: (@dim/6);\n\t\t\theight: (@dim/6);\n\t\t}\n\t}\n\n\t.ed-anchor-content {}\n\n\t.ed-anchor-handle-resize {\n\t\twidth: (@dim/2);\n\t\theight: (@dim/2);\n\t\tbackground: black;\n\t\tposition: absolute;\n\t\t// cursor: ns-resize;\n\t\ttop: 0;\n\t\tleft: 0;\n\t\tz-index: 1;\n\t}\n\n\t&.ed-anchor-drag {\n\t\tpointer-events: all;\n\t\tcursor: move;\n\n\t\t* {\n\t\t\tpointer-events: none !important;\n\t\t}\n\t}\n\n\t&.ed-anchor-resize {\n\t\tpointer-events: all;\n\n\t\t// cursor: ns-resize;\n\t\t* {\n\t\t\tpointer-events: none !important;\n\t\t}\n\t}\n}"],"sourceRoot":""}]);
+`, "",{"version":3,"sources":["webpack://./components/Style.less"],"names":[],"mappings":"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","sourcesContent":["@bg1: rgba(42, 42, 42, 1.0);\n@bg2: rgba(20, 20, 20, 1.0);\n@bg3: rgba(30, 30, 30, 1.0);\n\n@color1: rgb(255, 255, 255);\n@color2: rgb(235, 235, 235);\n@color3: rgb(200, 200, 200);\n@color4: rgba(150, 150, 150, 0.3);\n\n@mainfont: 'DM Mono', monospace;\n@fontsize: .85em;\n@padding: @fontsize*.5;\n@padding2: @fontsize;\n@margin: @padding*.6;\n@dim: 1.60em;\n\n\n.noselect {\n\t-webkit-touch-callout: none;\n\t/* iOS Safari */\n\t-webkit-user-select: none;\n\t/* Safari */\n\t-khtml-user-select: none;\n\t/* Konqueror HTML */\n\t-moz-user-select: none;\n\t/* Old versions of Firefox */\n\t-ms-user-select: none;\n\t/* Internet Explorer/Edge */\n\tuser-select: none;\n\t/* Non-prefixed version, currently\n                                  supported by Chrome, Edge, Opera and Firefox */\n}\n\n.ed-layout {\n\tz-index: 100;\n\t// transform: translate3D(0.0px,0.0px,0.0px);\n\ttext-rendering: optimizeSpeed;\n\tline-height: 95%;\n\tfont-family: @mainfont;\n\tfont-size: @fontsize;\n\tcolor: @color1;\n\tposition: relative;\n\ttop: 0px;\n\tleft: 0px;\n\twidth: 100%;\n\theight: 100%;\n\toverflow: hidden;\n\tpointer-events: none;\n\n\t* {\n\t\tpointer-events: all;\n\t\tbox-sizing: border-box;\n\t}\n}\n\n.ed-layout-dragging {\n\tpointer-events: all;\n\tcursor: ew-resize;\n\n\t* {\n\t\tpointer-events: none !important;\n\t}\n}\n\n.ed-full-w {\n\twidth: 100%;\n}\n\n.ed-flex-left {\n\tdisplay: flex;\n\tflex-wrap: wrap;\n\tposition: relative;\n\tflex-direction: row-reverse;\n\talign-items: center;\n\tjustify-content: flex-end;\n}\n\n.ed-flex-right {\n\tdisplay: flex;\n\tposition: relative;\n\t// flex-wrap: wrap;\n\tflex-direction: row;\n\talign-items: center;\n\tjustify-content: flex-start;\n}\n\n.ed-flex-down {\n\tdisplay: flex;\n\tflex-direction: column;\n\talign-items: flex-start;\n\tjustify-content: flex-start;\n}\n\n.ed-in-wrap {\n\tfont-size: .9em;\n\twidth: 100%;\n\tpadding: 0px @padding;\n\tmin-height: @dim;\n\t&:extend(.ed-flex-right);\n\tflex-wrap: nowrap;\n\t// margin-top: @padding;\n\tmargin-bottom: @margin;\n\n\t&.ed-in-half {\n\t\twidth: 50%;\n\t}\n\n\t&.ed-tight {\n\t\tmin-height: 1em;\n\t}\n\n\t&:last-child {\n\t\tmargin-bottom: 0.425em;\n\t}\n}\n\n.ed-in-wrap-toggle {\n\tcursor: pointer;\n}\n\n.ed-in-wrap-toggle-input {\n\twidth: auto;\n\tflex-shrink: 0;\n\t// margin-right: 4px;\n}\n\n.ed-in-wrap-toggle-label {\n\twidth: auto;\n}\n\n.ed-input-wrap {\n\n\t&:extend(.ed-flex-left);\n\twidth: 100%;\n\tflex-shrink: 1;\n\tmax-width: 60%;\n\tmin-width: 150px;\n\n\t&.ed-in-half {\n\t\twidth: -webkit-fill-available;\n\t\tmax-width: -webkit-fill-available;\n\t}\n}\n\n.ed-in-full {\n\tmax-width: 100%;\n\twidth: 100%;\n}\n\n.ed-in-label {\n\twidth: fit-content;\n\tmax-width: 150px;\n\tflex-shrink: 2;\n\tpadding-left: 0.4em;\n\tcolor: @color3;\n\twhite-space: normal;\n\ttext-align: -webkit-left;\n\talign-items: flex-start;\n\tjustify-content: flex-start;\n\tword-break: break-all;\n}\n\n.ed-in-label-colon {\n\tcolor: @color3;\n}\n\ninput:disabled {\n\tcolor: @color3 !important;\n\t-webkit-user-select: none !important;\n\tuser-select: none !important;\n\tcursor: default !important;\n}\n\n.ed-in-disabled {\n\tpointer-events: none;\n\tcursor: not-allowed !important;\n\n\t* {\n\t\tcursor: not-allowed !important;\n\t}\n}\n\n.ed-input {\n\twidth: 100%;\n\tline-height: @dim;\n\theight: @dim;\n\tuser-select: all;\n\tfont-size: inherit;\n\tfont-family: @mainfont;\n\t-webkit-appearance: none;\n\toutline: none;\n\tcolor: @color1;\n\tbackground-color: @bg2;\n\tborder: none;\n\tborder-radius: none;\n\twhite-space: pre;\n\tpadding: 0px @padding;\n\ttext-align: end;\n\toverflow-y: hidden;\n\toverflow-x: auto;\n\t// margin-left: @padding2;\n\n}\n\n.ed-input-plain {\n\tbackground-color: @bg3;\n}\n\n.ed-toggle-outer {\n\twidth: @dim;\n\tcursor: pointer;\n\theight: @dim;\n\tbackground-color: @bg2;\n\tdisplay: flex;\n\talign-items: center;\n\tjustify-content: center;\n\n\t.ed-toggle-inner {\n\t\twidth: (@dim/2);\n\t\theight: (@dim/2);\n\t\tborder-radius: (@dim/2);\n\t\tbackground-color: @bg1;\n\n\t\t&.ed-toggle-active {\n\t\t\tbackground: @color1;\n\t\t}\n\t}\n}\n\n.ed-box-title {\n\n\tpadding: @padding;\n\tpadding-bottom: @padding/2;\n\t// margin-bottom: @padding;\n\tfont-weight: 800;\n\ttext-align: center;\n\tdisplay: flex;\n\tcolor: white;\n\n\t* {\n\t\twhite-space: pre;\n\t}\n\n\talign-items:flex-start;\n\tjustify-content: flex-start;\n\tflex-direction: row;\n\twidth: 100%;\n\n\tz-index: 1;\n\tbackground: @bg1;\n\n\t.ed-in-label-colon {\n\t\tcolor: @color3;\n\t}\n\n\ttext-transform: uppercase !important;\n}\n\n.ed-box-title-sticky {\n\tposition: sticky;\n\ttop: 0px;\n\tbackground: @color1;\n\tcolor: @bg1;\n\tmargin-bottom: @padding;\n}\n\n.ed-box-content {\n\t// padding: 0px @padding;\n\tdisplay: flex;\n\talign-self: start;\n\tjustify-content: start;\n\tflex-direction: row;\n\tflex-wrap: wrap;\n}\n\n\n.ed-box,\n.ed-menu,\n.ed-input {\n\t&::-webkit-scrollbar {\n\t\t-webkit-appearance: none;\n\t\tbackground-color: @bg2;\n\t\twidth: 4px;\n\t\theight: 4px;\n\t\tborder-radius: 0px;\n\t}\n\n\t&::-webkit-scrollbar-corner {\n\t\tbackground-color: @bg2;\n\t}\n\n\t&::-webkit-scrollbar-thumb {\n\t\tborder-radius: 0px;\n\t\tbackground-color: #7F7F7F;\n\n\t\t&:hover {\n\t\t\tbackground-color: #8F8F8F;\n\t\t}\n\t}\n}\n\n.ed-box {\n\ttext {\n\t\tmargin-left: 10px;\n\t}\n\n\toverflow-y: scroll;\n\n\t&.ed-scroll {\n\t\toverflow-y: scroll;\n\t\toverflow-x: hidden;\n\t\twidth: 324px;\n\t}\n\n\t// box-shadow: inset 0px 0px 4px #00000052;\n\t// backdrop-filter: @blur;\n\tbackground-color: @bg1;\n\tcolor: @color1;\n\tposition: absolute;\n\twidth: 300px;\n\n\t// box-shadow: inset 0px 0px 2px #757575;\n\t// border: 1px solid black;\n\t// padding: @padding @padding2;\n\tflex-wrap: nowrap;\n\n\t.ed-description {\n\t\tpadding: 0px @padding;\n\t\t// padding-top: 0;\n\t\tfont-size: 0.8em;\n\t\tcolor: @color2;\n\t\tmargin: @padding 0px;\n\t\tmargin-top: 0px;\n\t\twhite-space: normal;\n\t\t// border-bottom: 3px solid @color2;\n\t}\n}\n\n// .ed-menu.ed-flex-right>.ed-menu.ed-flex-down{\n// \tmin-width: -webkit-fill-available;\n// }\n.ed-menu-child-wrapper {\n\tposition: relative;\n\tleft: -100%;\n\ttop: 12px;\n}\n\n.ed-menu {\n\t// box-shadow:  0px 0px 3px black;\n\tcolor: @color1;\n\tflex-wrap: nowrap;\n\twidth: fit-content;\n\theight: fit-content;\n\tposition: absolute;\n\n\t&.ed-scroll {\n\t\toverflow-y: scroll;\n\t\toverflow-x: hidden;\n\t}\n\n\t&.ed-flex-down {\n\t\t>.ed-menu-item {\n\t\t\twidth: -webkit-fill-available;\n\t\t\theight: auto;\n\t\t}\n\t}\n\n\t&.ed-flex-right {\n\t\t>.ed-menu-item {\n\t\t\theight: -webkit-fill-available;\n\t\t\twidth: auto\n\t\t}\n\t}\n\n\t.ed-menu-labels {\n\t\tbackground-color: @bg1;\n\t\t// backdrop-filter: @blur;\n\t}\n\n\t.ed-menu-item-label {\n\t\twhite-space: pre;\n\t\t// background-color: @bg1;\n\t\tcolor: @color2;\n\t\twidth: -webkit-fill-available;\n\t\theight: @dim;\n\t\ttext-transform: uppercase;\n\t\tdisplay: flex;\n\t\talign-items: center;\n\t\tcolor: @color2;\n\t\tbackground: none;\n\t\tborder: none;\n\t\toutline: none;\n\t\tfont: inherit;\n\t\tpadding: 0px;\n\n\t\t&.ed-selected {\n\t\t\tbackground-color: @bg2;\n\t\t\t// backdrop-filter: @blur;\n\t\t\tcolor: @color1 !important;\n\t\t}\n\n\t\tcursor: pointer;\n\n\t\t// padding: 0px 12px;\n\t\t&:hover {\n\t\t\tcolor: @color1;\n\t\t\tbackground: @bg3;\n\t\t}\n\n\t}\n\n\t.ed-menu-item-box {\n\t\tdisplay: flex;\n\t\talign-items: center;\n\t\tjustify-content: center;\n\t\tcolor: @color2;\n\t\tbackground: none;\n\t\toutline: none;\n\t\tpadding: 0px;\n\t\tborder: none;\n\n\t\t* {\n\t\t\tpointer-events: none;\n\t\t}\n\n\t\t&.ed-selected {\n\t\t\tbackground: @color2;\n\t\t\tcolor: @bg2 !important;\n\t\t}\n\n\t}\n\n\n\t.ed-menu-item {\n\t\tposition: relative;\n\t}\n\n\t&.ed-menu-alt {\n\n\t\t>.ed-menu-labels>.ed-menu-item-label {\n\t\t\tbackground-color: @bg2;\n\t\t}\n\n\t\t>.ed-menu-labels>.ed-menu-item-label.ed-selected {\n\t\t\tbackground-color: @bg1;\n\t\t}\n\t}\n}\n\n// .ed-menu-item-child{\n// \tposition: absolute;\n// \tleft: 0px;\n// \ttop: 0px;\n// }\n\n.ed-hidden {\n\tvisibility: hidden;\n}\n\n.ed-range-outer {\n\theight: @dim;\n\twidth: 100%;\n\tbackground: @bg2;\n\tposition: relative;\n\n\t.ed-range-slider {\n\t\twidth: 6.5px;\n\t\theight: @dim;\n\t\tbackground: @color1;\n\n\t\t&.ed-active {\n\t\t\tbackground: @color1;\n\t\t}\n\n\t}\n\n\t.ed-range-value {\n\t\tposition: absolute;\n\t\tleft: 14px;\n\t\ttop: 50%;\n\t\ttransform: translate(0%, -50%);\n\n\t\t&.ed-range-value-snap {\n\t\t\tright: 8px;\n\t\t\tleft: initial;\n\t\t}\n\n\t\t&.ed-range-value-left {\n\t\t\tright: 14px;\n\t\t\tleft: initial;\n\n\t\t\t&.ed-range-value-snap {\n\t\t\t\tleft: 8px;\n\t\t\t\tright: initial;\n\t\t\t}\n\t\t}\n\n\t}\n\n\tcursor: ew-resize;\n}\n\n.ed-button {\n\toutline: none;\n\t-webkit-appearance: none;\n\tfont: inherit;\n\tborder: none;\n\tcursor: pointer;\n\twidth: 100%;\n\theight: @dim;\n\tbackground: @bg2;\n\tcolor: @color2;\n\n\t&:hover {\n\t\tcolor: @color1;\n\t}\n}\n\n.ed-color-box {\n\tposition: relative;\n\t-webkit-appearance: none;\n\twidth: @dim * 2;\n\theight: @dim;\n\tflex-shrink: 0;\n\tcursor: pointer;\n\tmargin-right: @margin;\n\tborder: 3px solid black;\n\n\t.ed-color-box-input {\n\t\tvisibility: visible;\n\t\topacity: 0;\n\t\tcursor: pointer;\n\t\twidth: 100%;\n\t\theight: 100%;\n\t\tposition: absolute;\n\t\tpadding: 0px;\n\t\tleft: 0px;\n\t\ttop: 0px;\n\t}\n}\n\n.ed-value-box {\n\twidth: 100%;\n\t// flex-shrink: 1;\n\theight: @dim;\n\tbackground-color: @bg1;\n\tmargin-left: @margin*.6;\n\tline-height: @dim;\n\tpadding: 0px @padding;\n}\n\n\n\n.ed-section {\n\t// margin: 0px;\n\tmargin: @padding 0px;\n\tpadding: @padding 0px;\n\tposition: relative;\n\n\t// text-transform: uppercase;\n\t// margin-bottom: 2px;\n\tborder-top: 1px solid @color4;\n\tborder-bottom: 1px solid @color4;\n\t// margin-bottom: 200px;\n\t// padding: @padding;\n}\n\n.ed-section-title {\n\tmin-height: @dim;\n\tcursor: pointer;\n\twhite-space: pre;\n\n\tfont-weight: 800;\n\twidth: 100%;\n\tpadding: 0px @padding;\n\ttext-transform: uppercase;\n}\n\n.ed-section-label-toggle-off {\n\tcursor: default;\n}\n\n.ed-section-label-toggle {\n\tfont-size: @fontsize;\n\twidth: 100%;\n\tpadding-right: @padding;\n\tdisplay: flex;\n\tcolor: @color3;\n\tflex-direction: column;\n\talign-items: flex-end;\n\tjustify-content: flex-end;\n\n\t&.ed-section-label-toggle-active {\n\t\tcolor: @color2;\n\t}\n}\n\n.ed-section-end-label {\n\tpadding: @padding;\n\tdisplay: flex;\n\twidth: 100%;\n\tflex-direction: row;\n\talign-items: center;\n\tjustify-content: center;\n\t// padding-left: @padding2;\n}\n\n.ed-input-select {\n\twidth: 100%;\n\toutline: none;\n\t-webkit-appearance: none;\n\theight: 24px;\n\tcursor: pointer;\n\tpadding: 0px @padding;\n\tborder: none;\n\tcolor: @color1;\n\tbackground: @bg2;\n}\n\n.ed-input-select-arrow {\n\tposition: absolute;\n\tright: 14px;\n\tcolor: @color3;\n\tfont-family: monospace;\n\n}\n\n.ed-separator {\n\tmargin-top: @dim / 3;\n\tborder-bottom: 1px solid @color4;\n\theight: 0px;\n\twidth: 100%;\n\tmargin-bottom: @dim / 2;\n}\n\n.ed-line-chart {\n\twidth: 100%;\n\theight: 80px;\n\tbackground: @bg2;\n}\n\n.ed-line-chart-wrap {\n\tflex-direction: column;\n\talign-content: flex-start;\n\tjustify-content: flex-start;\n\talign-items: flex-start;\n\n\tcanvas {\n\t\tcursor: ew-resize;\n\t\twidth: 100%;\n\t\theight: 100%;\n\t}\n}\n\n.ed-line-chart-label {\n\t// width: 50%;\n\tpadding: @padding 0px;\n}\n\n.ed-anchor {\n\tdisplay: flex;\n\tflex-direction: row;\n\tposition: absolute;\n\n\t.ed-anchor-handle {\n\t\tposition: absolute;\n\t\tbackground: black;\n\t\tcursor: move;\n\t\tdisplay: flex;\n\t\tjustify-content: center;\n\t\talign-content: center;\n\t\talign-items: center;\n\n\t\t.ed-anchor-dot {\n\t\t\tmargin: (@dim/6);\n\t\t\tpointer-events: none;\n\t\t\tbackground: white;\n\t\t\twidth: (@dim/6);\n\t\t\theight: (@dim/6);\n\t\t}\n\t}\n\n\t.ed-anchor-content {}\n\n\t.ed-anchor-handle-resize {\n\t\twidth: (@dim/2);\n\t\theight: (@dim/2);\n\t\tbackground: black;\n\t\tposition: absolute;\n\t\t// cursor: ns-resize;\n\t\ttop: 0;\n\t\tleft: 0;\n\t\tz-index: 1;\n\t}\n\n\t&.ed-anchor-drag {\n\t\tpointer-events: all;\n\t\tcursor: move;\n\n\t\t* {\n\t\t\tpointer-events: none !important;\n\t\t}\n\t}\n\n\t&.ed-anchor-resize {\n\t\tpointer-events: all;\n\n\t\t// cursor: ns-resize;\n\t\t* {\n\t\t\tpointer-events: none !important;\n\t\t}\n\t}\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -2476,7 +2476,7 @@ BAR_DIM = 12;
 REBAR_DIM = 4;
 
 Box = function(props, state) {
-  var align_key, content_ref, context, dim_overflow, height, offset_x, offset_y, self_context, self_ref, self_x, self_y, setDim, setVisible, style, visible, width, x, y;
+  var align_key, content_ref, context, dim_overflow, height, offset_x, offset_y, render_x, render_y, self_context, self_ref, self_x, self_y, setDim, setVisible, style, visible, width, x, y;
   context = (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(_LayoutContext__WEBPACK_IMPORTED_MODULE_1__["default"]);
   [visible, setVisible] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   [dim_overflow, setDim] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([MIN_HEIGHT, 0]);
@@ -2548,8 +2548,15 @@ Box = function(props, state) {
     self_y += offset_y;
   }
   style.zIndex = context.depth + 1 + 888;
-  style.left = self_x + 'px';
-  style.top = self_y + 'px';
+  if (context.root) {
+    render_x = self_x;
+    render_y = self_y;
+  } else {
+    render_x = self_x - (context.x || 0);
+    render_y = self_y - (context.y || 0);
+  }
+  style.left = render_x + 'px';
+  style.top = render_y + 'px';
   return h('div', {
     ref: self_ref,
     style: style,
@@ -3193,7 +3200,7 @@ h = react__WEBPACK_IMPORTED_MODULE_0__.createElement;
 
 
 Layout = function(props, state) {
-  var canvas_ref, context, css_font, font_loaded, forceUpdate, force_update_t, getLabelWidth, isDragging, is_dragging, layout_ref, measure_text, setContext, setFontLoaded, setWinSize, startDrag, stopDrag, win_size;
+  var canvas_ref, context, css_font, font_loaded, forceUpdate, force_update_t, getLabelWidth, isDragging, is_dragging, layout_ref, measure_text, setContext, setFontLoaded, setWinSize, startDrag, stopDrag, updateContext, win_size;
   layout_ref = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)();
   [context, setContext] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   [win_size, setWinSize] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
@@ -3203,6 +3210,44 @@ Layout = function(props, state) {
   [force_update_t, forceUpdate] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
   [font_loaded, setFontLoaded] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   css_font = props.fontSize + 'px ' + props.fontFamily;
+  updateContext = function() {
+    var parent_element, view_rect;
+    if (!layout_ref.current) {
+      return;
+    }
+    parent_element = layout_ref.current.parentElement;
+    if (parent_element) {
+      view_rect = {
+        left: 0,
+        top: 0,
+        right: parent_element.clientWidth,
+        bottom: parent_element.clientHeight,
+        width: parent_element.clientWidth,
+        height: parent_element.clientHeight
+      };
+    } else {
+      view_rect = {
+        left: 0,
+        top: 0,
+        right: layout_ref.current.clientWidth,
+        bottom: layout_ref.current.clientHeight,
+        width: layout_ref.current.clientWidth,
+        height: layout_ref.current.clientHeight
+      };
+    }
+    return setContext({
+      depth: 0,
+      dim: props.fontSize * 1.6,
+      wpad: props.fontSize * .4,
+      root: true,
+      selected_label: 'root',
+      view_rect: view_rect,
+      getLabelWidth: getLabelWidth,
+      stopDrag: stopDrag,
+      font_loaded: font_loaded,
+      startDrag: startDrag
+    });
+  };
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function() {
     // log 'WAIT FOR WEB FONTS',props.waitForWebfonts
     if (props.waitForFontLoad) {
@@ -3235,23 +3280,19 @@ Layout = function(props, state) {
     canvas_ref.current.font = css_font;
   }, [props.fontFamily, props.fontSize, win_size, font_loaded]);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function() {
-    var view_rect;
-    if (!layout_ref.current) {
+    var parent_element, resize_observer;
+    updateContext();
+    if (!layout_ref.current || !layout_ref.current.parentElement) {
       return;
     }
-    view_rect = layout_ref.current.getBoundingClientRect();
-    return setContext({
-      depth: 0,
-      dim: props.fontSize * 1.6,
-      wpad: props.fontSize * .4,
-      root: true,
-      selected_label: 'root',
-      view_rect: view_rect,
-      getLabelWidth: getLabelWidth,
-      stopDrag: stopDrag,
-      font_loaded: font_loaded,
-      startDrag: startDrag
+    parent_element = layout_ref.current.parentElement;
+    resize_observer = new ResizeObserver(function() {
+      return updateContext();
     });
+    resize_observer.observe(parent_element);
+    return function() {
+      return resize_observer.disconnect();
+    };
   }, [props.fontFamily, props.fontSize, win_size, font_loaded]);
   startDrag = function(onDrag, onDragEnd, onMouseOut) {
     isDragging(true);
@@ -3354,7 +3395,7 @@ h = react__WEBPACK_IMPORTED_MODULE_0__.createElement;
 
 
 Menu = function(props) {
-  var align_key, autoDeselect, box_context, context, label_keys, label_widths, labels, max_label_width, menu_ref, new_height, offset_x, offset_y, overflow_y, ref, ref1, ref2, scroll_top, selected_child, selected_label_index, selected_label_x, selected_label_y, self_context, self_height, self_width, self_x, self_y, style, total_label_height, total_label_width, vert;
+  var actual_x, actual_y, align_key, autoDeselect, box_context, context, handled_transform, label_keys, label_widths, labels, max_label_width, menu_ref, new_height, offset_x, offset_y, overflow_y, ref, ref1, ref2, ref3, ref4, ref5, ref6, ref7, ref8, render_x, render_y, scroll_top, selected_child, selected_label_index, selected_label_x, selected_label_y, self_context, self_height, self_width, self_x, self_y, style, total_label_height, total_label_width, vert;
   context = (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(_LayoutContext__WEBPACK_IMPORTED_MODULE_2__["default"]);
   box_context = (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(_BoxContext__WEBPACK_IMPORTED_MODULE_3__["default"]);
   if (context && box_context) {
@@ -3471,28 +3512,55 @@ Menu = function(props) {
   style.overflowY = overflow_y && 'scroll';
   style.zIndex = props.select && 666 || 1;
   style.zIndex += self_context.depth;
-  style.left = self_x + 'px';
-  style.top = self_y + 'px';
   style.height = self_height + 'px';
   // if offset_x || offset_y
   // 	style.transform = "translate(#{offset_x}px,#{offset_y}px)"
   if (props.style) {
     Object.assign(style, props.style);
   }
+  actual_x = self_x;
+  actual_y = self_y;
+  handled_transform = false;
+  if (((ref3 = props.style) != null ? ref3.left : void 0) === '50%') {
+    actual_x = (context.view_rect.width - self_width) / 2;
+    handled_transform = true;
+  }
+  if (((ref4 = props.style) != null ? ref4.top : void 0) === '50%') {
+    actual_y = (context.view_rect.height - self_height) / 2;
+    handled_transform = true;
+  }
+  if (((ref5 = props.style) != null ? ref5.left : void 0) === 0 || ((ref6 = props.style) != null ? ref6.left : void 0) === '0') {
+    actual_x = 0;
+  }
+  if (((ref7 = props.style) != null ? ref7.top : void 0) === 0 || ((ref8 = props.style) != null ? ref8.top : void 0) === '0') {
+    actual_y = 0;
+  }
+  if (context.root) {
+    render_x = actual_x;
+    render_y = actual_y;
+  } else {
+    render_x = actual_x - (context.x || 0);
+    render_y = actual_y - (context.y || 0);
+  }
+  style.left = render_x + 'px';
+  style.top = render_y + 'px';
+  if (handled_transform) {
+    delete style.transform;
+  }
   self_context.width = self_width;
   self_context.height = self_height;
-  self_context.x = self_x;
-  self_context.y = self_y;
+  self_context.x = actual_x;
+  self_context.y = actual_y;
   self_context.vert = props.vert;
   self_context.root = false;
   self_context.align = align_key;
   self_context.selected_label = props.select;
   if (props.vert) {
-    self_context.sel_x = self_x;
-    self_context.sel_y = self_y + selected_label_y + scroll_top;
+    self_context.sel_x = actual_x;
+    self_context.sel_y = actual_y + selected_label_y + scroll_top;
   } else {
-    self_context.sel_x = self_x + selected_label_x;
-    self_context.sel_y = self_y + scroll_top;
+    self_context.sel_x = actual_x + selected_label_x;
+    self_context.sel_y = actual_y + scroll_top;
   }
   self_context.sel_w = label_widths[selected_label_index];
   selected_child = null;
